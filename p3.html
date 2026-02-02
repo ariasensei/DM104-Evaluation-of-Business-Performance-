@@ -1,0 +1,957 @@
+<!doctype html>
+<html lang="en" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DM104 Week 3 - KPIs: Types, Characteristics &amp; Selection</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="/_sdk/data_sdk.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&amp;family=Lato:wght@400;500;700&amp;display=swap" rel="stylesheet">
+  <style>
+    body {
+      box-sizing: border-box;
+    }
+    html, body, #app-wrapper {
+      height: 100%;
+      width: 100%;
+    }
+    .font-heading {
+      font-family: 'Merriweather', Georgia, serif;
+    }
+    .font-body {
+      font-family: 'Lato', system-ui, sans-serif;
+    }
+    .term-highlight {
+      position: relative;
+      cursor: help;
+      padding: 2px 6px;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+    }
+    .term-highlight:hover {
+      background-color: rgba(59, 130, 246, 0.2);
+    }
+    .tooltip {
+      display: none;
+      position: absolute;
+      background: linear-gradient(135deg, #1f2937, #111827);
+      color: #f3f4f6;
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      z-index: 50;
+      border-left: 3px solid #3b82f6;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+      max-width: 280px;
+      line-height: 1.5;
+      white-space: normal;
+    }
+    .term-highlight:hover .tooltip {
+      display: block;
+      bottom: 120%;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    .animate-slide-in {
+      animation: slideIn 0.6s ease-out;
+    }
+    .section-divider {
+      height: 3px;
+      background: linear-gradient(90deg, #3b82f6, #1e40af, transparent);
+      margin: 2rem 0;
+    }
+    .card-hover {
+      transition: all 0.3s ease;
+    }
+    .card-hover:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 15px 40px rgba(59, 130, 246, 0.15);
+    }
+    .example-box {
+      border-left: 4px solid #10b981;
+      background: rgba(16, 185, 129, 0.05);
+    }
+    .activity-box {
+      border-left: 4px solid #6366f1;
+      background: rgba(99, 102, 241, 0.05);
+    }
+    .smart-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+    }
+    .kpi-type-card {
+      padding: 16px;
+      border-radius: 12px;
+      background: white;
+      border: 2px solid #e5e7eb;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .kpi-type-card:hover {
+      border-color: #3b82f6;
+      box-shadow: 0 8px 20px rgba(59, 130, 246, 0.1);
+      transform: translateY(-2px);
+    }
+    .selection-checklist {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 12px;
+    }
+    .checklist-item {
+      padding: 12px;
+      border-radius: 8px;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      display: flex;
+      gap: 10px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .checklist-item:hover {
+      background: #f3f4f6;
+      border-color: #3b82f6;
+    }
+    .smart-criteria {
+      background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+      border: 2px solid #3b82f6;
+      border-radius: 12px;
+      padding: 24px;
+      margin: 20px 0;
+    }
+    .smart-letter {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #3b82f6, #1e40af);
+      color: white;
+      font-weight: bold;
+      margin-right: 10px;
+    }
+    .smart-item {
+      margin: 12px 0;
+      display: flex;
+      gap: 12px;
+    }
+    .alignment-diagram {
+      background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+      border: 2px solid #10b981;
+      border-radius: 12px;
+      padding: 24px;
+      margin: 20px 0;
+    }
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #10b981;
+      color: white;
+      padding: 14px 20px;
+      border-radius: 8px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      z-index: 100;
+      animation: slideIn 0.3s ease-out;
+    }
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+    .comparison-table th {
+      background: linear-gradient(135deg, #3b82f6, #1e40af);
+      color: white;
+      padding: 12px;
+      text-align: left;
+      font-weight: 600;
+    }
+    .comparison-table td {
+      padding: 12px;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    .comparison-table tr:last-child td {
+      border-bottom: none;
+    }
+    .comparison-table tr:nth-child(even) {
+      background: #f9fafb;
+    }
+    .tab-button {
+      padding: 12px 24px;
+      font-weight: 600;
+      border-bottom: 3px solid transparent;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      white-space: nowrap;
+    }
+    .tab-button.active {
+      border-bottom-color: #3b82f6;
+      color: #3b82f6;
+    }
+    .tab-button:not(.active) {
+      color: #6b7280;
+    }
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    .loading {
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+  </style>
+  <style>@view-transition { navigation: auto; }</style>
+ </head>
+ <body class="h-full font-body w-full">
+  <div id="app-wrapper" class="w-full h-full overflow-auto" style="background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);"><!-- Navigation Bar -->
+   <nav class="sticky top-0 z-40 w-full" style="background: white; border-bottom: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+    <div class="w-full px-6 py-4 flex items-center justify-between">
+     <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background: linear-gradient(135deg, #3b82f6, #1e40af);">
+       <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+       </svg>
+      </div>
+      <div>
+       <p class="text-xs font-semibold text-gray-500" id="course-label">DM104</p>
+       <p class="text-sm font-bold text-gray-900" id="module-title">Week 3: KPIs - Types, Characteristics &amp; Selection</p>
+      </div>
+     </div>
+     <div class="flex items-center gap-2 text-sm" style="color: #6b7280;"><span>📊 KPI Design Workshop</span>
+     </div>
+    </div>
+   </nav>
+   <main class="w-full px-6 py-12" style="max-width: 1400px; margin: 0 auto;"><!-- Learning Objectives -->
+    <section class="mb-12 animate-slide-in">
+     <div class="rounded-2xl p-8 w-full" style="background: white; border: 1px solid #e5e7eb; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+      <div class="flex items-start gap-4">
+       <div class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style="background: linear-gradient(135deg, #3b82f6, #1e40af);">
+        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+       </div>
+       <div class="flex-1">
+        <h2 class="font-heading text-2xl font-bold mb-4" style="color: #1f2937;">Learning Objectives</h2>
+        <p class="mb-4" style="color: #6b7280;">By the end of this week, you'll be able to:</p>
+        <ul class="space-y-2">
+         <li class="flex gap-3" style="color: #374151;"><span style="color: #3b82f6;">✓</span> <span><strong>Classify</strong> KPIs by type and understand their specific purposes</span></li>
+         <li class="flex gap-3" style="color: #374151;"><span style="color: #3b82f6;">✓</span> <span><strong>Design KPIs</strong> that are SMART and aligned with organizational objectives</span></li>
+         <li class="flex gap-3" style="color: #374151;"><span style="color: #3b82f6;">✓</span> <span><strong>Select and evaluate</strong> KPIs using systematic criteria</span></li>
+         <li class="flex gap-3" style="color: #374151;"><span style="color: #3b82f6;">✓</span> <span><strong>Apply KPI frameworks</strong> to real-world business scenarios</span></li>
+        </ul>
+       </div>
+      </div>
+     </div>
+    </section><!-- KPI Types Section -->
+    <section class="mb-12 w-full">
+     <h2 class="font-heading text-3xl font-bold mb-8" style="color: #1f2937;">KPI Types Explained</h2><!-- Leading vs Lagging -->
+     <div class="card-hover rounded-2xl p-8 mb-8 w-full" style="background: white; border: 1px solid #e5e7eb; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+      <h3 class="font-heading text-2xl font-bold mb-6" style="color: #1f2937;">1. Leading vs Lagging Indicators</h3>
+      <div class="grid md:grid-cols-2 gap-6 mb-6 w-full">
+       <div style="background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%); border-left: 4px solid #0284c7; padding: 20px; border-radius: 12px;">
+        <p class="font-semibold mb-2" style="color: #0369a1;">⏩ Leading Indicators (Predictive)</p>
+        <p style="color: #164e63; line-height: 1.8; font-size: 14px;">Show what WILL happen in the future. They help you predict results before they occur. Like checking weather forecasts before going outside.</p>
+       </div>
+       <div style="background: linear-gradient(135deg, #fecaca 0%, #fca5a5 100%); border-left: 4px solid #dc2626; padding: 20px; border-radius: 12px;">
+        <p class="font-semibold mb-2" style="color: #991b1b;">⏱️ Lagging Indicators (Reactive)</p>
+        <p style="color: #7f1d1d; line-height: 1.8; font-size: 14px;">Show what HAS happened. They measure final results. Like checking sales revenue at the end of the month – you already know if you succeeded or failed.</p>
+       </div>
+      </div>
+      <div class="grid md:grid-cols-2 gap-6 w-full">
+       <div class="example-box rounded-lg p-6">
+        <p class="font-semibold mb-4" style="color: #047857;">💼 Real-World Examples</p>
+        <div class="mb-4">
+         <p style="color: #374151; font-weight: 600; margin-bottom: 8px;">🏪 Coffee Shop Scenario:</p>
+         <ul style="color: #374151; font-size: 14px; line-height: 1.8;">
+          <li><strong>Leading:</strong> Customer inquiries about new menu items (+30% this week)</li>
+          <li><strong>Lagging:</strong> Actual sales of new menu items ($500 revenue)</li>
+         </ul>
+        </div>
+        <div>
+         <p style="color: #374151; font-weight: 600; margin-bottom: 8px;">🏢 Tech Company Scenario:</p>
+         <ul style="color: #374151; font-size: 14px; line-height: 1.8;">
+          <li><strong>Leading:</strong> Number of job applications received (200/month)</li>
+          <li><strong>Lagging:</strong> Actual number of new hires (25 employees/month)</li>
+         </ul>
+        </div>
+       </div>
+       <div style="background: #f0fdf4; border-left: 4px solid #10b981; padding: 16px; border-radius: 8px;">
+        <p class="font-semibold mb-3" style="color: #047857;">Why Use Both?</p>
+        <ul style="color: #374151; font-size: 14px; line-height: 1.8;">
+         <li>✓ <strong>Leading:</strong> Helps you take ACTION before problems occur</li>
+         <li>✓ <strong>Lagging:</strong> Confirms if your actions actually worked</li>
+         <li>✓ <strong>Together:</strong> Create a complete performance picture</li>
+        </ul>
+       </div>
+      </div>
+     </div><!-- Quantitative vs Qualitative -->
+     <div class="card-hover rounded-2xl p-8 mb-8 w-full" style="background: white; border: 1px solid #e5e7eb; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+      <h3 class="font-heading text-2xl font-bold mb-6" style="color: #1f2937;">2. Quantitative vs Qualitative KPIs</h3>
+      <div class="grid md:grid-cols-2 gap-6 mb-6 w-full">
+       <div style="background: linear-gradient(135deg, #ddd6fe 0%, #c4b5fd 100%); border-left: 4px solid #7c3aed; padding: 20px; border-radius: 12px;">
+        <p class="font-semibold mb-2" style="color: #5b21b6;">🔢 Quantitative (Numbers)</p>
+        <p style="color: #3f0f5c; line-height: 1.8; font-size: 14px;">Measured with <span class="term-highlight">hard data</span></p>
+        <div class="tooltip">
+         Objective, factual information that can be counted, measured, or calculated with precision. Examples: revenue, customer count, production units.
+        </div> and numbers. Easy to track, compare, and analyze. You can see exact progress. 
+        <p></p>
+       </div>
+       <div style="background: linear-gradient(135deg, #fef3c7 0%, #fcd34d 100%); border-left: 4px solid #f59e0b; padding: 20px; border-radius: 12px;">
+        <p class="font-semibold mb-2" style="color: #92400e;">💭 Qualitative (Descriptions)</p>
+        <p style="color: #451a03; line-height: 1.8; font-size: 14px;">Measured with opinions, feedback, and descriptions. Harder to measure precisely but shows the "how" and "why" behind the numbers. Shows the human side.</p>
+       </div>
+      </div>
+      <table class="comparison-table w-full">
+       <thead>
+        <tr>
+         <th>Aspect</th>
+         <th>Quantitative</th>
+         <th>Qualitative</th>
+        </tr>
+       </thead>
+       <tbody>
+        <tr>
+         <td><strong>Measurement</strong></td>
+         <td>Numbers &amp; metrics</td>
+         <td>Descriptions &amp; feedback</td>
+        </tr>
+        <tr>
+         <td><strong>Examples</strong></td>
+         <td>Revenue, sales growth, error rate, customer count</td>
+         <td>Customer satisfaction, employee morale, brand perception</td>
+        </tr>
+        <tr>
+         <td><strong>Ease of Analysis</strong></td>
+         <td>Easy to compare and trend</td>
+         <td>Requires interpretation</td>
+        </tr>
+        <tr>
+         <td><strong>Best For</strong></td>
+         <td>Financial &amp; operational goals</td>
+         <td>Understanding experiences &amp; feelings</td>
+        </tr>
+        <tr>
+         <td><strong>Example KPI</strong></td>
+         <td>"Revenue: $500,000/quarter"</td>
+         <td>"Customer satisfaction: Very Satisfied 75%"</td>
+        </tr>
+       </tbody>
+      </table>
+     </div><!-- Input vs Output -->
+     <div class="card-hover rounded-2xl p-8 w-full" style="background: white; border: 1px solid #e5e7eb; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+      <h3 class="font-heading text-2xl font-bold mb-6" style="color: #1f2937;">3. Input vs Output KPIs</h3>
+      <div class="grid md:grid-cols-2 gap-6 w-full">
+       <div class="example-box rounded-lg p-6">
+        <p class="font-semibold mb-4" style="color: #047857;">📥 Input KPIs (Resources)</p>
+        <p style="color: #374151; line-height: 1.8; margin-bottom: 12px;">Measure the <strong>resources you put in</strong>. What you invest or spend to make something happen.</p>
+        <p style="color: #374151; font-weight: 600; margin-bottom: 8px;">Examples:</p>
+        <ul style="color: #374151; font-size: 14px; line-height: 1.8;">
+         <li>• Training hours per employee</li>
+         <li>• Budget allocated</li>
+         <li>• Marketing spend</li>
+         <li>• R&amp;D investment</li>
+        </ul>
+       </div>
+       <div style="background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%); border-left: 4px solid #4f46e5; padding: 16px; border-radius: 8px;">
+        <p class="font-semibold mb-4" style="color: #3730a3;">📤 Output KPIs (Results)</p>
+        <p style="color: #374151; line-height: 1.8; margin-bottom: 12px;">Measure the <strong>results you get</strong>. What you actually achieved with those resources.</p>
+        <p style="color: #374151; font-weight: 600; margin-bottom: 8px;">Examples:</p>
+        <ul style="color: #374151; font-size: 14px; line-height: 1.8;">
+         <li>• Skills improvement</li>
+         <li>• Revenue generated</li>
+         <li>• New customers acquired</li>
+         <li>• New products launched</li>
+        </ul>
+       </div>
+      </div>
+      <div class="alignment-diagram w-full">
+       <p class="font-semibold mb-4" style="color: #047857;">🔄 The Input-Output Relationship</p>
+       <div style="display: flex; align-items: center; gap: 20px; flex-wrap: wrap;">
+        <div style="flex: 1; min-width: 150px; text-align: center; padding: 12px; background: white; border-radius: 8px; border: 2px solid #10b981;">
+         <p style="font-weight: 600; color: #047857;">Spend $50,000</p>
+         <p style="font-size: 12px; color: #6b7280;">on marketing</p>
+        </div>
+        <div style="font-size: 24px; color: #10b981;">
+         →
+        </div>
+        <div style="flex: 1; min-width: 150px; text-align: center; padding: 12px; background: white; border-radius: 8px; border: 2px solid #10b981;">
+         <p style="font-weight: 600; color: #047857;">Gain 500 new</p>
+         <p style="font-size: 12px; color: #6b7280;">customers</p>
+        </div>
+       </div>
+       <p style="color: #374151; margin-top: 16px; font-size: 14px;">INPUT (Marketing spend) → OUTPUT (New customers). Both are important to track!</p>
+      </div>
+     </div>
+    </section>
+    <div class="section-divider"></div><!-- SMART Criteria Section -->
+    <section class="mb-12 w-full">
+     <h2 class="font-heading text-3xl font-bold mb-8" style="color: #1f2937;">SMART KPI Criteria</h2>
+     <div class="smart-criteria w-full">
+      <p class="font-semibold mb-6" style="color: #1e40af;">Every good KPI must be SMART. Here's what that means:</p>
+      <div class="smart-item">
+       <div class="smart-letter">
+        S
+       </div>
+       <div style="flex: 1;">
+        <p class="font-semibold" style="color: #1f2937;">Specific</p>
+        <p style="color: #374151; font-size: 14px;">Clear and well-defined. You know exactly what's being measured, not vague or general.</p>
+        <p style="color: #059669; font-size: 13px; margin-top: 4px;">✓ Good: "Increase customer satisfaction by 10%" | ✗ Bad: "Make customers happy"</p>
+       </div>
+      </div>
+      <div class="smart-item">
+       <div class="smart-letter">
+        M
+       </div>
+       <div style="flex: 1;">
+        <p class="font-semibold" style="color: #1f2937;">Measurable</p>
+        <p style="color: #374151; font-size: 14px;">Can be tracked with actual numbers or clear evidence. You can see data to prove it.</p>
+        <p style="color: #059669; font-size: 13px; margin-top: 4px;">✓ Good: "Survey score of 4.5/5 stars" | ✗ Bad: "Customer happiness level"</p>
+       </div>
+      </div>
+      <div class="smart-item">
+       <div class="smart-letter">
+        A
+       </div>
+       <div style="flex: 1;">
+        <p class="font-semibold" style="color: #1f2937;">Achievable</p>
+        <p style="color: #374151; font-size: 14px;">Realistic and possible to reach. Challenging but not impossible with effort.</p>
+        <p style="color: #059669; font-size: 13px; margin-top: 4px;">✓ Good: "Grow sales by 15% this year" | ✗ Bad: "Grow sales by 300% this year"</p>
+       </div>
+      </div>
+      <div class="smart-item">
+       <div class="smart-letter">
+        R
+       </div>
+       <div style="flex: 1;">
+        <p class="font-semibold" style="color: #1f2937;">Relevant</p>
+        <p style="color: #374151; font-size: 14px;">Directly connected to your business goals and strategy. Matters to your success.</p>
+        <p style="color: #059669; font-size: 13px; margin-top: 4px;">✓ Good: "Revenue growth" (for a profit company) | ✗ Bad: "Social media followers" (if not your focus)</p>
+       </div>
+      </div>
+      <div class="smart-item">
+       <div class="smart-letter">
+        T
+       </div>
+       <div style="flex: 1;">
+        <p class="font-semibold" style="color: #1f2937;">Time-bound</p>
+        <p style="color: #374151; font-size: 14px;">Has a clear deadline or time frame. You know when to measure progress and by when to reach the goal.</p>
+        <p style="color: #059669; font-size: 13px; margin-top: 4px;">✓ Good: "Reduce errors by 20% by end of Q2" | ✗ Bad: "Reduce errors eventually"</p>
+       </div>
+      </div>
+     </div><!-- SMART Examples -->
+     <div class="card-hover rounded-2xl p-8 mb-8 w-full" style="background: white; border: 1px solid #e5e7eb; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+      <h3 class="font-heading text-2xl font-bold mb-6" style="color: #1f2937;">SMART KPI Examples by Industry</h3>
+      <div class="grid md:grid-cols-3 gap-6 w-full">
+       <div class="kpi-type-card">
+        <p class="font-semibold mb-4" style="color: #1f2937;">🏪 Retail Store</p>
+        <div style="background: #f0fdf4; padding: 12px; border-radius: 8px; text-align: left; font-size: 14px;">
+         <p style="color: #374151; margin-bottom: 8px;"><strong>KPI:</strong> "Increase same-store sales by 12% by Dec 31, 2024"</p>
+         <ul style="color: #6b7280; font-size: 12px; line-height: 1.6;">
+          <li>S: Specific ✓</li>
+          <li>M: Measurable ✓</li>
+          <li>A: Achievable ✓</li>
+          <li>R: Relevant ✓</li>
+          <li>T: Time-bound ✓</li>
+         </ul>
+        </div>
+       </div>
+       <div class="kpi-type-card">
+        <p class="font-semibold mb-4" style="color: #1f2937;">🏥 Hospital</p>
+        <div style="background: #f0fdf4; padding: 12px; border-radius: 8px; text-align: left; font-size: 14px;">
+         <p style="color: #374151; margin-bottom: 8px;"><strong>KPI:</strong> "Achieve 95% patient satisfaction by June 2024"</p>
+         <ul style="color: #6b7280; font-size: 12px; line-height: 1.6;">
+          <li>S: Specific ✓</li>
+          <li>M: Measurable ✓</li>
+          <li>A: Achievable ✓</li>
+          <li>R: Relevant ✓</li>
+          <li>T: Time-bound ✓</li>
+         </ul>
+        </div>
+       </div>
+       <div class="kpi-type-card">
+        <p class="font-semibold mb-4" style="color: #1f2937;">📱 Tech Company</p>
+        <div style="background: #f0fdf4; padding: 12px; border-radius: 8px; text-align: left; font-size: 14px;">
+         <p style="color: #374151; margin-bottom: 8px;"><strong>KPI:</strong> "Reduce app crash rate to 0.5% by March 2024"</p>
+         <ul style="color: #6b7280; font-size: 12px; line-height: 1.6;">
+          <li>S: Specific ✓</li>
+          <li>M: Measurable ✓</li>
+          <li>A: Achievable ✓</li>
+          <li>R: Relevant ✓</li>
+          <li>T: Time-bound ✓</li>
+         </ul>
+        </div>
+       </div>
+      </div>
+     </div>
+    </section>
+    <div class="section-divider"></div><!-- KPI Selection Criteria Section -->
+    <section class="mb-12 w-full">
+     <h2 class="font-heading text-3xl font-bold mb-8" style="color: #1f2937;">KPI Selection Criteria</h2>
+     <p class="text-lg mb-6" style="color: #6b7280;">When choosing KPIs for your organization, ask these important questions:</p>
+     <div class="selection-checklist w-full">
+      <div class="checklist-item">
+       <div style="width: 24px; height: 24px; background: #e0e7ff; border-radius: 6px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;"><span style="color: #3b82f6; font-weight: bold;">1</span>
+       </div>
+       <div>
+        <p style="font-weight: 600; color: #1f2937;">Aligned with Strategy?</p>
+        <p style="font-size: 13px; color: #6b7280;">Does this KPI directly support the business strategy and goals?</p>
+       </div>
+      </div>
+      <div class="checklist-item">
+       <div style="width: 24px; height: 24px; background: #e0e7ff; border-radius: 6px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;"><span style="color: #3b82f6; font-weight: bold;">2</span>
+       </div>
+       <div>
+        <p style="font-weight: 600; color: #1f2937;">Data Available?</p>
+        <p style="font-size: 13px; color: #6b7280;">Can you actually collect reliable data for this metric?</p>
+       </div>
+      </div>
+      <div class="checklist-item">
+       <div style="width: 24px; height: 24px; background: #e0e7ff; border-radius: 6px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;"><span style="color: #3b82f6; font-weight: bold;">3</span>
+       </div>
+       <div>
+        <p style="font-weight: 600; color: #1f2937;">Controllable?</p>
+        <p style="font-size: 13px; color: #6b7280;">Can the team actually influence this metric through their efforts?</p>
+       </div>
+      </div>
+      <div class="checklist-item">
+       <div style="width: 24px; height: 24px; background: #e0e7ff; border-radius: 6px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;"><span style="color: #3b82f6; font-weight: bold;">4</span>
+       </div>
+       <div>
+        <p style="font-weight: 600; color: #1f2937;">Benchmarkable?</p>
+        <p style="font-size: 13px; color: #6b7280;">Can you compare it to industry standards or past performance?</p>
+       </div>
+      </div>
+      <div class="checklist-item">
+       <div style="width: 24px; height: 24px; background: #e0e7ff; border-radius: 6px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;"><span style="color: #3b82f6; font-weight: bold;">5</span>
+       </div>
+       <div>
+        <p style="font-weight: 600; color: #1f2937;">Cost-Effective?</p>
+        <p style="font-size: 13px; color: #6b7280;">Is it worth the time and money to measure and track?</p>
+       </div>
+      </div>
+      <div class="checklist-item">
+       <div style="width: 24px; height: 24px; background: #e0e7ff; border-radius: 6px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;"><span style="color: #3b82f6; font-weight: bold;">6</span>
+       </div>
+       <div>
+        <p style="font-weight: 600; color: #1f2937;">Clear Target?</p>
+        <p style="font-size: 13px; color: #6b7280;">Does the KPI have a specific target number or goal?</p>
+       </div>
+      </div>
+     </div><!-- Common KPI Mistakes -->
+     <div class="card-hover rounded-2xl p-8 mt-8 w-full" style="background: white; border: 1px solid #e5e7eb; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+      <h3 class="font-heading text-2xl font-bold mb-6" style="color: #1f2937;">⚠️ Common KPI Mistakes to Avoid</h3>
+      <div class="grid md:grid-cols-2 gap-6 w-full">
+       <div style="background: #fee2e2; border-left: 4px solid #dc2626; padding: 16px; border-radius: 8px;">
+        <p style="font-weight: 600; color: #991b1b; margin-bottom: 8px;">❌ Too Many KPIs</p>
+        <p style="color: #7f1d1d; font-size: 14px;">Tracking 50 KPIs dilutes focus. You lose sight of what's important. <strong>Best practice:</strong> 5-10 key KPIs per department</p>
+       </div>
+       <div style="background: #fee2e2; border-left: 4px solid #dc2626; padding: 16px; border-radius: 8px;">
+        <p style="font-weight: 600; color: #991b1b; margin-bottom: 8px;">❌ Vanity Metrics</p>
+        <p style="color: #7f1d1d; font-size: 14px;">Tracking metrics that look good but don't matter. (Like website visitors if they don't buy anything)</p>
+       </div>
+       <div style="background: #fee2e2; border-left: 4px solid #dc2626; padding: 16px; border-radius: 8px;">
+        <p style="font-weight: 600; color: #991b1b; margin-bottom: 8px;">❌ Hard-to-Measure Goals</p>
+        <p style="color: #7f1d1d; font-size: 14px;">KPIs you can't actually measure. You need data. If you can't measure it, don't use it.</p>
+       </div>
+       <div style="background: #fee2e2; border-left: 4px solid #dc2626; padding: 16px; border-radius: 8px;">
+        <p style="font-weight: 600; color: #991b1b; margin-bottom: 8px;">❌ Uncontrollable Metrics</p>
+        <p style="color: #7f1d1d; font-size: 14px;">Using KPIs the team can't influence (like interest rates). People get frustrated when they can't affect the score.</p>
+       </div>
+      </div>
+     </div>
+    </section>
+    <div class="section-divider"></div><!-- Activities Section -->
+    <section class="mb-12 w-full">
+     <h2 class="font-heading text-3xl font-bold mb-8" style="color: #1f2937;">Interactive Activities</h2><!-- Tab Navigation -->
+     <div class="flex gap-4 mb-6 border-b w-full overflow-x-auto" style="border-color: #e5e7eb;"><button class="tab-button active" onclick="switchTab('individual', event)"> 👤 Individual: Design KPIs </button> <button class="tab-button" onclick="switchTab('group', event)"> 👥 Group: KPI Evaluation </button> <button class="tab-button" onclick="switchTab('quiz', event)"> ✍️ Quiz </button>
+     </div><!-- Individual Activity -->
+     <div id="individual-tab" class="tab-content active activity-box rounded-2xl p-8 mb-8 w-full">
+      <div class="flex items-center gap-3 mb-6"><span class="text-3xl">👤</span>
+       <h3 class="font-heading text-2xl font-bold" style="color: #1f2937;">Individual Activity: Design SMART KPIs</h3>
+      </div>
+      <div style="background: #eff6ff; border-left: 4px solid #3b82f6; padding: 16px; border-radius: 8px; margin-bottom: 16px;">
+       <p class="font-semibold mb-3" style="color: #0c4a6e;">📋 Your Task:</p>
+       <p style="color: #164e63; line-height: 1.8;">Choose ONE organization scenario below. Design 5 SMART KPIs that would help achieve their strategic goals. For each KPI, explain why it's SMART and how it connects to the organization's strategy.</p>
+      </div>
+      <div class="grid md:grid-cols-2 gap-4 mb-8 w-full">
+       <div class="border-2 border-blue-200 rounded-lg p-4 cursor-pointer hover:bg-blue-50 transition-all" onclick="selectScenario('ecommerce')">
+        <p class="font-semibold" style="color: #1e40af;">🛍️ E-commerce Store</p>
+        <p style="color: #374151; font-size: 14px;">Goal: Increase online sales by 25% and improve customer retention</p>
+       </div>
+       <div class="border-2 border-blue-200 rounded-lg p-4 cursor-pointer hover:bg-blue-50 transition-all" onclick="selectScenario('manufacturing')">
+        <p class="font-semibold" style="color: #1e40af;">🏭 Manufacturing Company</p>
+        <p style="color: #374151; font-size: 14px;">Goal: Reduce production costs and improve product quality</p>
+       </div>
+       <div class="border-2 border-blue-200 rounded-lg p-4 cursor-pointer hover:bg-blue-50 transition-all" onclick="selectScenario('education')">
+        <p class="font-semibold" style="color: #1e40af;">🎓 Online School</p>
+        <p style="color: #374151; font-size: 14px;">Goal: Improve student learning outcomes and course completion rates</p>
+       </div>
+       <div class="border-2 border-blue-200 rounded-lg p-4 cursor-pointer hover:bg-blue-50 transition-all" onclick="selectScenario('fitness')">
+        <p class="font-semibold" style="color: #1e40af;">💪 Fitness Center</p>
+        <p style="color: #374151; font-size: 14px;">Goal: Increase member retention and attract new members</p>
+       </div>
+      </div>
+      <form id="individual-form" style="display: none;" class="w-full">
+       <div class="mb-6 w-full"><label class="block font-semibold mb-2" style="color: #1f2937;">Your Name:</label> <input type="text" id="individual-name" placeholder="Enter your name" class="w-full px-4 py-3 rounded-lg border" style="border-color: #e5e7eb; color: #374151;" required>
+       </div>
+       <div class="mb-6 w-full"><label class="block font-semibold mb-2" style="color: #1f2937;">Your Email:</label> <input type="email" id="individual-email" placeholder="Enter your email" class="w-full px-4 py-3 rounded-lg border" style="border-color: #e5e7eb; color: #374151;" required>
+       </div>
+       <div class="mb-6 w-full"><label class="block font-semibold mb-2" style="color: #1f2937;">Selected Organization:</label>
+        <p id="selected-scenario-display" class="px-4 py-3 rounded-lg" style="background: #f3f4f6; color: #374151;"></p>
+       </div>
+       <div class="mb-6 w-full"><label class="block font-semibold mb-2" style="color: #1f2937;">Design 5 SMART KPIs (with explanations):</label> <textarea id="individual-kpis" placeholder="Format:
+1. KPI Name (S/M/A/R/T explanation): Why it's important
+
+Example:
+1. Increase online sales by 25% in Q4 2024 (SMART: specific percentage, measurable in revenue, achievable with Q3 growth, relevant to business goal, deadline is Q4)" class="w-full px-4 py-3 rounded-lg border" style="border-color: #e5e7eb; color: #374151; min-height: 200px; font-family: monospace; font-size: 13px;" required></textarea>
+       </div><button type="submit" class="w-full px-6 py-3 rounded-lg font-semibold text-white transition-all" style="background: linear-gradient(135deg, #3b82f6, #1e40af);" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'"> Submit Individual Activity </button>
+      </form>
+     </div><!-- Group Activity -->
+     <div id="group-tab" class="tab-content activity-box rounded-2xl p-8 mb-8 w-full" style="display: none;">
+      <div class="flex items-center gap-3 mb-6"><span class="text-3xl">👥</span>
+       <h3 class="font-heading text-2xl font-bold" style="color: #1f2937;">Group Activity: Evaluate and Compare KPIs</h3>
+      </div>
+      <div style="background: #eff6ff; border-left: 4px solid #3b82f6; padding: 16px; border-radius: 8px; margin-bottom: 16px;">
+       <p class="font-semibold mb-3" style="color: #0c4a6e;">👥 Your Task (3-4 students):</p>
+       <p style="color: #164e63; line-height: 1.8;">Your group is consulting for a tech startup that just received investment. They have created 15 potential KPIs but can only realistically track 8. Your job is to evaluate all 15 KPIs using the selection criteria and recommend which 8 are best. Provide reasoning for each decision.</p>
+      </div>
+      <div style="background: #f0fdf4; border-left: 4px solid #10b981; padding: 16px; border-radius: 8px; margin-bottom: 16px;">
+       <p class="font-semibold mb-3" style="color: #047857;">📊 15 Proposed KPIs (Select 8):</p>
+       <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 12px; font-size: 14px;">
+        <div style="padding: 12px; background: white; border-radius: 6px; border: 1px solid #d1fae5;"><input type="checkbox" id="kpi1" onchange="updateKPICount()"> <label for="kpi1" style="margin-left: 6px;">1. Monthly revenue growth %</label>
+        </div>
+        <div style="padding: 12px; background: white; border-radius: 6px; border: 1px solid #d1fae5;"><input type="checkbox" id="kpi2" onchange="updateKPICount()"> <label for="kpi2" style="margin-left: 6px;">2. Customer satisfaction (NPS)</label>
+        </div>
+        <div style="padding: 12px; background: white; border-radius: 6px; border: 1px solid #d1fae5;"><input type="checkbox" id="kpi3" onchange="updateKPICount()"> <label for="kpi3" style="margin-left: 6px;">3. Stock market price</label>
+        </div>
+        <div style="padding: 12px; background: white; border-radius: 6px; border: 1px solid #d1fae5;"><input type="checkbox" id="kpi4" onchange="updateKPICount()"> <label for="kpi4" style="margin-left: 6px;">4. Customer acquisition cost</label>
+        </div>
+        <div style="padding: 12px; background: white; border-radius: 6px; border: 1px solid #d1fae5;"><input type="checkbox" id="kpi5" onchange="updateKPICount()"> <label for="kpi5" style="margin-left: 6px;">5. Employee satisfaction</label>
+        </div>
+        <div style="padding: 12px; background: white; border-radius: 6px; border: 1px solid #d1fae5;"><input type="checkbox" id="kpi6" onchange="updateKPICount()"> <label for="kpi6" style="margin-left: 6px;">6. Product bug reports</label>
+        </div>
+        <div style="padding: 12px; background: white; border-radius: 6px; border: 1px solid #d1fae5;"><input type="checkbox" id="kpi7" onchange="updateKPICount()"> <label for="kpi7" style="margin-left: 6px;">7. CEO's opinion on growth</label>
+        </div>
+        <div style="padding: 12px; background: white; border-radius: 6px; border: 1px solid #d1fae5;"><input type="checkbox" id="kpi8" onchange="updateKPICount()"> <label for="kpi8" style="margin-left: 6px;">8. Customer churn rate</label>
+        </div>
+        <div style="padding: 12px; background: white; border-radius: 6px; border: 1px solid #d1fae5;"><input type="checkbox" id="kpi9" onchange="updateKPICount()"> <label for="kpi9" style="margin-left: 6px;">9. Social media followers</label>
+        </div>
+        <div style="padding: 12px; background: white; border-radius: 6px; border: 1px solid #d1fae5;"><input type="checkbox" id="kpi10" onchange="updateKPICount()"> <label for="kpi10" style="margin-left: 6px;">10. Feature development speed</label>
+        </div>
+        <div style="padding: 12px; background: white; border-radius: 6px; border: 1px solid #d1fae5;"><input type="checkbox" id="kpi11" onchange="updateKPICount()"> <label for="kpi11" style="margin-left: 6px;">11. App uptime %</label>
+        </div>
+        <div style="padding: 12px; background: white; border-radius: 6px; border: 1px solid #d1fae5;"><input type="checkbox" id="kpi12" onchange="updateKPICount()"> <label for="kpi12" style="margin-left: 6px;">12. Market share %</label>
+        </div>
+        <div style="padding: 12px; background: white; border-radius: 6px; border: 1px solid #d1fae5;"><input type="checkbox" id="kpi13" onchange="updateKPICount()"> <label for="kpi13" style="margin-left: 6px;">13. Competitor actions</label>
+        </div>
+        <div style="padding: 12px; background: white; border-radius: 6px; border: 1px solid #d1fae5;"><input type="checkbox" id="kpi14" onchange="updateKPICount()"> <label for="kpi14" style="margin-left: 6px;">14. User onboarding time</label>
+        </div>
+        <div style="padding: 12px; background: white; border-radius: 6px; border: 1px solid #d1fae5;"><input type="checkbox" id="kpi15" onchange="updateKPICount()"> <label for="kpi15" style="margin-left: 6px;">15. Press mentions</label>
+        </div>
+       </div>
+       <p id="kpi-count" style="color: #047857; margin-top: 12px; font-weight: 600;">Selected: 0/8 KPIs</p>
+      </div>
+      <form id="group-form" class="w-full">
+       <div class="mb-6 w-full"><label class="block font-semibold mb-2" style="color: #1f2937;">Group Members' Names:</label> <input type="text" id="group-names" placeholder="Name 1, Name 2, Name 3" class="w-full px-4 py-3 rounded-lg border" style="border-color: #e5e7eb; color: #374151;" required>
+       </div>
+       <div class="mb-6 w-full"><label class="block font-semibold mb-2" style="color: #1f2937;">Reasoning for Your Selection:</label> <textarea id="group-reasoning" placeholder="Explain which 8 KPIs you selected and why. Consider: alignment with strategy, data availability, controllability, cost-effectiveness, and whether they avoid common mistakes like vanity metrics." class="w-full px-4 py-3 rounded-lg border" style="border-color: #e5e7eb; color: #374151; min-height: 150px;" required></textarea>
+       </div><button type="submit" class="w-full px-6 py-3 rounded-lg font-semibold text-white transition-all" style="background: linear-gradient(135deg, #3b82f6, #1e40af);" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'"> Submit Group Activity </button>
+      </form>
+     </div><!-- Quiz -->
+     <div id="quiz-tab" class="tab-content rounded-2xl p-8 mb-8 w-full" style="background: white; border: 1px solid #e5e7eb;">
+      <div class="flex items-center gap-3 mb-6"><span class="text-3xl">✍️</span>
+       <h3 class="font-heading text-2xl font-bold" style="color: #1f2937;">Week 3 Knowledge Check Quiz</h3>
+      </div>
+      <p class="mb-8" style="color: #6b7280;">Test your understanding of KPI types, characteristics, and selection. This is for self-assessment.</p>
+      <form id="quiz-form" class="space-y-8 w-full"><!-- Q1 -->
+       <div class="rounded-lg p-6 w-full" style="background: #f9fafb; border: 1px solid #e5e7eb;">
+        <p class="font-semibold mb-4" style="color: #1f2937;">1. What is the main difference between leading and lagging indicators?</p>
+        <div class="space-y-3"><label class="flex items-start gap-3 p-3 rounded-lg hover:bg-white cursor-pointer transition-all"> <input type="radio" name="q1" value="a" class="mt-1" required> <span style="color: #374151;">A) Leading shows future predictions; lagging shows past results</span> </label> <label class="flex items-start gap-3 p-3 rounded-lg hover:bg-white cursor-pointer transition-all"> <input type="radio" name="q1" value="b" class="mt-1"> <span style="color: #374151;">B) They are the same thing with different names</span> </label> <label class="flex items-start gap-3 p-3 rounded-lg hover:bg-white cursor-pointer transition-all"> <input type="radio" name="q1" value="c" class="mt-1"> <span style="color: #374151;">C) Leading is for finance; lagging is for operations</span> </label>
+        </div>
+       </div><!-- Q2 -->
+       <div class="rounded-lg p-6 w-full" style="background: #f9fafb; border: 1px solid #e5e7eb;">
+        <p class="font-semibold mb-4" style="color: #1f2937;">2. Which KPI is SMART?</p>
+        <div class="space-y-3"><label class="flex items-start gap-3 p-3 rounded-lg hover:bg-white cursor-pointer transition-all"> <input type="radio" name="q2" value="a" class="mt-1" required> <span style="color: #374151;">A) "Increase customer satisfaction"</span> </label> <label class="flex items-start gap-3 p-3 rounded-lg hover:bg-white cursor-pointer transition-all"> <input type="radio" name="q2" value="b" class="mt-1"> <span style="color: #374151;">B) "Increase customer satisfaction from 3.5 to 4.2 stars by June 30, 2024"</span> </label> <label class="flex items-start gap-3 p-3 rounded-lg hover:bg-white cursor-pointer transition-all"> <input type="radio" name="q2" value="c" class="mt-1"> <span style="color: #374151;">C) "Make customers very happy"</span> </label>
+        </div>
+       </div><!-- Q3 -->
+       <div class="rounded-lg p-6 w-full" style="background: #f9fafb; border: 1px solid #e5e7eb;">
+        <p class="font-semibold mb-4" style="color: #1f2937;">3. What is a "vanity metric"?</p>
+        <div class="space-y-3"><label class="flex items-start gap-3 p-3 rounded-lg hover:bg-white cursor-pointer transition-all"> <input type="radio" name="q3" value="a" class="mt-1" required> <span style="color: #374151;">A) A metric that looks good but doesn't actually indicate business success</span> </label> <label class="flex items-start gap-3 p-3 rounded-lg hover:bg-white cursor-pointer transition-all"> <input type="radio" name="q3" value="b" class="mt-1"> <span style="color: #374151;">B) The most important metric a company can track</span> </label> <label class="flex items-start gap-3 p-3 rounded-lg hover:bg-white cursor-pointer transition-all"> <input type="radio" name="q3" value="c" class="mt-1"> <span style="color: #374151;">C) A metric used in luxury companies only</span> </label>
+        </div>
+       </div><!-- Q4 -->
+       <div class="rounded-lg p-6 w-full" style="background: #f9fafb; border: 1px solid #e5e7eb;">
+        <p class="font-semibold mb-4" style="color: #1f2937;">4. What does "Input KPI" measure?</p>
+        <div class="space-y-3"><label class="flex items-start gap-3 p-3 rounded-lg hover:bg-white cursor-pointer transition-all"> <input type="radio" name="q4" value="a" class="mt-1" required> <span style="color: #374151;">A) The resources and effort put into a project</span> </label> <label class="flex items-start gap-3 p-3 rounded-lg hover:bg-white cursor-pointer transition-all"> <input type="radio" name="q4" value="b" class="mt-1"> <span style="color: #374151;">B) The final results achieved</span> </label> <label class="flex items-start gap-3 p-3 rounded-lg hover:bg-white cursor-pointer transition-all"> <input type="radio" name="q4" value="c" class="mt-1"> <span style="color: #374151;">C) How employees feel about their work</span> </label>
+        </div>
+       </div><!-- Q5 -->
+       <div class="rounded-lg p-6 w-full" style="background: #f9fafb; border: 1px solid #e5e7eb;">
+        <p class="font-semibold mb-4" style="color: #1f2937;">5. Which criterion is MOST important when selecting KPIs?</p>
+        <div class="space-y-3"><label class="flex items-start gap-3 p-3 rounded-lg hover:bg-white cursor-pointer transition-all"> <input type="radio" name="q5" value="a" class="mt-1" required> <span style="color: #374151;">A) Alignment with organizational strategy and goals</span> </label> <label class="flex items-start gap-3 p-3 rounded-lg hover:bg-white cursor-pointer transition-all"> <input type="radio" name="q5" value="b" class="mt-1"> <span style="color: #374151;">B) How easy the KPI is to pronounce</span> </label> <label class="flex items-start gap-3 p-3 rounded-lg hover:bg-white cursor-pointer transition-all"> <input type="radio" name="q5" value="c" class="mt-1"> <span style="color: #374151;">C) How many KPIs other companies use</span> </label>
+        </div>
+       </div><!-- Q6 -->
+       <div class="rounded-lg p-6 w-full" style="background: #f9fafb; border: 1px solid #e5e7eb;">
+        <p class="font-semibold mb-4" style="color: #1f2937;">6. A retail store has this KPI: "Traffic light in front of store turned green 45 times today." Is this a good KPI?</p>
+        <div class="space-y-3"><label class="flex items-start gap-3 p-3 rounded-lg hover:bg-white cursor-pointer transition-all"> <input type="radio" name="q6" value="a" class="mt-1" required> <span style="color: #374151;">A) No, it's not controllable and doesn't relate to business goals</span> </label> <label class="flex items-start gap-3 p-3 rounded-lg hover:bg-white cursor-pointer transition-all"> <input type="radio" name="q6" value="b" class="mt-1"> <span style="color: #374151;">B) Yes, it measures foot traffic</span> </label> <label class="flex items-start gap-3 p-3 rounded-lg hover:bg-white cursor-pointer transition-all"> <input type="radio" name="q6" value="c" class="mt-1"> <span style="color: #374151;">C) Maybe, depends on the season</span> </label>
+        </div>
+       </div><button type="submit" class="w-full px-6 py-3 rounded-lg font-semibold text-white transition-all" style="background: linear-gradient(135deg, #3b82f6, #1e40af);"> Submit Quiz &amp; Check Answers </button>
+      </form>
+      <div id="quiz-results" style="display: none; margin-top: 24px; padding: 24px; border-radius: 12px; background: #f0fdf4; border: 2px solid #10b981;">
+       <div class="flex items-center gap-3 mb-4"><span class="text-3xl">✅</span>
+        <p class="font-heading text-xl font-bold" style="color: #047857;">Quiz Complete!</p>
+       </div>
+       <p id="quiz-score" style="color: #374151; margin-bottom: 16px;"></p>
+       <div id="quiz-feedback" style="color: #374151; line-height: 1.8;"></div>
+      </div>
+     </div>
+    </section><!-- Key Takeaways -->
+    <section class="mb-12 w-full">
+     <div class="rounded-2xl p-8 w-full" style="background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%); border: 2px solid #3b82f6;">
+      <div class="flex items-start gap-4"><span class="text-3xl">💡</span>
+       <div class="flex-1">
+        <h3 class="font-heading text-2xl font-bold mb-4" style="color: #1e3a8a;">Key Takeaways</h3>
+        <ul class="space-y-3" style="color: #1e40af;">
+         <li class="flex gap-2"><span>✓</span> <span><strong>KPI Types Matter:</strong> Leading (predictions) vs Lagging (results), Quantitative (numbers) vs Qualitative (descriptions), Input (resources) vs Output (results)</span></li>
+         <li class="flex gap-2"><span>✓</span> <span><strong>SMART is Essential:</strong> Every KPI must be Specific, Measurable, Achievable, Relevant, and Time-bound</span></li>
+         <li class="flex gap-2"><span>✓</span> <span><strong>Alignment is Critical:</strong> KPIs must directly support your organizational strategy and goals</span></li>
+         <li class="flex gap-2"><span>✓</span> <span><strong>Quality &gt; Quantity:</strong> 5-10 good KPIs are better than 50 mediocre ones (avoid overload)</span></li>
+         <li class="flex gap-2"><span>✓</span> <span><strong>Avoid Common Traps:</strong> Don't use vanity metrics, uncontrollable measures, or hard-to-measure goals</span></li>
+        </ul>
+       </div>
+      </div>
+     </div>
+    </section><!-- Footer -->
+    <footer class="border-t pt-8 w-full" style="border-color: #e5e7eb; color: #6b7280; text-align: center;">
+     <p>DM104 - Evaluation of Business Performance | Week 3 Interactive Module</p>
+     <p style="margin-top: 8px;">Instructor: MKDB | Lyceum de San Pablo</p>
+     <p style="margin-top: 16px; font-size: 12px;">© 2026 All Rights Reserved</p>
+    </footer>
+   </main>
+  </div>
+  <script>
+    const defaultConfig = {
+      header_title: 'Week 3: KPIs - Types, Characteristics & Selection',
+      course_code: 'DM104',
+      instructor_name: 'MKDB'
+    };
+
+    let config = { ...defaultConfig };
+    let selectedScenario = null;
+    let currentRecordCount = 0;
+
+    const dataHandler = {
+      onDataChanged(data) {
+        currentRecordCount = data.length;
+        console.log('Data updated:', data);
+      }
+    };
+
+    async function initSDK() {
+      if (window.dataSdk) {
+        const result = await window.dataSdk.init(dataHandler);
+        if (!result.isOk) {
+          console.error('Failed to initialize Data SDK');
+        }
+      }
+
+      if (window.elementSdk) {
+        window.elementSdk.init({
+          defaultConfig,
+          onConfigChange,
+          mapToCapabilities,
+          mapToEditPanelValues
+        });
+      }
+    }
+
+    async function onConfigChange(newConfig) {
+      config = { ...config, ...newConfig };
+      const titleEl = document.getElementById('module-title');
+      if (titleEl) titleEl.textContent = config.header_title || defaultConfig.header_title;
+    }
+
+    function mapToCapabilities(config) {
+      return {
+        recolorables: [],
+        borderables: [],
+        fontEditable: undefined,
+        fontSizeable: undefined
+      };
+    }
+
+    function mapToEditPanelValues(config) {
+      return new Map([
+        ['header_title', config.header_title || defaultConfig.header_title],
+        ['course_code', config.course_code || defaultConfig.course_code],
+        ['instructor_name', config.instructor_name || defaultConfig.instructor_name]
+      ]);
+    }
+
+    function switchTab(tabName, event) {
+      if (event) event.preventDefault();
+      
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.tab-button').forEach(el => el.classList.remove('active'));
+      
+      const activeTab = document.getElementById(tabName + '-tab');
+      const activeBtn = event?.target;
+      
+      if (activeTab) activeTab.classList.add('active');
+      if (activeBtn) activeBtn.classList.add('active');
+    }
+
+    function selectScenario(scenario) {
+      selectedScenario = scenario;
+      const scenarioNames = {
+        'ecommerce': '🛍️ E-commerce Store',
+        'manufacturing': '🏭 Manufacturing Company',
+        'education': '🎓 Online School',
+        'fitness': '💪 Fitness Center'
+      };
+      document.getElementById('selected-scenario-display').textContent = scenarioNames[scenario];
+      document.getElementById('individual-form').style.display = 'block';
+    }
+
+    function updateKPICount() {
+      let count = 0;
+      for (let i = 1; i <= 15; i++) {
+        if (document.getElementById(`kpi${i}`)?.checked) count++;
+      }
+      document.getElementById('kpi-count').textContent = `Selected: ${count}/8 KPIs`;
+    }
+
+    document.getElementById('individual-form')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = document.getElementById('individual-name').value;
+      const email = document.getElementById('individual-email').value;
+      const kpis = document.getElementById('individual-kpis').value;
+
+      if (window.dataSdk) {
+        const result = await window.dataSdk.create({
+          student_name: name,
+          email: email,
+          activity_type: 'individual_kpi_design',
+          responses: kpis,
+          completed: true,
+          timestamp: new Date().toISOString()
+        });
+
+        if (result.isOk) {
+          showToast('✅ KPI design submitted successfully!');
+          document.getElementById('individual-form').reset();
+          setTimeout(() => switchTab('group', null), 1500);
+        } else {
+          showToast('⚠️ Error submitting. Please try again.');
+        }
+      }
+    });
+
+    document.getElementById('group-form')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const names = document.getElementById('group-names').value;
+      const reasoning = document.getElementById('group-reasoning').value;
+
+      const selectedKPIs = [];
+      for (let i = 1; i <= 15; i++) {
+        if (document.getElementById(`kpi${i}`)?.checked) selectedKPIs.push(i);
+      }
+
+      if (selectedKPIs.length !== 8) {
+        showToast('⚠️ Please select exactly 8 KPIs');
+        return;
+      }
+
+      if (window.dataSdk) {
+        const result = await window.dataSdk.create({
+          student_name: names,
+          email: 'group@kpi.activity',
+          activity_type: 'group_kpi_evaluation',
+          responses: `Selected KPIs: ${selectedKPIs.join(', ')}\n\nReasoning: ${reasoning}`,
+          completed: true,
+          timestamp: new Date().toISOString()
+        });
+
+        if (result.isOk) {
+          showToast('✅ Group activity submitted successfully!');
+          document.getElementById('group-form').reset();
+        } else {
+          showToast('⚠️ Error submitting. Please try again.');
+        }
+      }
+    });
+
+    document.getElementById('quiz-form')?.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const answers = {
+        q1: document.querySelector('input[name="q1"]:checked')?.value,
+        q2: document.querySelector('input[name="q2"]:checked')?.value,
+        q3: document.querySelector('input[name="q3"]:checked')?.value,
+        q4: document.querySelector('input[name="q4"]:checked')?.value,
+        q5: document.querySelector('input[name="q5"]:checked')?.value,
+        q6: document.querySelector('input[name="q6"]:checked')?.value
+      };
+
+      const correctAnswers = { q1: 'a', q2: 'b', q3: 'a', q4: 'a', q5: 'a', q6: 'a' };
+      let score = 0;
+
+      Object.keys(correctAnswers).forEach(q => {
+        if (answers[q] === correctAnswers[q]) score++;
+      });
+
+      const percentage = (score / 6) * 100;
+
+      document.getElementById('quiz-form').style.display = 'none';
+      document.getElementById('quiz-results').style.display = 'block';
+      document.getElementById('quiz-score').textContent = `Score: ${score}/6 (${Math.round(percentage)}%)`;
+
+      let feedback = '';
+      if (score === 6) {
+        feedback = '🌟 Perfect score! You\'ve mastered KPI selection and design!';
+      } else if (score >= 5) {
+        feedback = '✨ Excellent! You have a strong understanding of KPI concepts.';
+      } else if (score >= 4) {
+        feedback = '📚 Good effort! Review the KPI types and SMART criteria sections.';
+      } else if (score >= 3) {
+        feedback = '👍 You\'re getting there! Study the selection criteria and common mistakes.';
+      } else {
+        feedback = '📖 Keep learning! Review all concept sections and try again.';
+      }
+
+      document.getElementById('quiz-feedback').innerHTML = feedback;
+    });
+
+    function showToast(message) {
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.textContent = message;
+      document.body.appendChild(toast);
+
+      setTimeout(() => {
+        toast.remove();
+      }, 3000);
+    }
+
+    initSDK();
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9c77cbbdc0b26e8a',t:'MTc3MDAxNTQ2Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

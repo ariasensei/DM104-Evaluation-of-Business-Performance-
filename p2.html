@@ -1,0 +1,621 @@
+<!doctype html>
+<html lang="en" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DM104 Week 1 - Performance Measurement</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="/_sdk/data_sdk.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&amp;family=Lato:wght@400;500;700&amp;display=swap" rel="stylesheet">
+  <style>
+    body {
+      box-sizing: border-box;
+    }
+    html, body, #app-wrapper {
+      height: 100%;
+    }
+    .font-heading {
+      font-family: 'Merriweather', Georgia, serif;
+    }
+    .font-body {
+      font-family: 'Lato', system-ui, sans-serif;
+    }
+    .term-highlight {
+      position: relative;
+      cursor: help;
+      padding: 2px 6px;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+    }
+    .term-highlight:hover {
+      background-color: rgba(251, 146, 60, 0.2);
+      transform: scale(1.02);
+    }
+    .tooltip {
+      display: none;
+      position: absolute;
+      background: linear-gradient(135deg, #1f2937, #111827);
+      color: #f3f4f6;
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      z-index: 50;
+      border-left: 3px solid #fb923c;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+      max-width: 280px;
+      line-height: 1.5;
+    }
+    .term-highlight:hover .tooltip {
+      display: block;
+      bottom: 120%;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    .animate-slide-in {
+      animation: slideIn 0.6s ease-out;
+    }
+    .section-divider {
+      height: 3px;
+      background: linear-gradient(90deg, #fb923c, #f97316, transparent);
+      margin: 2rem 0;
+    }
+    .card-hover {
+      transition: all 0.3s ease;
+    }
+    .card-hover:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 15px 40px rgba(249, 115, 22, 0.15);
+    }
+    .example-box {
+      border-left: 4px solid #10b981;
+      background: rgba(16, 185, 129, 0.05);
+    }
+    .activity-box {
+      border-left: 4px solid #3b82f6;
+      background: rgba(59, 130, 246, 0.05);
+    }
+    .group-activity-box {
+      border-left: 4px solid #8b5cf6;
+      background: rgba(139, 92, 246, 0.05);
+    }
+    .loading-spinner {
+      border: 3px solid rgba(249, 115, 22, 0.2);
+      border-top-color: #fb923c;
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #10b981;
+      color: white;
+      padding: 14px 20px;
+      border-radius: 8px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      z-index: 100;
+      animation: slideIn 0.3s ease-out;
+    }
+  </style>
+  <style>@view-transition { navigation: auto; }</style>
+ </head>
+ <body class="h-full font-body">
+  <div id="app-wrapper" class="w-full h-full overflow-auto" style="background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);"><!-- Navigation Bar -->
+   <nav class="sticky top-0 z-40" style="background: white; border-bottom: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+     <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background: linear-gradient(135deg, #fb923c, #f97316);">
+       <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+       </svg>
+      </div>
+      <div>
+       <p class="text-xs font-semibold text-gray-500" id="course-label">DM104</p>
+       <p class="text-sm font-bold text-gray-900" id="module-title">Week 1: Performance Measurement</p>
+      </div>
+     </div>
+     <div class="flex items-center gap-2" style="color: #6b7280;"><span class="text-sm">📊 Interactive Module</span>
+     </div>
+    </div>
+   </nav>
+   <main class="max-w-6xl mx-auto px-6 py-12"><!-- Learning Objectives -->
+    <section class="mb-12 animate-slide-in">
+     <div class="rounded-2xl p-8" style="background: white; border: 1px solid #e5e7eb; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+      <div class="flex items-start gap-4">
+       <div class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style="background: linear-gradient(135deg, #fb923c, #f97316);">
+        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+       </div>
+       <div class="flex-1">
+        <h2 class="font-heading text-2xl font-bold mb-4" style="color: #1f2937;">Learning Objectives</h2>
+        <p class="mb-4" style="color: #6b7280;">By the end of this week, you'll be able to:</p>
+        <ul class="space-y-2">
+         <li class="flex gap-3" style="color: #374151;"><span style="color: #fb923c;">✓</span> <span><strong>Understand</strong> why organizations measure business performance</span></li>
+         <li class="flex gap-3" style="color: #374151;"><span style="color: #fb923c;">✓</span> <span><strong>Explain</strong> how performance measurement connects to business strategy</span></li>
+         <li class="flex gap-3" style="color: #374151;"><span style="color: #fb923c;">✓</span> <span><strong>Identify</strong> the role of Information Systems (IS) and analytics in performance measurement</span></li>
+        </ul>
+       </div>
+      </div>
+     </div>
+    </section><!-- Core Concepts -->
+    <section class="mb-12">
+     <h2 class="font-heading text-3xl font-bold mb-8" style="color: #1f2937;">Core Concepts Explained</h2><!-- Performance Measurement Card -->
+     <div class="card-hover rounded-2xl p-8 mb-8" style="background: white; border: 1px solid #e5e7eb; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+      <div class="flex items-center gap-3 mb-6"><span class="w-10 h-10 rounded-lg flex items-center justify-center" style="background: #dcfce7; color: #10b981; font-weight: bold;">1</span>
+       <h3 class="font-heading text-2xl font-bold" style="color: #1f2937;">What is Performance Measurement?</h3>
+      </div>
+      <div class="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-6 mb-6 border-l-4 border-green-500">
+       <p class="font-semibold mb-2" style="color: #047857;">Simple Definition:</p>
+       <p style="color: #365a40; line-height: 1.8;"><strong>Performance measurement</strong> is the process of tracking and evaluating how well a business is doing at achieving its goals. It's like keeping score in a game – you need to know if you're winning, losing, or tied!</p>
+      </div>
+      <div class="grid md:grid-cols-2 gap-6">
+       <div class="example-box rounded-lg p-6">
+        <p class="font-semibold mb-3" style="color: #047857;">🏪 Real-World Example</p>
+        <p style="color: #374151; line-height: 1.6;">A coffee shop manager tracks:<br>
+          • <strong>Daily sales revenue</strong> (target: $1,500/day)<br>
+          • <strong>Customer satisfaction</strong> (target: 4.5/5 stars)<br>
+          • <strong>Wait time</strong> (target: under 5 minutes)<br><br>
+          These measurements show if the business is operating well.</p>
+       </div>
+       <div class="bg-blue-50 rounded-lg p-6 border-l-4 border-blue-500">
+        <p class="font-semibold mb-3" style="color: #1e40af;">Why It Matters:</p>
+        <ul class="space-y-2" style="color: #374151;">
+         <li>✓ Know what's working and what isn't</li>
+         <li>✓ Make better business decisions</li>
+         <li>✓ Set clear goals for teams</li>
+         <li>✓ Track progress over time</li>
+         <li>✓ Identify problems early</li>
+        </ul>
+       </div>
+      </div>
+     </div><!-- Strategy Connection Card -->
+     <div class="card-hover rounded-2xl p-8 mb-8" style="background: white; border: 1px solid #e5e7eb; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+      <div class="flex items-center gap-3 mb-6"><span class="w-10 h-10 rounded-lg flex items-center justify-center" style="background: #dbeafe; color: #0284c7; font-weight: bold;">2</span>
+       <h3 class="font-heading text-2xl font-bold" style="color: #1f2937;">Strategy &amp; Performance Measurement</h3>
+      </div>
+      <div class="bg-gradient-to-r from-blue-50 to-cyan-50 rounded-xl p-6 mb-6 border-l-4 border-blue-500">
+       <p class="font-semibold mb-2" style="color: #0369a1;">Connection:</p>
+       <p style="color: #164e63; line-height: 1.8;">Your <strong>business strategy</strong> is your big plan for success. <strong>Performance measurement</strong> checks if your plan is working. They work together like a map and a GPS – the map is your strategy, and performance measurement is the GPS telling you if you're on the right route.</p>
+      </div>
+      <div class="grid md:grid-cols-2 gap-6">
+       <div class="example-box rounded-lg p-6">
+        <p class="font-semibold mb-3" style="color: #047857;">🏥 Healthcare Example</p>
+        <p style="color: #374151; line-height: 1.6;"><strong>Strategy:</strong> "Provide the best patient care in the city"<br><br><strong>Performance measures:</strong><br>
+          • Patient recovery time<br>
+          • Patient satisfaction scores<br>
+          • Doctor availability<br>
+          • Treatment success rates<br><br>
+          These show if they're actually achieving their strategy.</p>
+       </div>
+       <div class="bg-purple-50 rounded-lg p-6 border-l-4 border-purple-500">
+        <p class="font-semibold mb-3" style="color: #6b21a8;">The Connection Flow:</p>
+        <div style="color: #374151; font-size: 14px;">
+         <div class="mb-3">
+          📍 <strong>Strategy:</strong> What we want to achieve
+         </div>
+         <div class="mb-3">
+          ↓
+         </div>
+         <div class="mb-3">
+          📊 <strong>Measures:</strong> Specific things to track
+         </div>
+         <div class="mb-3">
+          ↓
+         </div>
+         <div class="mb-3">
+          📈 <strong>Data:</strong> Collect the numbers
+         </div>
+         <div class="mb-3">
+          ↓
+         </div>
+         <div>
+          ✅ <strong>Decision:</strong> Adjust if needed
+         </div>
+        </div>
+       </div>
+      </div>
+     </div><!-- IS & Analytics Card -->
+     <div class="card-hover rounded-2xl p-8" style="background: white; border: 1px solid #e5e7eb; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+      <div class="flex items-center gap-3 mb-6"><span class="w-10 h-10 rounded-lg flex items-center justify-center" style="background: #fce7f3; color: #ec4899; font-weight: bold;">3</span>
+       <h3 class="font-heading text-2xl font-bold" style="color: #1f2937;">Role of Information Systems &amp; Analytics</h3>
+      </div>
+      <div class="bg-gradient-to-r from-pink-50 to-rose-50 rounded-xl p-6 mb-6 border-l-4 border-pink-500">
+       <p class="font-semibold mb-2" style="color: #be185d;">What are they?</p>
+       <p style="color: #831843; line-height: 1.8;"><strong>Information Systems (IS):</strong> The computer systems that collect and store business data<br><br><strong>Analytics:</strong> The tools and techniques to analyze that data and find useful insights</p>
+      </div>
+      <div class="grid md:grid-cols-3 gap-6">
+       <div class="example-box rounded-lg p-6">
+        <p class="font-semibold mb-3" style="color: #047857;">📱 Social Media Platform</p>
+        <p style="color: #374151; text-sm; line-height: 1.6;"><strong>IS:</strong> Servers that store user posts, likes, shares<br><br><strong>Analytics:</strong> Tools showing:<br>
+          • Most trending topics<br>
+          • User engagement rates<br>
+          • Peak usage times<br><br>
+          These help the platform make better decisions about features.</p>
+       </div>
+       <div class="example-box rounded-lg p-6">
+        <p class="font-semibold mb-3" style="color: #047857;">🛒 E-commerce Store</p>
+        <p style="color: #374151; text-sm; line-height: 1.6;"><strong>IS:</strong> Website database tracking purchases, browsing<br><br><strong>Analytics:</strong> Reports on:<br>
+          • Best-selling products<br>
+          • Customer buying patterns<br>
+          • Conversion rates<br><br>
+          Helps optimize inventory and marketing.</p>
+       </div>
+       <div class="example-box rounded-lg p-6">
+        <p class="font-semibold mb-3" style="color: #047857;">🏢 Manufacturing Plant</p>
+        <p style="color: #374151; text-sm; line-height: 1.6;"><strong>IS:</strong> Sensors on machines tracking production<br><br><strong>Analytics:</strong> Dashboards showing:<br>
+          • Production speed<br>
+          • Quality issues<br>
+          • Equipment downtime<br><br>
+          Enables quick problem-solving.</p>
+       </div>
+      </div>
+     </div>
+    </section>
+    <div class="section-divider"></div><!-- Activities Section -->
+    <section class="mb-12">
+     <h2 class="font-heading text-3xl font-bold mb-8" style="color: #1f2937;">Interactive Activities</h2><!-- Tabs for Activities -->
+     <div class="flex gap-4 mb-6 border-b" style="border-color: #e5e7eb;"><button onclick="switchTab('individual')" id="tab-individual" class="px-6 py-3 font-semibold border-b-2" style="border-color: #fb923c; color: #fb923c;"> 👤 Individual Activity </button> <button onclick="switchTab('group')" id="tab-group" class="px-6 py-3 font-semibold" style="color: #6b7280;">    Group Activity </button> <button onclick="switchTab('quiz')" id="tab-quiz" class="px-6 py-3 font-semibold" style="color: #6b7280;"> ✍️ Diagnostic Quiz </button>
+     </div><!-- Individual Activity -->
+     <div id="individual-tab" class="activity-box rounded-2xl p-8 mb-8">
+      <div class="flex items-center gap-3 mb-6"><span class="text-3xl">👤</span>
+       <h3 class="font-heading text-2xl font-bold" style="color: #1f2937;">Individual Activity: Identify Performance Measures</h3>
+      </div>
+      <div class="bg-blue-50 rounded-xl p-6 mb-8 border-l-4 border-blue-500">
+       <p class="font-semibold mb-4" style="color: #1e40af;">📋 Your Task:</p>
+       <p style="color: #1e3a8a; line-height: 1.8;">Choose ONE of these organizations and identify 5 performance measures that would help them achieve their strategy:</p>
+      </div>
+      <div class="grid md:grid-cols-2 gap-6 mb-8">
+       <div class="border-2 border-blue-200 rounded-lg p-6 cursor-pointer hover:bg-blue-50 transition-all" onclick="selectOrg('university')">
+        <p class="font-semibold mb-2" style="color: #1e40af;">🎓 University</p>
+        <p style="color: #374151;">Goal: Provide quality education and prepare students for careers</p>
+       </div>
+       <div class="border-2 border-blue-200 rounded-lg p-6 cursor-pointer hover:bg-blue-50 transition-all" onclick="selectOrg('hospital')">
+        <p class="font-semibold mb-2" style="color: #1e40af;">🏥 Hospital</p>
+        <p style="color: #374151;">Goal: Deliver excellent healthcare and save lives</p>
+       </div>
+       <div class="border-2 border-blue-200 rounded-lg p-6 cursor-pointer hover:bg-blue-50 transition-all" onclick="selectOrg('restaurant')">
+        <p class="font-semibold mb-2" style="color: #1e40af;">🍽️ Restaurant</p>
+        <p style="color: #374151;">Goal: Serve great food quickly and build loyal customers</p>
+       </div>
+       <div class="border-2 border-blue-200 rounded-lg p-6 cursor-pointer hover:bg-blue-50 transition-all" onclick="selectOrg('retail')">
+        <p class="font-semibold mb-2" style="color: #1e40af;">🛍️ Retail Store</p>
+        <p style="color: #374151;">Goal: Maximize sales and improve customer experience</p>
+       </div>
+      </div>
+      <form id="individual-form" style="display: none;">
+       <div class="mb-6"><label class="block font-semibold mb-2" style="color: #1f2937;">Your Name:</label> <input type="text" id="individual-name" placeholder="Enter your name" class="w-full px-4 py-3 rounded-lg border" style="border-color: #e5e7eb; color: #374151;" required>
+       </div>
+       <div class="mb-6"><label class="block font-semibold mb-2" style="color: #1f2937;">Your Email:</label> <input type="email" id="individual-email" placeholder="Enter your email" class="w-full px-4 py-3 rounded-lg border" style="border-color: #e5e7eb; color: #374151;" required>
+       </div>
+       <div class="mb-6"><label class="block font-semibold mb-2" style="color: #1f2937;">Selected Organization:</label>
+        <p id="selected-org-display" class="px-4 py-3 rounded-lg" style="background: #f3f4f6; color: #374151;"></p>
+       </div>
+       <div class="mb-6"><label class="block font-semibold mb-2" style="color: #1f2937;">List 5 Performance Measures:</label> <textarea id="individual-response" placeholder="Example: 1. Student graduation rate (%)
+2. Job placement rate within 6 months
+3. Student satisfaction score
+4. Course pass rate
+5. Alumni earnings growth" class="w-full px-4 py-3 rounded-lg border" style="border-color: #e5e7eb; color: #374151; min-height: 150px;" required></textarea>
+        <p class="text-sm mt-2" style="color: #6b7280;">💡 Tip: Make sure each measure connects to the organization's strategy!</p>
+       </div><button type="submit" class="w-full px-6 py-3 rounded-lg font-semibold text-white transition-all" style="background: linear-gradient(135deg, #fb923c, #f97316);" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'"> Submit Individual Activity </button>
+      </form>
+     </div><!-- Group Activity -->
+     <div id="group-tab" class="group-activity-box rounded-2xl p-8 mb-8" style="display: none;">
+      <div class="flex items-center gap-3 mb-6"><span class="text-3xl">👥</span>
+       <h3 class="font-heading text-2xl font-bold" style="color: #1f2937;">Group Activity: Strategy Debate</h3>
+      </div>
+      <div class="bg-purple-50 rounded-xl p-6 mb-8 border-l-4 border-purple-500">
+       <p class="font-semibold mb-4" style="color: #5b21b6;">👥 Group Discussion (3-4 students):</p>
+       <p style="color: #4c1d95; line-height: 1.8;">You are consulting for a mid-sized tech company. Half your group believes the company should focus on <strong>product quality</strong>, while the other half wants to focus on <strong>market expansion</strong>. Discuss and decide which is more important, and what performance measures would support each strategy.</p>
+      </div>
+      <div class="grid md:grid-cols-2 gap-6 mb-8">
+       <div class="bg-white rounded-lg p-6 border-2 border-purple-200">
+        <p class="font-semibold mb-4" style="color: #5b21b6;">🎯 Team A: Quality Focus</p>
+        <p style="color: #374151; text-sm; line-height: 1.6;"><strong>Strategy:</strong> Build the best product on the market<br><br><strong>Potential Measures:</strong><br>
+          • Bug reports per release<br>
+          • Customer satisfaction rating<br>
+          • Product reliability uptime<br>
+          • Customer retention rate<br>
+          • Returns/complaints ratio</p>
+       </div>
+       <div class="bg-white rounded-lg p-6 border-2 border-purple-200">
+        <p class="font-semibold mb-4" style="color: #5b21b6;">🚀 Team B: Expansion Focus</p>
+        <p style="color: #374151; text-sm; line-height: 1.6;"><strong>Strategy:</strong> Grow to new markets quickly<br><br><strong>Potential Measures:</strong><br>
+          • Market share growth (%)<br>
+          • New customer acquisition rate<br>
+          • Revenue growth rate<br>
+          • Sales team performance<br>
+          • Geographic expansion milestones</p>
+       </div>
+      </div>
+      <form id="group-form">
+       <div class="mb-6"><label class="block font-semibold mb-2" style="color: #1f2937;">Group Members' Names:</label> <input type="text" id="group-names" placeholder="Name 1, Name 2, Name 3, Name 4" class="w-full px-4 py-3 rounded-lg border" style="border-color: #e5e7eb; color: #374151;" required>
+       </div>
+       <div class="mb-6"><label class="block font-semibold mb-2" style="color: #1f2937;">Which strategy should the company prioritize and why?</label> <textarea id="group-response" placeholder="Explain your group's decision and the performance measures that would support it..." class="w-full px-4 py-3 rounded-lg border" style="border-color: #e5e7eb; color: #374151; min-height: 150px;" required></textarea>
+        <p class="text-sm mt-2" style="color: #6b7280;">💡 Tip: Consider both short-term and long-term implications!</p>
+       </div><button type="submit" class="w-full px-6 py-3 rounded-lg font-semibold text-white transition-all" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'"> Submit Group Activity </button>
+      </form>
+     </div><!-- Diagnostic Quiz -->
+     <div id="quiz-tab" class="rounded-2xl p-8 mb-8" style="display: none; background: white; border: 1px solid #e5e7eb;">
+      <div class="flex items-center gap-3 mb-6"><span class="text-3xl">✍️</span>
+       <h3 class="font-heading text-2xl font-bold" style="color: #1f2937;">Diagnostic Quiz</h3>
+      </div>
+      <p class="mb-8" style="color: #6b7280;">Test your understanding of Week 1 concepts. This is for self-assessment only.</p>
+      <form id="quiz-form" class="space-y-8"><!-- Question 1 -->
+       <div class="rounded-lg p-6" style="background: #f9fafb; border: 1px solid #e5e7eb;">
+        <p class="font-semibold mb-4" style="color: #1f2937;">1. What is the PRIMARY purpose of performance measurement?</p>
+        <div class="space-y-3"><label class="flex items-start gap-3 p-3 rounded-lg hover:bg-white cursor-pointer transition-all"> <input type="radio" name="q1" value="a" class="mt-1" required> <span style="color: #374151;">A) To make employees work harder</span> </label> <label class="flex items-start gap-3 p-3 rounded-lg hover:bg-white cursor-pointer transition-all"> <input type="radio" name="q1" value="b" class="mt-1"> <span style="color: #374151;">B) To track progress toward organizational goals and support decision-making</span> </label> <label class="flex items-start gap-3 p-3 rounded-lg hover:bg-white cursor-pointer transition-all"> <input type="radio" name="q1" value="c" class="mt-1"> <span style="color: #374151;">C) To find problems to punish people for</span> </label> <label class="flex items-start gap-3 p-3 rounded-lg hover:bg-white cursor-pointer transition-all"> <input type="radio" name="q1" value="d" class="mt-1"> <span style="color: #374151;">D) To replace human judgment with numbers</span> </label>
+        </div>
+       </div><!-- Question 2 -->
+       <div class="rounded-lg p-6" style="background: #f9fafb; border: 1px solid #e5e7eb;">
+        <p class="font-semibold mb-4" style="color: #1f2937;">2. How is business strategy connected to performance measurement?</p>
+        <div class="space-y-3"><label class="flex items-start gap-3 p-3 rounded-lg hover:bg-white cursor-pointer transition-all"> <input type="radio" name="q2" value="a" class="mt-1" required> <span style="color: #374151;">A) Performance measures show whether the strategy is actually working</span> </label> <label class="flex items-start gap-3 p-3 rounded-lg hover:bg-white cursor-pointer transition-all"> <input type="radio" name="q2" value="b" class="mt-1"> <span style="color: #374151;">B) Strategy and measurement are unrelated</span> </label> <label class="flex items-start gap-3 p-3 rounded-lg hover:bg-white cursor-pointer transition-all"> <input type="radio" name="q2" value="c" class="mt-1"> <span style="color: #374151;">C) Performance measurement replaces strategy</span> </label> <label class="flex items-start gap-3 p-3 rounded-lg hover:bg-white cursor-pointer transition-all"> <input type="radio" name="q2" value="d" class="mt-1"> <span style="color: #374151;">D) Strategy is only about financial numbers</span> </label>
+        </div>
+       </div><!-- Question 3 -->
+       <div class="rounded-lg p-6" style="background: #f9fafb; border: 1px solid #e5e7eb;">
+        <p class="font-semibold mb-4" style="color: #1f2937;">3. What role does Information Systems (IS) play in performance measurement?</p>
+        <div class="space-y-3"><label class="flex items-start gap-3 p-3 rounded-lg hover:bg-white cursor-pointer transition-all"> <input type="radio" name="q3" value="a" class="mt-1" required> <span style="color: #374151;">A) Collects and stores the business data needed for measurement</span> </label> <label class="flex items-start gap-3 p-3 rounded-lg hover:bg-white cursor-pointer transition-all"> <input type="radio" name="q3" value="b" class="mt-1"> <span style="color: #374151;">B) Makes strategic decisions for the company</span> </label> <label class="flex items-start gap-3 p-3 rounded-lg hover:bg-white cursor-pointer transition-all"> <input type="radio" name="q3" value="c" class="mt-1"> <span style="color: #374151;">C) IS has no connection to performance measurement</span> </label> <label class="flex items-start gap-3 p-3 rounded-lg hover:bg-white cursor-pointer transition-all"> <input type="radio" name="q3" value="d" class="mt-1"> <span style="color: #374151;">D) Reduces the need for performance measurement</span> </label>
+        </div>
+       </div><!-- Question 4 -->
+       <div class="rounded-lg p-6" style="background: #f9fafb; border: 1px solid #e5e7eb;">
+        <p class="font-semibold mb-4" style="color: #1f2937;">4. What is analytics in the context of performance measurement?</p>
+        <div class="space-y-3"><label class="flex items-start gap-3 p-3 rounded-lg hover:bg-white cursor-pointer transition-all"> <input type="radio" name="q4" value="a" class="mt-1" required> <span style="color: #374151;">A) Tools and techniques to analyze data and find useful insights</span> </label> <label class="flex items-start gap-3 p-3 rounded-lg hover:bg-white cursor-pointer transition-all"> <input type="radio" name="q4" value="b" class="mt-1"> <span style="color: #374151;">B) Simply collecting raw data</span> </label> <label class="flex items-start gap-3 p-3 rounded-lg hover:bg-white cursor-pointer transition-all"> <input type="radio" name="q4" value="c" class="mt-1"> <span style="color: #374151;">C) Making guesses about business performance</span> </label> <label class="flex items-start gap-3 p-3 rounded-lg hover:bg-white cursor-pointer transition-all"> <input type="radio" name="q4" value="d" class="mt-1"> <span style="color: #374151;">D) Having IT specialists write code</span> </label>
+        </div>
+       </div><!-- Question 5 -->
+       <div class="rounded-lg p-6" style="background: #f9fafb; border: 1px solid #e5e7eb;">
+        <p class="font-semibold mb-4" style="color: #1f2937;">5. A retail store's strategy is "provide the best customer experience." Which would be an appropriate performance measure?</p>
+        <div class="space-y-3"><label class="flex items-start gap-3 p-3 rounded-lg hover:bg-white cursor-pointer transition-all"> <input type="radio" name="q5" value="a" class="mt-1" required> <span style="color: #374151;">A) Customer satisfaction score and return rate</span> </label> <label class="flex items-start gap-3 p-3 rounded-lg hover:bg-white cursor-pointer transition-all"> <input type="radio" name="q5" value="b" class="mt-1"> <span style="color: #374151;">B) Only total revenue</span> </label> <label class="flex items-start gap-3 p-3 rounded-lg hover:bg-white cursor-pointer transition-all"> <input type="radio" name="q5" value="c" class="mt-1"> <span style="color: #374151;">C) Employee age</span> </label> <label class="flex items-start gap-3 p-3 rounded-lg hover:bg-white cursor-pointer transition-all"> <input type="radio" name="q5" value="d" class="mt-1"> <span style="color: #374151;">D) Number of social media followers</span> </label>
+        </div>
+       </div><button type="submit" class="w-full px-6 py-3 rounded-lg font-semibold text-white transition-all" style="background: linear-gradient(135deg, #fb923c, #f97316);"> Submit Quiz &amp; Check Answers </button>
+      </form>
+      <div id="quiz-results" style="display: none; margin-top: 24px; padding: 24px; border-radius: 12px; background: #f0fdf4; border: 2px solid #10b981;">
+       <div class="flex items-center gap-3 mb-4"><span class="text-3xl">✅</span>
+        <p class="font-heading text-xl font-bold" style="color: #047857;">Quiz Complete!</p>
+       </div>
+       <p id="quiz-score" style="color: #374151; margin-bottom: 16px;"></p>
+       <div id="quiz-feedback" style="color: #374151; line-height: 1.8;"></div>
+      </div>
+     </div>
+    </section><!-- Key Takeaways -->
+    <section class="mb-12">
+     <div class="rounded-2xl p-8" style="background: linear-gradient(135deg, #fef3c7 0%, #fcd34d 100%); border: 2px solid #f59e0b;">
+      <div class="flex items-start gap-4"><span class="text-3xl">💡</span>
+       <div>
+        <h3 class="font-heading text-2xl font-bold mb-4" style="color: #78350f;">Key Takeaways</h3>
+        <ul class="space-y-3" style="color: #451a03;">
+         <li class="flex gap-2"><span>✓</span> <span><strong>Performance measurement</strong> helps organizations track progress toward goals and make better decisions</span></li>
+         <li class="flex gap-2"><span>✓</span> <span><strong>Strategy and measurement are connected:</strong> Measures tell you if your strategy is working</span></li>
+         <li class="flex gap-2"><span>✓</span> <span><strong>Information Systems</strong> collect and store the data we need to measure</span></li>
+         <li class="flex gap-2"><span>✓</span> <span><strong>Analytics</strong> helps us understand what the data means and make insights</span></li>
+         <li class="flex gap-2"><span>✓</span> <span><strong>Good measures</strong> are connected to strategy and actionable for decision-making</span></li>
+        </ul>
+       </div>
+      </div>
+     </div>
+    </section><!-- Resources -->
+    <section class="mb-12">
+     <h2 class="font-heading text-2xl font-bold mb-6" style="color: #1f2937;">📚 Additional Resources</h2>
+     <div class="grid md:grid-cols-3 gap-6"><a href="#" class="card-hover rounded-lg p-6" style="background: white; border: 1px solid #e5e7eb; text-decoration: none;"> <span class="text-3xl mb-3 block">📖</span> <p class="font-semibold mb-2" style="color: #1f2937;">Reading Material</p><p style="color: #6b7280; font-size: 14px;">Download the course slides and readings from Modules section</p></a> <a href="#" class="card-hover rounded-lg p-6" style="background: white; border: 1px solid #e5e7eb; text-decoration: none;"> <span class="text-3xl mb-3 block">🎥</span> <p class="font-semibold mb-2" style="color: #1f2937;">Video Lecture</p><p style="color: #6b7280; font-size: 14px;">Watch the guided discussion recorded lecture available on Canvas</p></a> <a href="#" class="card-hover rounded-lg p-6" style="background: white; border: 1px solid #e5e7eb; text-decoration: none;"> <span class="text-3xl mb-3 block">❓</span> <p class="font-semibold mb-2" style="color: #1f2937;">Q&amp;A Forum</p><p style="color: #6b7280; font-size: 14px;">Post questions on the discussion board and help classmates</p></a>
+     </div>
+    </section><!-- Footer -->
+    <footer class="border-t pt-8" style="border-color: #e5e7eb; color: #6b7280; text-align: center;">
+     <p>DM104 - Evaluation of Business Performance | Week 1 Interactive Module</p>
+     <p style="margin-top: 8px;">Instructor: MKDB | Lyceum de San Pablo</p>
+     <p style="margin-top: 16px; font-size: 12px;">© 2026 All Rights Reserved</p>
+    </footer>
+   </main>
+  </div>
+  <script>
+    const defaultConfig = {
+      module_title: 'Week 1: Introduction to Business Performance Measurement',
+      week_number: 'Week 1'
+    };
+
+    let config = { ...defaultConfig };
+    let currentTab = 'individual';
+    let selectedOrgType = null;
+    let allResponses = [];
+
+    // Data SDK Handler
+    const dataHandler = {
+      onDataChanged(data) {
+        allResponses = data;
+        console.log('Data updated:', data);
+      }
+    };
+
+    // Initialize SDK
+    async function initSDK() {
+      if (window.dataSdk) {
+        const result = await window.dataSdk.init(dataHandler);
+        if (!result.isOk) {
+          console.error('Failed to initialize Data SDK');
+        }
+      }
+
+      if (window.elementSdk) {
+        window.elementSdk.init({
+          defaultConfig,
+          onConfigChange,
+          mapToCapabilities,
+          mapToEditPanelValues
+        });
+      }
+    }
+
+    async function onConfigChange(newConfig) {
+      config = { ...config, ...newConfig };
+      const titleEl = document.getElementById('module-title');
+      if (titleEl) titleEl.textContent = config.module_title || defaultConfig.module_title;
+    }
+
+    function mapToCapabilities(config) {
+      return {
+        recolorables: [],
+        borderables: [],
+        fontEditable: undefined,
+        fontSizeable: undefined
+      };
+    }
+
+    function mapToEditPanelValues(config) {
+      return new Map([
+        ['module_title', config.module_title || defaultConfig.module_title],
+        ['week_number', config.week_number || defaultConfig.week_number]
+      ]);
+    }
+
+    // Tab switching
+    function switchTab(tabName) {
+      currentTab = tabName;
+      document.getElementById('individual-tab').style.display = tabName === 'individual' ? 'block' : 'none';
+      document.getElementById('group-tab').style.display = tabName === 'group' ? 'block' : 'none';
+      document.getElementById('quiz-tab').style.display = tabName === 'quiz' ? 'block' : 'none';
+
+      document.getElementById('tab-individual').style.color = tabName === 'individual' ? '#fb923c' : '#6b7280';
+      document.getElementById('tab-individual').style.borderColor = tabName === 'individual' ? '#fb923c' : 'transparent';
+      document.getElementById('tab-group').style.color = tabName === 'group' ? '#8b5cf6' : '#6b7280';
+      document.getElementById('tab-group').style.borderColor = tabName === 'group' ? '#8b5cf6' : 'transparent';
+      document.getElementById('tab-quiz').style.color = tabName === 'quiz' ? '#fb923c' : '#6b7280';
+      document.getElementById('tab-quiz').style.borderColor = tabName === 'quiz' ? '#fb923c' : 'transparent';
+    }
+
+    // Select organization
+    function selectOrg(org) {
+      selectedOrgType = org;
+      const orgNames = {
+        'university': '🎓 University',
+        'hospital': '🏥 Hospital',
+        'restaurant': '🍽️ Restaurant',
+        'retail': '🛍️ Retail Store'
+      };
+      document.getElementById('selected-org-display').textContent = orgNames[org];
+      document.getElementById('individual-form').style.display = 'block';
+    }
+
+    // Individual activity submission
+    document.getElementById('individual-form')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = document.getElementById('individual-name').value;
+      const email = document.getElementById('individual-email').value;
+      const response = document.getElementById('individual-response').value;
+
+      if (window.dataSdk) {
+        const result = await window.dataSdk.create({
+          student_name: name,
+          email: email,
+          activity_type: 'individual',
+          responses: response,
+          completed: true,
+          timestamp: new Date().toISOString()
+        });
+
+        if (result.isOk) {
+          showToast('✅ Individual activity submitted successfully!');
+          document.getElementById('individual-form').reset();
+          setTimeout(() => switchTab('group'), 1500);
+        } else {
+          showToast('❌ Error submitting activity. Please try again.');
+        }
+      }
+    });
+
+    // Group activity submission
+    document.getElementById('group-form')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const names = document.getElementById('group-names').value;
+      const response = document.getElementById('group-response').value;
+
+      if (window.dataSdk) {
+        const result = await window.dataSdk.create({
+          student_name: names,
+          email: 'group@activity.com',
+          activity_type: 'group',
+          responses: response,
+          completed: true,
+          timestamp: new Date().toISOString()
+        });
+
+        if (result.isOk) {
+          showToast('✅ Group activity submitted successfully!');
+          document.getElementById('group-form').reset();
+        } else {
+          showToast('❌ Error submitting activity. Please try again.');
+        }
+      }
+    });
+
+    // Quiz submission
+    document.getElementById('quiz-form')?.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const answers = {
+        q1: document.querySelector('input[name="q1"]:checked')?.value,
+        q2: document.querySelector('input[name="q2"]:checked')?.value,
+        q3: document.querySelector('input[name="q3"]:checked')?.value,
+        q4: document.querySelector('input[name="q4"]:checked')?.value,
+        q5: document.querySelector('input[name="q5"]:checked')?.value
+      };
+
+      const correctAnswers = { q1: 'b', q2: 'a', q3: 'a', q4: 'a', q5: 'a' };
+      let score = 0;
+
+      Object.keys(correctAnswers).forEach(q => {
+        if (answers[q] === correctAnswers[q]) score++;
+      });
+
+      const percentage = (score / 5) * 100;
+
+      // Show results
+      document.getElementById('quiz-form').style.display = 'none';
+      document.getElementById('quiz-results').style.display = 'block';
+      document.getElementById('quiz-score').textContent = `Score: ${score}/5 (${percentage}%)`;
+
+      let feedback = '';
+      if (score === 5) {
+        feedback = '🌟 Perfect! You have a great understanding of Week 1 concepts!';
+      } else if (score >= 4) {
+        feedback = '✨ Great job! Review the explanations above for any topics you\'d like to strengthen.';
+      } else if (score >= 3) {
+        feedback = '📚 Good effort! I recommend reviewing the core concepts section and watching the video lecture.';
+      } else {
+        feedback = '    Keep learning! Review all the core concepts and try the activities again.';
+      }
+
+      document.getElementById('quiz-feedback').innerHTML = feedback;
+    });
+
+    // Show toast notification
+    function showToast(message) {
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.textContent = message;
+      document.body.appendChild(toast);
+
+      setTimeout(() => {
+        toast.style.animation = 'slideDown 0.3s ease-in';
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    }
+
+    // Initialize
+    initSDK();
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9c77c00825c16e8a',t:'MTc3MDAxNDk4Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

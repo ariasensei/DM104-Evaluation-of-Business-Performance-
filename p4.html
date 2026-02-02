@@ -1,0 +1,708 @@
+<!doctype html>
+<html lang="en" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DM104 Week 4 - KPI Development and Performance Frameworks</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="/_sdk/data_sdk.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&amp;family=Lato:wght@400;500;700&amp;display=swap" rel="stylesheet">
+  <style>
+    body { box-sizing: border-box; }
+    html, body, #app-wrapper { height: 100%; width: 100%; }
+    .font-heading { font-family: 'Merriweather', Georgia, serif; }
+    .font-body { font-family: 'Lato', system-ui, sans-serif; }
+    
+    .term-highlight {
+      position: relative;
+      cursor: help;
+      border-bottom: 2px dotted #3b82f6;
+      padding: 2px 0;
+    }
+    .tooltip {
+      visibility: hidden;
+      position: absolute;
+      background: #1f2937;
+      color: #f3f4f6;
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      z-index: 50;
+      border-left: 3px solid #3b82f6;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+      max-width: 280px;
+      line-height: 1.5;
+      white-space: normal;
+      bottom: 120%;
+      left: 50%;
+      transform: translateX(-50%);
+      margin-bottom: 8px;
+    }
+    .term-highlight:hover .tooltip { visibility: visible; }
+    
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-slide-in { animation: slideIn 0.6s ease-out; }
+    .card-hover { transition: all 0.3s ease; }
+    .card-hover:hover { transform: translateY(-4px); box-shadow: 0 15px 40px rgba(59, 130, 246, 0.15); }
+    
+    .example-box { border-left: 4px solid #10b981; background: rgba(16, 185, 129, 0.05); }
+    .activity-box { border-left: 4px solid #6366f1; background: rgba(99, 102, 241, 0.05); }
+    .definition-box { border-left: 4px solid #8b5cf6; background: rgba(139, 92, 246, 0.05); }
+    .framework-box { border-left: 4px solid #f59e0b; background: rgba(245, 158, 11, 0.05); }
+    .alignment-box { border-left: 4px solid #06b6d4; background: rgba(6, 182, 212, 0.05); }
+    
+    .tab-button {
+      padding: 12px 20px;
+      font-weight: 600;
+      border-bottom: 3px solid transparent;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      white-space: nowrap;
+      background: none;
+      border: none;
+    }
+    .tab-button.active { border-bottom-color: #3b82f6; color: #3b82f6; }
+    .tab-button:not(.active) { color: #6b7280; }
+    
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+    
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #10b981;
+      color: white;
+      padding: 14px 20px;
+      border-radius: 8px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      z-index: 100;
+      animation: slideIn 0.3s ease-out;
+    }
+    
+    .cascade-diagram {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      margin: 16px 0;
+      border: 1px solid #e5e7eb;
+    }
+    .cascade-item {
+      padding: 16px;
+      background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+      border-radius: 8px;
+      margin: 8px 0;
+      border-left: 4px solid #0284c7;
+      text-align: center;
+    }
+    .cascade-arrow { text-align: center; color: #3b82f6; font-size: 24px; margin: 8px 0; }
+    
+    .framework-comparison {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 16px;
+      margin: 16px 0;
+    }
+    .framework-card {
+      padding: 16px;
+      background: white;
+      border: 2px solid #e5e7eb;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+    .framework-card:hover { border-color: #3b82f6; box-shadow: 0 8px 16px rgba(59, 130, 246, 0.1); }
+    
+    .dashboard-preview {
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 20px;
+      margin: 16px 0;
+    }
+    .kpi-metric {
+      display: inline-block;
+      background: linear-gradient(135deg, #fef3c7 0%, #fcd34d 100%);
+      padding: 12px 16px;
+      border-radius: 8px;
+      margin: 8px 4px;
+      border-left: 3px solid #f59e0b;
+    }
+    
+    input, textarea, select {
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 12px;
+      font-family: inherit;
+      font-size: 14px;
+    }
+    input:focus, textarea:focus, select:focus {
+      outline: none;
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+    
+    button {
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    button:hover { transform: translateY(-2px); }
+    button:disabled { opacity: 0.6; cursor: not-allowed; }
+  </style>
+  <style>@view-transition { navigation: auto; }</style>
+ </head>
+ <body class="h-full font-body w-full">
+  <div id="app-wrapper" class="w-full h-full overflow-auto" style="background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);"><!-- Navigation -->
+   <nav class="sticky top-0 z-40 w-full" style="background: white; border-bottom: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+    <div class="w-full px-6 py-4 flex items-center justify-between">
+     <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background: linear-gradient(135deg, #3b82f6, #1e40af);">
+       <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+       </svg>
+      </div>
+      <div>
+       <p class="text-xs font-semibold text-gray-500">DM104</p>
+       <p class="text-sm font-bold text-gray-900" id="course-title">Evaluation of Business Performance</p>
+      </div>
+     </div>
+     <div class="text-sm font-semibold px-4 py-2 rounded-lg" style="background: #e0e7ff; color: #3b82f6;">
+      📊 Week 4: KPI Development
+     </div>
+    </div>
+   </nav>
+   <main class="w-full px-6 py-12" style="max-width: 1400px; margin: 0 auto;"><!-- Week 4 Content -->
+    <section class="mb-12 animate-slide-in"><!-- Header -->
+     <div class="text-center mb-12">
+      <h1 class="font-heading text-4xl font-bold mb-4" style="color: #1f2937;">Week 4: KPI Development and Performance Frameworks</h1>
+      <p style="color: #6b7280; font-size: 16px;">Learn how to design KPIs that align with strategic goals and build effective performance frameworks</p>
+     </div><!-- Learning Objectives -->
+     <div class="rounded-2xl p-8 mb-12 w-full card-hover" style="background: white; border: 1px solid #e5e7eb;">
+      <h2 class="font-heading text-2xl font-bold mb-6" style="color: #1f2937;">📚 Learning Objectives</h2>
+      <div class="grid md:grid-cols-2 gap-4 w-full">
+       <div class="flex gap-3"><span style="color: #3b82f6; font-size: 20px;">✓</span>
+        <div>
+         <p class="font-semibold" style="color: #1f2937;">Explain strategic goals</p>
+         <p style="color: #6b7280; font-size: 14px;">Understand long-term business direction and mission</p>
+        </div>
+       </div>
+       <div class="flex gap-3"><span style="color: #3b82f6; font-size: 20px;">✓</span>
+        <div>
+         <p class="font-semibold" style="color: #1f2937;">Performance alignment</p>
+         <p style="color: #6b7280; font-size: 14px;">Connect KPIs to company strategy at all levels</p>
+        </div>
+       </div>
+       <div class="flex gap-3"><span style="color: #3b82f6; font-size: 20px;">✓</span>
+        <div>
+         <p class="font-semibold" style="color: #1f2937;">Design effective KPIs</p>
+         <p style="color: #6b7280; font-size: 14px;">Create measurable, actionable performance indicators</p>
+        </div>
+       </div>
+       <div class="flex gap-3"><span style="color: #3b82f6; font-size: 20px;">✓</span>
+        <div>
+         <p class="font-semibold" style="color: #1f2937;">Build performance frameworks</p>
+         <p style="color: #6b7280; font-size: 14px;">Implement systems to track and manage performance</p>
+        </div>
+       </div>
+      </div>
+     </div><!-- Section 1: Strategic Goals -->
+     <div class="rounded-2xl p-8 mb-8 w-full card-hover" style="background: white; border: 1px solid #e5e7eb;">
+      <h2 class="font-heading text-2xl font-bold mb-6" style="color: #1f2937;">🎯 Strategic Goals Explained</h2>
+      <div class="definition-box rounded-lg p-6 mb-6">
+       <p class="font-semibold mb-3" style="color: #6b21a6;">What are Strategic Goals?</p>
+       <p style="color: #374151; line-height: 1.8;"><span class="term-highlight">Strategic goals</span></p>
+       <div class="tooltip">
+        Long-term targets (3-5 years) that define where a company wants to be in the future. They guide all decisions and shape company culture.
+       </div> are the big, long-term targets a company wants to achieve. They answer: "Where do we want to be in 3-5 years?" Unlike day-to-day tasks, strategic goals define the company's direction and purpose. 
+       <p></p>
+      </div>
+      <div class="grid md:grid-cols-2 gap-6 w-full mb-6">
+       <div class="example-box rounded-lg p-6">
+        <p class="font-semibold mb-4" style="color: #047857;">🏆 Real-World Examples</p>
+        <div class="mb-4">
+         <p style="color: #374151; font-weight: 600; margin-bottom: 8px;">🛍️ E-Commerce Company</p>
+         <p style="color: #6b7280; font-size: 13px; line-height: 1.6;">"Become the #1 online retailer in Southeast Asia with $500M annual revenue by 2028"</p>
+        </div>
+        <div class="mb-4">
+         <p style="color: #374151; font-weight: 600; margin-bottom: 8px;">🏥 Healthcare Clinic</p>
+         <p style="color: #6b7280; font-size: 13px; line-height: 1.6;">"Expand to 10 locations and serve 50,000 patients annually while maintaining 95% satisfaction"</p>
+        </div>
+        <div class="mb-4">
+         <p style="color: #374151; font-weight: 600; margin-bottom: 8px;">🍕 Restaurant Chain</p>
+         <p style="color: #6b7280; font-size: 13px; line-height: 1.6;">"Open 50 new locations in 5 years and increase average order value by 30%"</p>
+        </div>
+        <div>
+         <p style="color: #374151; font-weight: 600; margin-bottom: 8px;">📱 Gaming Startup</p>
+         <p style="color: #6b7280; font-size: 13px; line-height: 1.6;">"Reach 1 million active users and rank in top 10 mobile games globally"</p>
+        </div>
+       </div>
+       <div style="background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border-left: 4px solid #10b981; padding: 16px; border-radius: 8px;">
+        <p class="font-semibold mb-4" style="color: #047857;">Why Strategic Goals Matter</p>
+        <ul style="color: #374151; font-size: 14px; line-height: 2;">
+         <li>🧭 <strong>Direction</strong> - Guide all company decisions</li>
+         <li>🤝 <strong>Alignment</strong> - Unite departments around shared vision</li>
+         <li>💪 <strong>Motivation</strong> - Inspire employees to work toward something meaningful</li>
+         <li>📊 <strong>Measurement</strong> - Create baseline for measuring success</li>
+         <li>🔄 <strong>Accountability</strong> - Set clear expectations for leaders</li>
+        </ul>
+       </div>
+      </div>
+      <div style="background: #eff6ff; border-left: 4px solid #3b82f6; padding: 16px; border-radius: 8px;">
+       <p class="font-semibold mb-2" style="color: #164e63;">💡 Key Difference</p>
+       <p style="color: #164e63; font-size: 14px;"><strong>Strategic goals</strong> = Where we want to go (long-term) | <strong>Daily tasks</strong> = What we do today to get there (short-term)</p>
+      </div>
+     </div><!-- Section 2: Performance Alignment -->
+     <div class="rounded-2xl p-8 mb-8 w-full card-hover" style="background: white; border: 1px solid #e5e7eb;">
+      <h2 class="font-heading text-2xl font-bold mb-6" style="color: #1f2937;">🔗 The Alignment Cascade</h2>
+      <p class="mb-6" style="color: #6b7280;"><strong>Performance alignment</strong> means connecting KPIs at every level to the company's strategic goals. It's like a cascade—company goals flow down to departments, which flow down to individual teams, which flow down to each person's job.</p>
+      <div class="cascade-diagram">
+       <div class="cascade-item">
+        <p style="font-weight: 700; color: #1f2937; font-size: 16px; margin-bottom: 4px;">Level 1: Company Strategic Goal</p>
+        <p style="color: #6b7280; font-size: 13px;">🎯 "Increase online sales by 40% in 2 years"</p>
+       </div>
+       <div class="cascade-arrow">
+        ⬇️
+       </div>
+       <div class="cascade-item">
+        <p style="font-weight: 700; color: #1f2937; font-size: 16px; margin-bottom: 4px;">Level 2: Department Goals</p>
+        <p style="color: #6b7280; font-size: 13px;">📊 Sales: "Get 30% more online orders" | Marketing: "Drive 50% more website traffic" | Operations: "Reduce delivery time by 20%"</p>
+       </div>
+       <div class="cascade-arrow">
+        ⬇️
+       </div>
+       <div class="cascade-item">
+        <p style="font-weight: 700; color: #1f2937; font-size: 16px; margin-bottom: 4px;">Level 3: Individual KPIs</p>
+        <p style="color: #6b7280; font-size: 13px;">👤 Digital Marketer: "Grow social media followers by 200%" | Salesperson: "Complete 50 online sales per month"</p>
+       </div>
+      </div>
+      <div style="background: #fef3c7; border-left: 4px solid #f59e0b; padding: 16px; border-radius: 8px; margin-top: 16px;">
+       <p class="font-semibold mb-2" style="color: #92400e;">✅ Example: Real Restaurant Chain</p>
+       <p style="color: #78350f; font-size: 13px; line-height: 1.8;"><strong>Strategy:</strong> "Become customer favorite" → <strong>Operations Department KPI:</strong> "Reduce wait time to 15 minutes" → <strong>Individual Goal:</strong> "Chef prepares 40 orders per hour"</p>
+      </div>
+     </div><!-- Section 3: Performance Frameworks -->
+     <div class="rounded-2xl p-8 mb-8 w-full card-hover" style="background: white; border: 1px solid #e5e7eb;">
+      <h2 class="font-heading text-2xl font-bold mb-6" style="color: #1f2937;">📐 Performance Frameworks</h2>
+      <p class="mb-8" style="color: #6b7280;">A <span class="term-highlight">performance framework</span></p>
+      <div class="tooltip">
+       A structured system for organizing, measuring, and managing KPIs across the entire organization
+      </div> is a structured way to organize and measure performance. Here are the most popular ones: 
+      <p></p><!-- Framework 1: Balanced Scorecard -->
+      <div class="framework-box rounded-lg p-6 mb-6">
+       <h3 class="font-semibold mb-4" style="color: #92400e; font-size: 16px;">1️⃣ Balanced Scorecard (BSC)</h3>
+       <p style="color: #78350f; margin-bottom: 12px; line-height: 1.6;">Looks at performance from 4 different perspectives to get a complete picture:</p>
+       <div class="grid md:grid-cols-2 gap-4">
+        <div style="background: white; padding: 12px; border-left: 3px solid #10b981; border-radius: 4px;">
+         <p style="font-weight: 600; color: #047857; margin-bottom: 4px;">💰 Financial Perspective</p>
+         <p style="color: #6b7280; font-size: 13px;">Revenue, profit, cash flow, ROI</p>
+        </div>
+        <div style="background: white; padding: 12px; border-left: 3px solid #0284c7; border-radius: 4px;">
+         <p style="font-weight: 600; color: #0369a1; margin-bottom: 4px;">😊 Customer Perspective</p>
+         <p style="color: #6b7280; font-size: 13px;">Satisfaction, loyalty, market share</p>
+        </div>
+        <div style="background: white; padding: 12px; border-left: 3px solid #7c3aed; border-radius: 4px;">
+         <p style="font-weight: 600; color: #5b21b6; margin-bottom: 4px;">⚙️ Internal Process</p>
+         <p style="color: #6b7280; font-size: 13px;">Quality, efficiency, innovation</p>
+        </div>
+        <div style="background: white; padding: 12px; border-left: 3px solid #f59e0b; border-radius: 4px;">
+         <p style="font-weight: 600; color: #92400e; margin-bottom: 4px;">📚 Learning &amp; Growth</p>
+         <p style="color: #6b7280; font-size: 13px;">Employee skills, culture, technology</p>
+        </div>
+       </div>
+       <p style="color: #6b7280; font-size: 12px; margin-top: 12px; font-style: italic;">✓ Best for: Companies wanting balanced view | ✓ Easy to understand | ✗ Complex to implement</p>
+      </div><!-- Framework 2: OKR -->
+      <div class="framework-box rounded-lg p-6 mb-6">
+       <h3 class="font-semibold mb-4" style="color: #92400e; font-size: 16px;">2️⃣ OKR (Objectives &amp; Key Results)</h3>
+       <p style="color: #78350f; margin-bottom: 12px; line-height: 1.6;">Sets ambitious objectives and measures success with 3-5 key results per objective.</p>
+       <div style="background: white; padding: 12px; border-radius: 4px; margin-bottom: 12px;">
+        <p style="font-weight: 600; color: #374151; margin-bottom: 8px;">Example:</p>
+        <p style="color: #6b7280; font-size: 13px; margin-bottom: 4px;"><strong>Objective:</strong> "Dominate market in our region"</p>
+        <p style="color: #6b7280; font-size: 13px;"><strong>Key Results:</strong></p>
+        <ul style="color: #6b7280; font-size: 13px; margin-left: 20px; margin-top: 4px;">
+         <li>• Increase market share from 15% to 25%</li>
+         <li>• Open 20 new store locations</li>
+         <li>• Achieve 90% customer satisfaction rating</li>
+        </ul>
+       </div>
+       <p style="color: #6b7280; font-size: 12px; font-style: italic;">✓ Best for: Fast-growing companies | ✓ Clear and ambitious | ✗ Requires strong leadership</p>
+      </div><!-- Framework 3: SMART KPIs -->
+      <div class="framework-box rounded-lg p-6 mb-6">
+       <h3 class="font-semibold mb-4" style="color: #92400e; font-size: 16px;">3️⃣ SMART KPI Framework</h3>
+       <p style="color: #78350f; margin-bottom: 12px; line-height: 1.6;">Ensures every KPI is well-designed and measurable:</p>
+       <div style="background: white; padding: 12px; border-radius: 4px;">
+        <p style="color: #6b7280; font-size: 13px; margin-bottom: 4px;"><strong>S</strong>pecific - Clearly defined, not vague</p>
+        <p style="color: #6b7280; font-size: 13px; margin-bottom: 4px;"><strong>M</strong>easurable - Can be tracked with data</p>
+        <p style="color: #6b7280; font-size: 13px; margin-bottom: 4px;"><strong>A</strong>chievable - Realistic goal, not impossible</p>
+        <p style="color: #6b7280; font-size: 13px; margin-bottom: 4px;"><strong>R</strong>elevant - Connected to business goals</p>
+        <p style="color: #6b7280; font-size: 13px;"><strong>T</strong>ime-bound - Has clear deadline</p>
+       </div>
+       <p style="color: #6b7280; font-size: 12px; margin-top: 12px; font-style: italic;">✓ Best for: All types of organizations | ✓ Easy to understand and apply</p>
+      </div><!-- Framework 4: 360-Degree Performance -->
+      <div class="framework-box rounded-lg p-6">
+       <h3 class="font-semibold mb-4" style="color: #92400e; font-size: 16px;">4️⃣ 360-Degree Performance</h3>
+       <p style="color: #78350f; margin-bottom: 12px; line-height: 1.6;">Gathers feedback from multiple sources to see performance from all angles:</p>
+       <div style="background: white; padding: 12px; border-radius: 4px; display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 8px;">
+        <div style="text-align: center; padding: 8px;">
+         <p style="font-weight: 600; color: #374151; margin-bottom: 4px;">Self</p>
+         <p style="color: #6b7280; font-size: 12px;">Employee's own view</p>
+        </div>
+        <div style="text-align: center; padding: 8px;">
+         <p style="font-weight: 600; color: #374151; margin-bottom: 4px;">Manager</p>
+         <p style="color: #6b7280; font-size: 12px;">Direct supervisor</p>
+        </div>
+        <div style="text-align: center; padding: 8px;">
+         <p style="font-weight: 600; color: #374151; margin-bottom: 4px;">Peers</p>
+         <p style="color: #6b7280; font-size: 12px;">Colleagues/teammates</p>
+        </div>
+        <div style="text-align: center; padding: 8px;">
+         <p style="font-weight: 600; color: #374151; margin-bottom: 4px;">Customers</p>
+         <p style="color: #6b7280; font-size: 12px;">Client feedback</p>
+        </div>
+       </div>
+       <p style="color: #6b7280; font-size: 12px; margin-top: 12px; font-style: italic;">✓ Best for: Development &amp; fairness | ✗ Time-consuming to collect</p>
+      </div>
+     </div><!-- Section 4: KPI Hierarchy -->
+     <div class="rounded-2xl p-8 mb-8 w-full card-hover" style="background: white; border: 1px solid #e5e7eb;">
+      <h2 class="font-heading text-2xl font-bold mb-6" style="color: #1f2937;">🏢 KPI Hierarchy Across the Organization</h2>
+      <p class="mb-6" style="color: #6b7280;">KPIs work at three levels, each supporting the level above it:</p>
+      <div class="grid md:grid-cols-3 gap-6 w-full">
+       <div style="background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%); border-left: 4px solid #0284c7; padding: 16px; border-radius: 8px;">
+        <p class="font-semibold mb-4" style="color: #0369a1;">📊 Enterprise KPIs</p>
+        <p style="color: #164e63; font-size: 13px; line-height: 1.8; margin-bottom: 12px;">Measure <strong>whole company</strong> performance</p>
+        <p style="color: #164e63; font-size: 12px;"><strong>Examples:</strong></p>
+        <ul style="color: #164e63; font-size: 12px; margin-top: 8px; margin-left: 12px;">
+         <li>• Annual revenue</li>
+         <li>• Net profit</li>
+         <li>• Market share</li>
+         <li>• Customer satisfaction</li>
+        </ul>
+       </div>
+       <div style="background: linear-gradient(135deg, #fef3c7 0%, #fcd34d 100%); border-left: 4px solid #f59e0b; padding: 16px; border-radius: 8px;">
+        <p class="font-semibold mb-4" style="color: #92400e;">🏭 Departmental KPIs</p>
+        <p style="color: #78350f; font-size: 13px; line-height: 1.8; margin-bottom: 12px;">Measure specific <strong>department/team</strong> performance</p>
+        <p style="color: #78350f; font-size: 12px;"><strong>Examples:</strong></p>
+        <ul style="color: #78350f; font-size: 12px; margin-top: 8px; margin-left: 12px;">
+         <li>• Sales: Deal closure rate</li>
+         <li>• HR: Employee retention</li>
+         <li>• Operations: Cost per unit</li>
+         <li>• Marketing: Lead generation</li>
+        </ul>
+       </div>
+       <div style="background: linear-gradient(135deg, #e0fdf4 0%, #ccfbf1 100%); border-left: 4px solid #14b8a6; padding: 16px; border-radius: 8px;">
+        <p class="font-semibold mb-4" style="color: #0d7377;">👤 Individual KPIs</p>
+        <p style="color: #134e4a; font-size: 13px; line-height: 1.8; margin-bottom: 12px;">Measure <strong>individual employee</strong> performance</p>
+        <p style="color: #134e4a; font-size: 12px;"><strong>Examples:</strong></p>
+        <ul style="color: #134e4a; font-size: 12px; margin-top: 8px; margin-left: 12px;">
+         <li>• Sales calls per day</li>
+         <li>• Projects completed</li>
+         <li>• Customer support tickets</li>
+         <li>• Code quality metrics</li>
+        </ul>
+       </div>
+      </div>
+      <div style="background: #eff6ff; border-left: 4px solid #3b82f6; padding: 16px; border-radius: 8px; margin-top: 16px;">
+       <p class="font-semibold mb-2" style="color: #164e63;">🔄 How They Connect</p>
+       <p style="color: #164e63; font-size: 13px;">If department achieves 100% of its KPIs → Company achieves its enterprise KPIs → Strategic goals are met</p>
+      </div>
+     </div><!-- Section 5: Real-World Dashboard Example -->
+     <div class="rounded-2xl p-8 mb-8 w-full card-hover" style="background: white; border: 1px solid #e5e7eb;">
+      <h2 class="font-heading text-2xl font-bold mb-6" style="color: #1f2937;">📊 Sample KPI Dashboard: Coffee Shop Chain</h2>
+      <p class="mb-6" style="color: #6b7280;">Here's what a real performance dashboard looks like with aligned KPIs:</p>
+      <div class="dashboard-preview">
+       <p style="font-weight: 700; color: #1f2937; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 2px solid #e5e7eb;">Strategic Goal: 50% revenue growth in 2 years</p>
+       <div style="margin-bottom: 16px;">
+        <p style="font-weight: 600; color: #374151; margin-bottom: 12px;">📊 Enterprise Level KPIs:</p>
+        <div class="kpi-metric">
+         Revenue: $50M → $75M
+        </div>
+        <div class="kpi-metric">
+         Profit: $8M → $14M
+        </div>
+        <div class="kpi-metric">
+         Stores: 20 → 35
+        </div>
+        <div class="kpi-metric">
+         Customer Rating: 4.2 → 4.5
+        </div>
+       </div>
+       <div style="margin-bottom: 16px;">
+        <p style="font-weight: 600; color: #374151; margin-bottom: 12px;">🏭 Department Level KPIs:</p>
+        <p style="color: #6b7280; font-size: 13px; margin-bottom: 8px;"><strong>Sales Department:</strong></p>
+        <div style="margin-left: 12px; margin-bottom: 12px;">
+         <div class="kpi-metric">
+          Daily sales: $2,500 → $4,000
+         </div>
+         <div class="kpi-metric">
+          Customer count: 400 → 650/day
+         </div>
+         <div class="kpi-metric">
+          Average order: $12.50 → $15
+         </div>
+        </div>
+        <p style="color: #6b7280; font-size: 13px; margin-bottom: 8px;"><strong>Operations Department:</strong></p>
+        <div style="margin-left: 12px;">
+         <div class="kpi-metric">
+          Order wait time: 8 min → 5 min
+         </div>
+         <div class="kpi-metric">
+          Product waste: 5% → 2%
+         </div>
+         <div class="kpi-metric">
+          Labor cost: 28% → 25%
+         </div>
+        </div>
+       </div>
+       <div>
+        <p style="font-weight: 600; color: #374151; margin-bottom: 12px;">👤 Individual KPIs (Barista):</p>
+        <div style="margin-left: 12px;">
+         <div class="kpi-metric">
+          Drinks/hour: 20 → 25
+         </div>
+         <div class="kpi-metric">
+          Accuracy: 98% → 99%
+         </div>
+         <div class="kpi-metric">
+          Customer comments: 90% positive
+         </div>
+        </div>
+       </div>
+      </div>
+     </div><!-- Activities Section -->
+     <div class="flex gap-4 mb-6 border-b w-full overflow-x-auto" style="border-color: #e5e7eb;"><button class="tab-button active" onclick="switchTab('individual', event)">👤 Individual Activity</button> <button class="tab-button" onclick="switchTab('group', event)">👥 Group Activity</button> <button class="tab-button" onclick="switchTab('quiz', event)">✍️ Quiz</button>
+     </div><!-- Individual Activity: Design KPIs -->
+     <div id="individual-tab" class="tab-content active activity-box rounded-2xl p-8 mb-8 w-full">
+      <h3 class="font-heading text-2xl font-bold mb-6" style="color: #1f2937;">Individual Activity: Design KPIs for a Business</h3>
+      <div style="background: #eff6ff; border-left: 4px solid #3b82f6; padding: 16px; border-radius: 8px; margin-bottom: 16px;">
+       <p style="color: #164e63; line-height: 1.8;"><strong>Task:</strong> Choose one business scenario below. Create 5 aligned KPIs (1 enterprise, 2 departmental, 2 individual) that support its strategic goal. Explain why you chose each KPI and how they connect to the strategy.</p>
+      </div>
+      <form id="individual-form" class="w-full space-y-4"><input type="text" placeholder="Your name" id="ind-name" class="w-full px-4 py-3" required> <input type="email" placeholder="Your email" id="ind-email" class="w-full px-4 py-3" required>
+       <div><label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Choose a business scenario:</label> <select id="ind-business" class="w-full px-4 py-3" required> <option value="">-- Select one --</option> <option value="car-rental">🚗 Car Rental Company - Goal: Expand fleet by 50% &amp; increase daily rentals</option> <option value="fitness">🏋️ Fitness Center Chain - Goal: Triple membership &amp; improve retention</option> <option value="realestate">🏠 Real Estate Agency - Goal: Double sales revenue &amp; expand to new regions</option> <option value="gaming">🎮 Mobile Gaming Company - Goal: Reach 5M active users &amp; improve monetization</option> <option value="supermarket">🏪 Supermarket - Goal: Reduce operating costs by 20% &amp; increase foot traffic</option> </select>
+       </div>
+       <div><label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Create your 5 aligned KPIs:</label> <textarea id="ind-kpis" placeholder="Format:
+1. [ENTERPRISE] KPI Name - Explanation
+2. [DEPARTMENT] KPI Name - Explanation
+3. [DEPARTMENT] KPI Name - Explanation
+4. [INDIVIDUAL] KPI Name - Explanation
+5. [INDIVIDUAL] KPI Name - Explanation
+
+Explain how each KPI supports the strategic goal and connects to the others." class="w-full px-4 py-3" style="min-height: 200px; font-size: 13px;" required></textarea>
+       </div><button type="submit" class="w-full px-6 py-3 rounded-lg font-semibold text-white" style="background: linear-gradient(135deg, #3b82f6, #1e40af);">Submit Activity</button>
+      </form>
+     </div><!-- Group Activity: Performance Dashboard -->
+     <div id="group-tab" class="tab-content activity-box rounded-2xl p-8 mb-8 w-full" style="display: none;">
+      <h3 class="font-heading text-2xl font-bold mb-6" style="color: #1f2937;">Group Activity: Complete Performance Dashboard</h3>
+      <div style="background: #eff6ff; border-left: 4px solid #3b82f6; padding: 16px; border-radius: 8px; margin-bottom: 16px;">
+       <p style="color: #164e63; line-height: 1.8;"><strong>Task:</strong> As a team, design a complete performance dashboard for a mid-size coffee shop chain. Include:</p>
+       <ul style="color: #164e63; margin-top: 8px; margin-left: 20px;">
+        <li>• 1 Strategic Goal (3-year target)</li>
+        <li>• 3 Department KPIs (Sales, Operations, Customer Service)</li>
+        <li>• Current values and target values for each KPI</li>
+        <li>• How the framework connects everything together</li>
+       </ul>
+      </div>
+      <form id="group-form" class="w-full space-y-4"><input type="text" placeholder="All team member names (comma-separated)" id="grp-names" class="w-full px-4 py-3" required> <input type="email" placeholder="One team email" id="grp-email" class="w-full px-4 py-3" required>
+       <div><label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Strategic Goal (what should the coffee shop achieve in 3 years?):</label> <input type="text" placeholder="e.g., Double revenue while improving customer experience" id="grp-goal" class="w-full px-4 py-3" required>
+       </div>
+       <div><label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Sales Department KPIs:</label> <textarea id="grp-sales" placeholder="List 2-3 KPIs for the sales team
+e.g., Daily revenue, customer count, average order value" class="w-full px-4 py-3" style="min-height: 80px;" required></textarea>
+       </div>
+       <div><label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Operations Department KPIs:</label> <textarea id="grp-ops" placeholder="List 2-3 KPIs for operations
+e.g., Order fulfillment time, product quality, labor efficiency" class="w-full px-4 py-3" style="min-height: 80px;" required></textarea>
+       </div>
+       <div><label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Customer Service Department KPIs:</label> <textarea id="grp-cs" placeholder="List 2-3 KPIs for customer service
+e.g., Customer satisfaction score, complaint resolution time, repeat customer rate" class="w-full px-4 py-3" style="min-height: 80px;" required></textarea>
+       </div>
+       <div><label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">How do all these KPIs work together to achieve your strategic goal?</label> <textarea id="grp-alignment" placeholder="Explain the connections and how achieving all KPIs leads to the strategic goal" class="w-full px-4 py-3" style="min-height: 100px;" required></textarea>
+       </div><button type="submit" class="w-full px-6 py-3 rounded-lg font-semibold text-white" style="background: linear-gradient(135deg, #3b82f6, #1e40af);">Submit Dashboard</button>
+      </form>
+     </div><!-- Quiz -->
+     <div id="quiz-tab" class="tab-content rounded-2xl p-8 mb-8 w-full" style="background: white; border: 1px solid #e5e7eb; display: none;">
+      <h3 class="font-heading text-2xl font-bold mb-6" style="color: #1f2937;">Week 4 Knowledge Check</h3>
+      <form id="quiz-form" class="space-y-6 w-full"><!-- Q1 -->
+       <div style="background: #f9fafb; border: 1px solid #e5e7eb; padding: 16px; border-radius: 8px;">
+        <p class="font-semibold mb-4" style="color: #1f2937;">1. What is a strategic goal?</p>
+        <div class="space-y-2"><label class="flex items-center gap-3 p-2 hover:bg-white cursor-pointer"> <input type="radio" name="q1" value="a" required> <span style="color: #374151;">A) A long-term target (3-5 years) that defines where company wants to be</span> </label> <label class="flex items-center gap-3 p-2 hover:bg-white cursor-pointer"> <input type="radio" name="q1" value="b"> <span style="color: #374151;">B) What employees should do today</span> </label> <label class="flex items-center gap-3 p-2 hover:bg-white cursor-pointer"> <input type="radio" name="q1" value="c"> <span style="color: #374151;">C) A weekly meeting schedule</span> </label>
+        </div>
+       </div><!-- Q2 -->
+       <div style="background: #f9fafb; border: 1px solid #e5e7eb; padding: 16px; border-radius: 8px;">
+        <p class="font-semibold mb-4" style="color: #1f2937;">2. What does performance alignment mean?</p>
+        <div class="space-y-2"><label class="flex items-center gap-3 p-2 hover:bg-white cursor-pointer"> <input type="radio" name="q2" value="a" required> <span style="color: #374151;">A) Connecting KPIs at all levels to strategic goals</span> </label> <label class="flex items-center gap-3 p-2 hover:bg-white cursor-pointer"> <input type="radio" name="q2" value="b"> <span style="color: #374151;">B) Measuring only individual employee performance</span> </label> <label class="flex items-center gap-3 p-2 hover:bg-white cursor-pointer"> <input type="radio" name="q2" value="c"> <span style="color: #374151;">C) Creating a financial budget</span> </label>
+        </div>
+       </div><!-- Q3 -->
+       <div style="background: #f9fafb; border: 1px solid #e5e7eb; padding: 16px; border-radius: 8px;">
+        <p class="font-semibold mb-4" style="color: #1f2937;">3. Which framework looks at 4 perspectives: Financial, Customer, Internal Process, and Learning &amp; Growth?</p>
+        <div class="space-y-2"><label class="flex items-center gap-3 p-2 hover:bg-white cursor-pointer"> <input type="radio" name="q3" value="a" required> <span style="color: #374151;">A) Balanced Scorecard</span> </label> <label class="flex items-center gap-3 p-2 hover:bg-white cursor-pointer"> <input type="radio" name="q3" value="b"> <span style="color: #374151;">B) OKR Framework</span> </label> <label class="flex items-center gap-3 p-2 hover:bg-white cursor-pointer"> <input type="radio" name="q3" value="c"> <span style="color: #374151;">C) SMART KPI Framework</span> </label>
+        </div>
+       </div><!-- Q4 -->
+       <div style="background: #f9fafb; border: 1px solid #e5e7eb; padding: 16px; border-radius: 8px;">
+        <p class="font-semibold mb-4" style="color: #1f2937;">4. At what level do we measure the whole company's performance?</p>
+        <div class="space-y-2"><label class="flex items-center gap-3 p-2 hover:bg-white cursor-pointer"> <input type="radio" name="q4" value="a" required> <span style="color: #374151;">A) Enterprise KPIs</span> </label> <label class="flex items-center gap-3 p-2 hover:bg-white cursor-pointer"> <input type="radio" name="q4" value="b"> <span style="color: #374151;">B) Departmental KPIs</span> </label> <label class="flex items-center gap-3 p-2 hover:bg-white cursor-pointer"> <input type="radio" name="q4" value="c"> <span style="color: #374151;">C) Individual KPIs</span> </label>
+        </div>
+       </div><!-- Q5 -->
+       <div style="background: #f9fafb; border: 1px solid #e5e7eb; padding: 16px; border-radius: 8px;">
+        <p class="font-semibold mb-4" style="color: #1f2937;">5. Which SMART criterion means a KPI must be connected to business goals?</p>
+        <div class="space-y-2"><label class="flex items-center gap-3 p-2 hover:bg-white cursor-pointer"> <input type="radio" name="q5" value="a" required> <span style="color: #374151;">A) Relevant</span> </label> <label class="flex items-center gap-3 p-2 hover:bg-white cursor-pointer"> <input type="radio" name="q5" value="b"> <span style="color: #374151;">B) Specific</span> </label> <label class="flex items-center gap-3 p-2 hover:bg-white cursor-pointer"> <input type="radio" name="q5" value="c"> <span style="color: #374151;">C) Measurable</span> </label>
+        </div>
+       </div><button type="submit" class="w-full px-6 py-3 rounded-lg font-semibold text-white" style="background: linear-gradient(135deg, #3b82f6, #1e40af);">Check Answers</button>
+      </form>
+      <div id="quiz-results" style="display: none; margin-top: 24px; padding: 16px; background: #f0fdf4; border-left: 4px solid #10b981; border-radius: 8px;">
+       <p id="quiz-score" style="color: #047857; font-weight: 600; font-size: 18px;"></p>
+       <p id="quiz-feedback" style="color: #374151; margin-top: 8px; font-size: 14px;"></p>
+      </div>
+     </div>
+    </section>
+   </main>
+  </div>
+  <script>
+    const defaultConfig = {
+      course_title: 'DM104 - Evaluation of Business Performance'
+    };
+
+    let config = { ...defaultConfig };
+    let currentRecordCount = 0;
+
+    const dataHandler = {
+      onDataChanged(data) {
+        currentRecordCount = data.length;
+      }
+    };
+
+    async function initSDK() {
+      if (window.dataSdk) {
+        const result = await window.dataSdk.init(dataHandler);
+        if (!result.isOk) console.error('Failed to initialize Data SDK');
+      }
+
+      if (window.elementSdk) {
+        window.elementSdk.init({
+          defaultConfig,
+          onConfigChange,
+          mapToCapabilities,
+          mapToEditPanelValues
+        });
+      }
+    }
+
+    async function onConfigChange(newConfig) {
+      config = { ...config, ...newConfig };
+      const titleEl = document.getElementById('course-title');
+      if (titleEl) titleEl.textContent = config.course_title || 'Evaluation of Business Performance';
+    }
+
+    function mapToCapabilities(config) {
+      return { recolorables: [], borderables: [], fontEditable: undefined, fontSizeable: undefined };
+    }
+
+    function mapToEditPanelValues(config) {
+      return new Map([['course_title', config.course_title || defaultConfig.course_title]]);
+    }
+
+    function switchTab(tabName, event) {
+      if (event) event.preventDefault();
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.tab-button').forEach(el => el.classList.remove('active'));
+      document.getElementById(tabName + '-tab').classList.add('active');
+      event.target.classList.add('active');
+    }
+
+    function showToast(message) {
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.textContent = message;
+      document.body.appendChild(toast);
+      setTimeout(() => toast.remove(), 3000);
+    }
+
+    // Individual Activity Submission
+    document.getElementById('individual-form')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = document.getElementById('ind-name').value;
+      const email = document.getElementById('ind-email').value;
+      const business = document.getElementById('ind-business').value;
+      const kpis = document.getElementById('ind-kpis').value;
+
+      if (window.dataSdk) {
+        const result = await window.dataSdk.create({
+          student_name: name,
+          email: email,
+          week: 'week4',
+          activity_type: 'individual_kpi_design',
+          submission_text: `Business: ${business}\n\nKPIs:\n${kpis}`,
+          timestamp: new Date().toISOString()
+        });
+
+        if (result.isOk) {
+          showToast('✅ Activity submitted successfully!');
+          document.getElementById('individual-form').reset();
+        } else {
+          showToast('⚠️ Error submitting. Please try again.');
+        }
+      }
+    });
+
+    // Group Activity Submission
+    document.getElementById('group-form')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const names = document.getElementById('grp-names').value;
+      const email = document.getElementById('grp-email').value;
+      const goal = document.getElementById('grp-goal').value;
+      const sales = document.getElementById('grp-sales').value;
+      const ops = document.getElementById('grp-ops').value;
+      const cs = document.getElementById('grp-cs').value;
+      const alignment = document.getElementById('grp-alignment').value;
+
+      if (window.dataSdk) {
+        const result = await window.dataSdk.create({
+          student_name: names,
+          email: email,
+          week: 'week4',
+          activity_type: 'group_performance_dashboard',
+          submission_text: `Strategic Goal: ${goal}\n\nSales KPIs:\n${sales}\n\nOperations KPIs:\n${ops}\n\nCustomer Service KPIs:\n${cs}\n\nAlignment:\n${alignment}`,
+          timestamp: new Date().toISOString()
+        });
+
+        if (result.isOk) {
+          showToast('✅ Dashboard submitted!');
+          document.getElementById('group-form').reset();
+        } else {
+          showToast('⚠️ Error submitting. Please try again.');
+        }
+      }
+    });
+
+    // Quiz Submission
+    document.getElementById('quiz-form')?.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const answers = {
+        q1: document.querySelector('input[name="q1"]:checked')?.value,
+        q2: document.querySelector('input[name="q2"]:checked')?.value,
+        q3: document.querySelector('input[name="q3"]:checked')?.value,
+        q4: document.querySelector('input[name="q4"]:checked')?.value,
+        q5: document.querySelector('input[name="q5"]:checked')?.value
+      };
+
+      const correctAnswers = { q1: 'a', q2: 'a', q3: 'a', q4: 'a', q5: 'a' };
+      let score = Object.keys(correctAnswers).filter(q => answers[q] === correctAnswers[q]).length;
+
+      document.getElementById('quiz-form').style.display = 'none';
+      document.getElementById('quiz-results').style.display = 'block';
+      const percent = Math.round((score / 5) * 100);
+      document.getElementById('quiz-score').textContent = `Score: ${score}/5 (${percent}%)`;
+
+      let feedback = '';
+      if (percent === 100) feedback = '🌟 Perfect! You've mastered Week 4 concepts!';
+      else if (percent >= 80) feedback = '✨ Excellent! You understand the material well.';
+      else if (percent >= 60) feedback = '📚 Good effort! Review the frameworks section for more clarity.';
+      else feedback = '💪 Keep studying! Focus on strategic alignment and frameworks.';
+
+      document.getElementById('quiz-feedback').textContent = feedback;
+    });
+
+    initSDK();
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9c77db1c91ac064f',t:'MTc3MDAxNjA5Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

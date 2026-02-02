@@ -1,0 +1,709 @@
+<!doctype html>
+<html lang="en" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DM104 Week 5 - Measuring Efficiency, Effectiveness, and Productivity</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="/_sdk/data_sdk.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&amp;family=Lato:wght@400;500;700&amp;display=swap" rel="stylesheet">
+  <style>
+    body { box-sizing: border-box; }
+    html, body, #app-wrapper { height: 100%; width: 100%; }
+    .font-heading { font-family: 'Merriweather', Georgia, serif; }
+    .font-body { font-family: 'Lato', system-ui, sans-serif; }
+    
+    .term-highlight {
+      position: relative;
+      cursor: help;
+      border-bottom: 2px dotted #3b82f6;
+      padding: 2px 0;
+    }
+    .tooltip {
+      visibility: hidden;
+      position: absolute;
+      background: #1f2937;
+      color: #f3f4f6;
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      z-index: 50;
+      border-left: 3px solid #3b82f6;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+      max-width: 280px;
+      line-height: 1.5;
+      white-space: normal;
+      bottom: 120%;
+      left: 50%;
+      transform: translateX(-50%);
+      margin-bottom: 8px;
+    }
+    .term-highlight:hover .tooltip { visibility: visible; }
+    
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-slide-in { animation: slideIn 0.6s ease-out; }
+    .card-hover { transition: all 0.3s ease; }
+    .card-hover:hover { transform: translateY(-4px); box-shadow: 0 15px 40px rgba(59, 130, 246, 0.15); }
+    
+    .definition-box { border-left: 4px solid #8b5cf6; background: rgba(139, 92, 246, 0.05); }
+    .example-box { border-left: 4px solid #10b981; background: rgba(16, 185, 129, 0.05); }
+    .activity-box { border-left: 4px solid #6366f1; background: rgba(99, 102, 241, 0.05); }
+    .comparison-box { border-left: 4px solid #f59e0b; background: rgba(245, 158, 11, 0.05); }
+    .scenario-box { border-left: 4px solid #06b6d4; background: rgba(6, 182, 212, 0.05); }
+    .metrics-box { border-left: 4px solid #ec4899; background: rgba(236, 72, 153, 0.05); }
+    
+    .tab-button {
+      padding: 12px 20px;
+      font-weight: 600;
+      border-bottom: 3px solid transparent;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      white-space: nowrap;
+      background: none;
+      border: none;
+    }
+    .tab-button.active { border-bottom-color: #3b82f6; color: #3b82f6; }
+    .tab-button:not(.active) { color: #6b7280; }
+    
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+    
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #10b981;
+      color: white;
+      padding: 14px 20px;
+      border-radius: 8px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      z-index: 100;
+      animation: slideIn 0.3s ease-out;
+    }
+    
+    .metric-card {
+      background: white;
+      border: 2px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 16px;
+      transition: all 0.3s ease;
+    }
+    .metric-card:hover { border-color: #3b82f6; box-shadow: 0 8px 16px rgba(59, 130, 246, 0.1); }
+    
+    .formula-box {
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+      margin: 8px 0;
+      overflow-x: auto;
+    }
+    
+    .scenario-card {
+      background: white;
+      border-left: 4px solid #06b6d4;
+      border-radius: 8px;
+      padding: 16px;
+      margin: 12px 0;
+    }
+    
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      border-radius: 8px;
+      overflow: hidden;
+      margin: 16px 0;
+    }
+    .comparison-table th {
+      background: linear-gradient(135deg, #3b82f6, #1e40af);
+      color: white;
+      padding: 12px;
+      text-align: left;
+      font-weight: 600;
+    }
+    .comparison-table td {
+      padding: 12px;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    .comparison-table tr:nth-child(even) { background: #f9fafb; }
+    
+    input, textarea, select {
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 12px;
+      font-family: inherit;
+      font-size: 14px;
+    }
+    input:focus, textarea:focus, select:focus {
+      outline: none;
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+    
+    button {
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    button:hover { transform: translateY(-2px); }
+    button:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    .metric-visual {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin: 16px 0;
+    }
+
+    .metric-item {
+      background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+      border-left: 4px solid #0284c7;
+      padding: 16px;
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .metric-value {
+      font-size: 24px;
+      font-weight: 700;
+      color: #0369a1;
+      margin-bottom: 4px;
+    }
+
+    .metric-label {
+      font-size: 12px;
+      color: #164e63;
+      font-weight: 600;
+    }
+  </style>
+  <style>@view-transition { navigation: auto; }</style>
+ </head>
+ <body class="h-full font-body w-full">
+  <div id="app-wrapper" class="w-full h-full overflow-auto" style="background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);"><!-- Navigation -->
+   <nav class="sticky top-0 z-40 w-full" style="background: white; border-bottom: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+    <div class="w-full px-6 py-4 flex items-center justify-between">
+     <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background: linear-gradient(135deg, #3b82f6, #1e40af);">
+       <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+       </svg>
+      </div>
+      <div>
+       <p class="text-xs font-semibold text-gray-500">DM104</p>
+       <p class="text-sm font-bold text-gray-900" id="course-title">Evaluation of Business Performance</p>
+      </div>
+     </div>
+     <div class="text-sm font-semibold px-4 py-2 rounded-lg" style="background: #e0e7ff; color: #3b82f6;">
+      ⚡ Week 5: Efficiency &amp; Effectiveness
+     </div>
+    </div>
+   </nav>
+   <main class="w-full px-6 py-12" style="max-width: 1400px; margin: 0 auto;"><!-- Week 5 Content -->
+    <section class="mb-12 animate-slide-in"><!-- Header -->
+     <div class="text-center mb-12">
+      <h1 class="font-heading text-4xl font-bold mb-4" style="color: #1f2937;">Week 5: Measuring Efficiency, Effectiveness, and Productivity</h1>
+      <p style="color: #6b7280; font-size: 16px;">Learn the practical metrics that show if your business is working smart and hard</p>
+     </div><!-- Learning Objectives -->
+     <div class="rounded-2xl p-8 mb-12 w-full card-hover" style="background: white; border: 1px solid #e5e7eb;">
+      <h2 class="font-heading text-2xl font-bold mb-6" style="color: #1f2937;">📚 Learning Objectives (ILO)</h2>
+      <div class="grid md:grid-cols-2 gap-4 w-full">
+       <div class="flex gap-3"><span style="color: #3b82f6; font-size: 20px;">✓</span>
+        <div>
+         <p class="font-semibold" style="color: #1f2937;">Understand efficiency metrics</p>
+         <p style="color: #6b7280; font-size: 14px;">Measure how well resources are used</p>
+        </div>
+       </div>
+       <div class="flex gap-3"><span style="color: #3b82f6; font-size: 20px;">✓</span>
+        <div>
+         <p class="font-semibold" style="color: #1f2937;">Measure effectiveness</p>
+         <p style="color: #6b7280; font-size: 14px;">Track if goals are being achieved</p>
+        </div>
+       </div>
+       <div class="flex gap-3"><span style="color: #3b82f6; font-size: 20px;">✓</span>
+        <div>
+         <p class="font-semibold" style="color: #1f2937;">Calculate productivity</p>
+         <p style="color: #6b7280; font-size: 14px;">Measure output per input (time, cost, effort)</p>
+        </div>
+       </div>
+       <div class="flex gap-3"><span style="color: #3b82f6; font-size: 20px;">✓</span>
+        <div>
+         <p class="font-semibold" style="color: #1f2937;">Apply to real scenarios</p>
+         <p style="color: #6b7280; font-size: 14px;">Solve business problems using these measures</p>
+        </div>
+       </div>
+      </div>
+     </div><!-- Section 1: The Big Picture -->
+     <div class="rounded-2xl p-8 mb-8 w-full card-hover" style="background: white; border: 1px solid #e5e7eb;">
+      <h2 class="font-heading text-2xl font-bold mb-6" style="color: #1f2937;">🎯 Efficiency vs Effectiveness vs Productivity: The Big Picture</h2>
+      <p class="mb-6" style="color: #6b7280;">Many people think these three words mean the same thing. They don't! Understanding the difference is crucial for managing business performance.</p>
+      <table class="comparison-table">
+       <thead>
+        <tr>
+         <th style="width: 25%;">Concept</th>
+         <th style="width: 25%;">What It Means</th>
+         <th style="width: 25%;">Question It Answers</th>
+         <th style="width: 25%;">Real Example</th>
+        </tr>
+       </thead>
+       <tbody>
+        <tr>
+         <td style="font-weight: 600; color: #10b981;">⚡ EFFICIENCY</td>
+         <td style="color: #374151;">Doing things RIGHT - using minimal resources (time, money, materials)</td>
+         <td style="color: #374151; font-size: 13px;">"Are we wasting resources?"</td>
+         <td style="color: #374151; font-size: 13px;">Producing 100 shirts using only 90 meters of fabric (less waste)</td>
+        </tr>
+        <tr>
+         <td style="font-weight: 600; color: #0284c7;">✓ EFFECTIVENESS</td>
+         <td style="color: #374151;">Doing the RIGHT things - achieving planned goals/results</td>
+         <td style="color: #374151; font-size: 13px;">"Did we reach our target?"</td>
+         <td style="color: #374151; font-size: 13px;">We planned to sell 1,000 shirts and we sold exactly 1,000</td>
+        </tr>
+        <tr>
+         <td style="font-weight: 600; color: #f59e0b;">📊 PRODUCTIVITY</td>
+         <td style="color: #374151;">Output divided by input - getting maximum results from what you invest</td>
+         <td style="color: #374151; font-size: 13px;">"What's our return on effort?"</td>
+         <td style="color: #374151; font-size: 13px;">5 workers made 500 shirts (100 shirts per worker)</td>
+        </tr>
+       </tbody>
+      </table>
+      <div style="background: #eff6ff; border-left: 4px solid #3b82f6; padding: 16px; border-radius: 8px; margin-top: 16px;">
+       <p class="font-semibold mb-2" style="color: #164e63;">💡 Key Insight</p>
+       <p style="color: #164e63; font-size: 14px;">You can be <strong>efficient but not effective</strong> (fast but wrong target) or <strong>effective but not efficient</strong> (right target but wasteful). The best businesses are BOTH efficient AND effective!</p>
+      </div>
+     </div><!-- Section 2: Efficiency -->
+     <div class="rounded-2xl p-8 mb-8 w-full card-hover" style="background: white; border: 1px solid #e5e7eb;">
+      <h2 class="font-heading text-2xl font-bold mb-6" style="color: #1f2937;">⚡ EFFICIENCY: Doing Things Right</h2>
+      <div class="definition-box rounded-lg p-6 mb-6">
+       <p class="font-semibold mb-3" style="color: #6b21a6;">Definition</p>
+       <p style="color: #374151; line-height: 1.8;"><span class="term-highlight">Efficiency</span></p>
+       <div class="tooltip">
+        The ability to accomplish tasks using minimum resources (time, money, materials, energy). It's about not wasting what you have.
+       </div> means using your resources wisely without waste. It answers: "Are we doing this the cheapest/fastest way possible?" 
+       <p></p>
+      </div>
+      <h3 class="font-semibold mb-4 mt-6" style="color: #1f2937; font-size: 16px;">Common Efficiency Metrics:</h3>
+      <div class="metric-visual">
+       <div class="metric-card">
+        <p style="color: #374151; font-weight: 600; margin-bottom: 12px;">⏱️ Time Efficiency</p>
+        <div class="formula-box">
+         Output per Hour<br>
+         = Tasks Completed ÷ Hours Worked
+        </div>
+        <p style="color: #6b7280; font-size: 13px; margin-top: 8px;"><strong>Example:</strong> Manager processed 40 customer complaints in 8 hours = 5 complaints/hour</p>
+       </div>
+       <div class="metric-card">
+        <p style="color: #374151; font-weight: 600; margin-bottom: 12px;">💰 Cost Efficiency</p>
+        <div class="formula-box">
+         Cost per Unit<br>
+         = Total Cost ÷ Units Produced
+        </div>
+        <p style="color: #6b7280; font-size: 13px; margin-top: 8px;"><strong>Example:</strong> Made 100 pizzas spending $400 = $4 per pizza</p>
+       </div>
+       <div class="metric-card">
+        <p style="color: #374151; font-weight: 600; margin-bottom: 12px;">🎯 Resource Efficiency</p>
+        <div class="formula-box">
+         Waste Reduction Rate<br>
+         = (Waste Reduced ÷ Original Waste) × 100%
+        </div>
+        <p style="color: #6b7280; font-size: 13px; margin-top: 8px;"><strong>Example:</strong> Reduced packaging waste from 50kg to 30kg = 40% reduction</p>
+       </div>
+      </div>
+      <div class="example-box rounded-lg p-6 mt-8">
+       <p class="font-semibold mb-4" style="color: #047857;">🏭 Real-World Scenario: Manufacturing Plant</p>
+       <p style="color: #374151; line-height: 1.8; margin-bottom: 12px;"><strong>The Situation:</strong> A textile factory produces 1,000 shirts per day but uses 1,200 meters of fabric (100 meters wasted).</p>
+       <p style="color: #374151; line-height: 1.8;"><strong>Efficiency Problem:</strong> They're wasting 10% of materials. <br><strong>Solution:</strong> Retrain workers on cutting techniques → Only 1,050 meters needed (saves 150 meters/day!)</p>
+      </div>
+      <div style="background: linear-gradient(135deg, #fef3c7 0%, #fcd34d 100%); border-left: 4px solid #f59e0b; padding: 16px; border-radius: 8px; margin-top: 16px;">
+       <p class="font-semibold mb-2" style="color: #92400e;">💼 Why Efficiency Matters</p>
+       <ul style="color: #78350f; font-size: 14px; line-height: 2;">
+        <li>✓ Cuts costs (more profit from same revenue)</li>
+        <li>✓ Improves competitiveness (can offer lower prices)</li>
+        <li>✓ Reduces environmental impact (less waste)</li>
+        <li>✓ Increases capacity (same people do more work)</li>
+       </ul>
+      </div>
+     </div><!-- Section 3: Effectiveness -->
+     <div class="rounded-2xl p-8 mb-8 w-full card-hover" style="background: white; border: 1px solid #e5e7eb;">
+      <h2 class="font-heading text-2xl font-bold mb-6" style="color: #1f2937;">✓ EFFECTIVENESS: Doing the Right Things</h2>
+      <div class="definition-box rounded-lg p-6 mb-6">
+       <p class="font-semibold mb-3" style="color: #6b21a6;">Definition</p>
+       <p style="color: #374151; line-height: 1.8;"><span class="term-highlight">Effectiveness</span></p>
+       <div class="tooltip">
+        The degree to which goals or targets are achieved. It measures whether you're doing the RIGHT work that leads to desired results.
+       </div> means achieving your planned goals and targets. It answers: "Did we do what we planned to do?" 
+       <p></p>
+      </div>
+      <h3 class="font-semibold mb-4 mt-6" style="color: #1f2937; font-size: 16px;">Common Effectiveness Metrics:</h3>
+      <div class="metric-visual">
+       <div class="metric-card">
+        <p style="color: #374151; font-weight: 600; margin-bottom: 12px;">🎯 Goal Attainment Rate</p>
+        <div class="formula-box">
+         = (Actual Result ÷ Target Goal) × 100%
+        </div>
+        <p style="color: #6b7280; font-size: 13px; margin-top: 8px;"><strong>Example:</strong> Target: 100 new customers | Actual: 85 customers = 85% effectiveness</p>
+       </div>
+       <div class="metric-card">
+        <p style="color: #374151; font-weight: 600; margin-bottom: 12px;">📊 Success Rate</p>
+        <div class="formula-box">
+         = (Successful Attempts ÷ Total Attempts) × 100%
+        </div>
+        <p style="color: #6b7280; font-size: 13px; margin-top: 8px;"><strong>Example:</strong> Sales calls: 20 calls → 5 sales = 25% success rate</p>
+       </div>
+       <div class="metric-card">
+        <p style="color: #374151; font-weight: 600; margin-bottom: 12px;">😊 Customer Satisfaction</p>
+        <div class="formula-box">
+         = (Satisfied Customers ÷ Total Customers) × 100%
+        </div>
+        <p style="color: #6b7280; font-size: 13px; margin-top: 8px;"><strong>Example:</strong> 450 satisfied out of 500 = 90% satisfaction</p>
+       </div>
+      </div>
+      <div class="example-box rounded-lg p-6 mt-8">
+       <p class="font-semibold mb-4" style="color: #047857;">🎥 Real-World Scenario: Movie Theater</p>
+       <p style="color: #374151; line-height: 1.8; margin-bottom: 12px;"><strong>The Situation:</strong> Goal: Fill 80% of seats in each showing. Actual: Only 60% filled.</p>
+       <p style="color: #374151; line-height: 1.8;"><strong>Effectiveness Problem:</strong> Not reaching revenue target (only 75% effective). <br><strong>Solution:</strong> Better marketing → increase awareness → fill more seats</p>
+      </div>
+      <div style="background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%); border-left: 4px solid #0284c7; padding: 16px; border-radius: 8px; margin-top: 16px;">
+       <p class="font-semibold mb-2" style="color: #0369a1;">💡 Key Difference from Efficiency</p>
+       <p style="color: #164e63; font-size: 14px;"><strong>Efficiency:</strong> "We processed tickets quickly" | <strong>Effectiveness:</strong> "We sold the number of tickets we needed"</p>
+      </div>
+     </div><!-- Section 4: Productivity -->
+     <div class="rounded-2xl p-8 mb-8 w-full card-hover" style="background: white; border: 1px solid #e5e7eb;">
+      <h2 class="font-heading text-2xl font-bold mb-6" style="color: #1f2937;">📊 PRODUCTIVITY: Getting Maximum Results</h2>
+      <div class="definition-box rounded-lg p-6 mb-6">
+       <p class="font-semibold mb-3" style="color: #6b21a6;">Definition</p>
+       <p style="color: #374151; line-height: 1.8;"><span class="term-highlight">Productivity</span></p>
+       <div class="tooltip">
+        The ratio of output (results, products, services) to input (time, cost, labor, resources). Higher productivity = more output with same or fewer inputs.
+       </div> is output divided by input. It measures: "How much are we getting from what we're putting in?" 
+       <p></p>
+      </div>
+      <h3 class="font-semibold mb-4 mt-6" style="color: #1f2937; font-size: 16px;">Common Productivity Metrics:</h3>
+      <div class="metric-visual">
+       <div class="metric-card">
+        <p style="color: #374151; font-weight: 600; margin-bottom: 12px;">👤 Labor Productivity</p>
+        <div class="formula-box">
+         = Output ÷ Number of Workers
+        </div>
+        <p style="color: #6b7280; font-size: 13px; margin-top: 8px;"><strong>Example:</strong> 5 workers produced 250 units = 50 units per worker</p>
+       </div>
+       <div class="metric-card">
+        <p style="color: #374151; font-weight: 600; margin-bottom: 12px;">💵 Revenue per Employee</p>
+        <div class="formula-box">
+         = Total Revenue ÷ Number of Employees
+        </div>
+        <p style="color: #6b7280; font-size: 13px; margin-top: 8px;"><strong>Example:</strong> $5 million revenue ÷ 50 staff = $100,000 per employee</p>
+       </div>
+       <div class="metric-card">
+        <p style="color: #374151; font-weight: 600; margin-bottom: 12px;">📈 Profit per Hour</p>
+        <div class="formula-box">
+         = Total Profit ÷ Total Hours Worked
+        </div>
+        <p style="color: #6b7280; font-size: 13px; margin-top: 8px;"><strong>Example:</strong> $10,000 profit ÷ 1,000 hours = $10 profit/hour</p>
+       </div>
+      </div>
+      <div class="example-box rounded-lg p-6 mt-8">
+       <p class="font-semibold mb-4" style="color: #047857;">🍕 Real-World Scenario: Pizza Delivery Business</p>
+       <p style="color: #374151; line-height: 1.8; margin-bottom: 12px;"><strong>The Comparison:</strong></p>
+       <ul style="color: #374151; font-size: 14px; line-height: 1.8; margin-left: 12px;">
+        <li>📍 <strong>Company A:</strong> 10 drivers deliver 200 pizzas/day = 20 pizzas per driver</li>
+        <li>📍 <strong>Company B:</strong> 8 drivers deliver 200 pizzas/day = 25 pizzas per driver</li>
+       </ul>
+       <p style="color: #374151; line-height: 1.8; margin-top: 12px;"><strong>Insight:</strong> Company B has HIGHER productivity (fewer people, same output). They might be more efficient in routes, faster at serving customers, etc.</p>
+      </div>
+      <div style="background: linear-gradient(135deg, #e0fdf4 0%, #ccfbf1 100%); border-left: 4px solid #14b8a6; padding: 16px; border-radius: 8px; margin-top: 16px;">
+       <p class="font-semibold mb-2" style="color: #0d7377;">🚀 Ways to Improve Productivity</p>
+       <ul style="color: #134e4a; font-size: 14px; line-height: 2;">
+        <li>✓ Train employees (better skills = more output)</li>
+        <li>✓ Use better tools/technology</li>
+        <li>✓ Improve processes (remove unnecessary steps)</li>
+        <li>✓ Motivate teams (happy workers work harder)</li>
+        <li>✓ Streamline workflows</li>
+       </ul>
+      </div>
+     </div><!-- Section 5: Real Business Scenarios -->
+     <div class="rounded-2xl p-8 mb-8 w-full card-hover" style="background: white; border: 1px solid #e5e7eb;">
+      <h2 class="font-heading text-2xl font-bold mb-6" style="color: #1f2937;">🔍 Putting It All Together: Real Business Scenarios</h2>
+      <div class="scenario-card">
+       <p class="font-semibold mb-3" style="color: #0369a1; font-size: 15px;">📱 Scenario 1: Customer Support Center</p>
+       <p style="color: #374151; line-height: 1.6; margin-bottom: 12px;"><strong>The Business:</strong> Call center with 20 employees. Goal: Handle 1,000 customer calls per day with 95% satisfaction.</p>
+       <p style="color: #374151; line-height: 1.6; margin-bottom: 12px;"><strong>Current Performance:</strong></p>
+       <ul style="color: #374151; font-size: 14px; margin-left: 12px; margin-bottom: 12px;">
+        <li>✓ Actual calls: 1,100 per day (goal exceeded!)</li>
+        <li>✓ Customer satisfaction: 92% (slightly below target)</li>
+        <li>✓ Cost per call: $15</li>
+       </ul>
+       <p style="color: #374151; line-height: 1.6;"><strong>Analysis:</strong></p>
+       <div style="background: #f0fdf4; border-left: 3px solid #10b981; padding: 12px; border-radius: 4px; margin-top: 8px;">
+        <p style="color: #047857; font-size: 13px; line-height: 1.6;">✅ <strong>Effectiveness:</strong> 110% (exceeded 1,000 call target) - GOOD!<br>
+          ⚠️ <strong>Effectiveness:</strong> 97% satisfaction (target was 95%) - Actually GOOD!<br>
+          💰 <strong>Productivity:</strong> 1,100 calls ÷ 20 staff = 55 calls per employee<br>
+          💚 <strong>Efficiency:</strong> They handle MORE calls but keep satisfaction high = they're working SMART not just hard</p>
+       </div>
+      </div>
+      <div class="scenario-card">
+       <p class="font-semibold mb-3" style="color: #0369a1; font-size: 15px;">🏭 Scenario 2: Restaurant Chain</p>
+       <p style="color: #374151; line-height: 1.6; margin-bottom: 12px;"><strong>The Business:</strong> Local restaurant with 15 staff. Targets: Serve 200 customers/day, 90% satisfaction, $4 cost per meal.</p>
+       <p style="color: #374151; line-height: 1.6; margin-bottom: 12px;"><strong>Current Performance:</strong></p>
+       <ul style="color: #374151; font-size: 14px; margin-left: 12px; margin-bottom: 12px;">
+        <li>✓ Customers served: 150/day (missed target)</li>
+        <li>✓ Satisfaction: 88% (below 90% target)</li>
+        <li>✓ Cost per meal: $3.50 (better than target!)</li>
+       </ul>
+       <p style="color: #374151; line-height: 1.6;"><strong>Analysis:</strong></p>
+       <div style="background: #fee2e2; border-left: 3px solid #dc2626; padding: 12px; border-radius: 4px; margin-top: 8px;">
+        <p style="color: #991b1b; font-size: 13px; line-height: 1.6;">❌ <strong>Effectiveness:</strong> 75% (only 150 vs 200 target) - PROBLEM!<br>
+          ❌ <strong>Effectiveness:</strong> 98% satisfaction (below 90% target) - PROBLEM!<br>
+          📊 <strong>Productivity:</strong> 150 ÷ 15 = 10 customers per staff<br>
+          ✅ <strong>Efficiency:</strong> Low cost per meal - but not translating to more sales</p>
+       </div>
+       <p style="color: #374151; line-height: 1.6; margin-top: 12px;"><strong>What They Need:</strong> Focus on marketing to get MORE customers, and improve service speed to hit satisfaction target!</p>
+      </div>
+      <div class="scenario-card">
+       <p class="font-semibold mb-3" style="color: #0369a1; font-size: 15px;">🚗 Scenario 3: Taxi Service</p>
+       <p style="color: #374151; line-height: 1.6; margin-bottom: 12px;"><strong>The Business:</strong> Fleet of 10 taxis. Goal: Complete 50 trips per taxi per day, average fare $25, with 4.5-star rating.</p>
+       <p style="color: #374151; line-height: 1.6; margin-bottom: 12px;"><strong>Current Performance:</strong></p>
+       <ul style="color: #374151; font-size: 14px; margin-left: 12px; margin-bottom: 12px;">
+        <li>✓ Trips completed: 60 per taxi/day (EXCEEDED!)</li>
+        <li>✓ Average rating: 4.3 stars (slightly below 4.5)</li>
+        <li>✓ Revenue per taxi: $1,500/day (60 trips × $25)</li>
+       </ul>
+       <p style="color: #374151; line-height: 1.6;"><strong>Analysis:</strong></p>
+       <div style="background: #dbeafe; border-left: 3px solid #0284c7; padding: 12px; border-radius: 4px; margin-top: 8px;">
+        <p style="color: #0369a1; font-size: 13px; line-height: 1.6;">✅ <strong>Effectiveness:</strong> 120% (60 vs 50 trips) - EXCELLENT!<br>
+          ⚠️ <strong>Satisfaction:</strong> 95.6% (4.3 vs 4.5 rating) - NEEDS IMPROVEMENT<br>
+          💰 <strong>Productivity:</strong> High revenue per vehicle<br>
+          📝 <strong>Insight:</strong> Drivers are working hard (high trips) but maybe too fast? Quality suffering. Need driver training or slower pace.</p>
+       </div>
+      </div>
+     </div><!-- Activities Section -->
+     <div class="flex gap-4 mb-6 border-b w-full overflow-x-auto" style="border-color: #e5e7eb;"><button class="tab-button active" onclick="switchTab('individual', event)">👤 Problem-Solving Exercise</button> <button class="tab-button" onclick="switchTab('group', event)">👥 Group Activity</button> <button class="tab-button" onclick="switchTab('quiz', event)">✍️ Quiz</button>
+     </div><!-- Individual Activity: Problem Solving -->
+     <div id="individual-tab" class="tab-content active activity-box rounded-2xl p-8 mb-8 w-full">
+      <h3 class="font-heading text-2xl font-bold mb-6" style="color: #1f2937;">👤 Problem-Solving Exercise: Real Business Scenario Analysis</h3>
+      <div style="background: #eff6ff; border-left: 4px solid #3b82f6; padding: 16px; border-radius: 8px; margin-bottom: 16px;">
+       <p style="color: #164e63; line-height: 1.8;"><strong>Task:</strong> Choose one business scenario and analyze it using efficiency, effectiveness, and productivity metrics. Identify problems and suggest solutions.</p>
+      </div>
+      <form id="individual-form" class="w-full space-y-4"><input type="text" placeholder="Your name" id="ind-name" class="w-full" required> <input type="email" placeholder="Your email" id="ind-email" class="w-full" required>
+       <div><label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Choose a scenario to analyze:</label> <select id="ind-scenario" class="w-full" required> <option value="">-- Select one --</option> <option value="manufacturing">🏭 Manufacturing: 50 workers produce 2,000 units/day costing $30,000, target 2,500 units, goal is to reach $50K profit/day</option> <option value="retail">🏪 Retail Store: 10 cashiers process 300 transactions/day in 8 hours, 1 complaint per 50 customers, inventory waste is 5%</option> <option value="shipping">📦 Shipping: 20 delivery drivers complete 500 deliveries/day, 92% on-time rate, target 95%, cost is $8/delivery</option> <option value="hospital">🏥 Hospital: 30 nurses handle 600 patients/day, 88% satisfaction, wait time 45 mins (target 20 mins)</option> <option value="software">💻 Software: Dev team of 8 people write 800 lines of code/day, 5% bugs, deadline is 10,000 lines in 2 weeks</option> </select>
+       </div>
+       <div><label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Analysis (Calculate &amp; Explain):</label> <textarea id="ind-analysis" placeholder="Analyze this scenario:
+1. What metrics would you calculate? (efficiency, effectiveness, productivity)
+2. What are the problems you identify?
+3. Are they efficient, effective, or productive? Why?
+4. What specific changes would you recommend?" class="w-full" style="min-height: 200px; font-size: 13px;" required></textarea>
+       </div><button type="submit" class="w-full px-6 py-3 rounded-lg font-semibold text-white" style="background: linear-gradient(135deg, #3b82f6, #1e40af);">Submit Analysis</button>
+      </form>
+     </div><!-- Group Activity -->
+     <div id="group-tab" class="tab-content activity-box rounded-2xl p-8 mb-8 w-full" style="display: none;">
+      <h3 class="font-heading text-2xl font-bold mb-6" style="color: #1f2937;">👥 Group Activity: Design a Performance Dashboard</h3>
+      <div style="background: #eff6ff; border-left: 4px solid #3b82f6; padding: 16px; border-radius: 8px; margin-bottom: 16px;">
+       <p style="color: #164e63; line-height: 1.8;"><strong>Task:</strong> As a team, create a performance dashboard for a business that tracks efficiency, effectiveness, and productivity. Define what metrics to measure and set targets for each.</p>
+      </div>
+      <form id="group-form" class="w-full space-y-4"><input type="text" placeholder="All team member names (comma-separated)" id="grp-names" class="w-full" required> <input type="email" placeholder="One team email" id="grp-email" class="w-full" required>
+       <div><label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Choose a business type:</label> <select id="grp-business" class="w-full" required> <option value="">-- Select one --</option> <option value="bank">🏦 Bank Call Center</option> <option value="ecommerce">🛒 E-commerce Order Fulfillment</option> <option value="hotel">🏨 Hotel Housekeeping</option> <option value="school">🎓 School Administration</option> <option value="salon">💇 Beauty Salon</option> </select>
+       </div>
+       <div><label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Efficiency Metrics (3-4 metrics you would track):</label> <textarea id="grp-efficiency" placeholder="What would you measure for efficiency? E.g., time to complete task, cost per unit, waste reduction, etc.
+Include how you'd measure it and what target/goal." class="w-full" style="min-height: 80px; font-size: 13px;" required></textarea>
+       </div>
+       <div><label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Effectiveness Metrics (3-4 metrics):</label> <textarea id="grp-effectiveness" placeholder="What goals/targets need to be achieved? E.g., customer satisfaction, number of tasks completed, quality standards met." class="w-full" style="min-height: 80px; font-size: 13px;" required></textarea>
+       </div>
+       <div><label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Productivity Metrics (2-3 metrics):</label> <textarea id="grp-productivity" placeholder="How would you measure output per input? E.g., revenue per employee, tasks per hour, profit per customer." class="w-full" style="min-height: 80px; font-size: 13px;" required></textarea>
+       </div>
+       <div><label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">How would you use these metrics together to improve performance?</label> <textarea id="grp-improvement" placeholder="Describe how monitoring all three (efficiency, effectiveness, productivity) together helps manage the business better." class="w-full" style="min-height: 80px; font-size: 13px;" required></textarea>
+       </div><button type="submit" class="w-full px-6 py-3 rounded-lg font-semibold text-white" style="background: linear-gradient(135deg, #3b82f6, #1e40af);">Submit Dashboard</button>
+      </form>
+     </div><!-- Quiz -->
+     <div id="quiz-tab" class="tab-content rounded-2xl p-8 mb-8 w-full" style="background: white; border: 1px solid #e5e7eb; display: none;">
+      <h3 class="font-heading text-2xl font-bold mb-6" style="color: #1f2937;">✍️ Week 5 Knowledge Check</h3>
+      <form id="quiz-form" class="space-y-6 w-full"><!-- Q1 -->
+       <div style="background: #f9fafb; border: 1px solid #e5e7eb; padding: 16px; border-radius: 8px;">
+        <p class="font-semibold mb-4" style="color: #1f2937;">1. Which of the following BEST defines efficiency?</p>
+        <div class="space-y-2"><label class="flex items-center gap-3 p-2 hover:bg-white cursor-pointer"> <input type="radio" name="q1" value="a" required> <span style="color: #374151;">A) Using minimum resources (time, money, materials) without waste</span> </label> <label class="flex items-center gap-3 p-2 hover:bg-white cursor-pointer"> <input type="radio" name="q1" value="b"> <span style="color: #374151;">B) Achieving planned goals and targets</span> </label> <label class="flex items-center gap-3 p-2 hover:bg-white cursor-pointer"> <input type="radio" name="q1" value="c"> <span style="color: #374151;">C) Getting maximum output from what you invest</span> </label>
+        </div>
+       </div><!-- Q2 -->
+       <div style="background: #f9fafb; border: 1px solid #e5e7eb; padding: 16px; border-radius: 8px;">
+        <p class="font-semibold mb-4" style="color: #1f2937;">2. A factory completes its daily goal of 1,000 units but wastes $500 worth of materials. What is true?</p>
+        <div class="space-y-2"><label class="flex items-center gap-3 p-2 hover:bg-white cursor-pointer"> <input type="radio" name="q2" value="a" required> <span style="color: #374151;">A) The factory is effective but not efficient</span> </label> <label class="flex items-center gap-3 p-2 hover:bg-white cursor-pointer"> <input type="radio" name="q2" value="b"> <span style="color: #374151;">B) The factory is efficient but not effective</span> </label> <label class="flex items-center gap-3 p-2 hover:bg-white cursor-pointer"> <input type="radio" name="q2" value="c"> <span style="color: #374151;">C) The factory is both effective and efficient</span> </label>
+        </div>
+       </div><!-- Q3 -->
+       <div style="background: #f9fafb; border: 1px solid #e5e7eb; padding: 16px; border-radius: 8px;">
+        <p class="font-semibold mb-4" style="color: #1f2937;">3. How would you calculate Labor Productivity?</p>
+        <div class="space-y-2"><label class="flex items-center gap-3 p-2 hover:bg-white cursor-pointer"> <input type="radio" name="q3" value="a" required> <span style="color: #374151;">A) Output ÷ Number of Workers</span> </label> <label class="flex items-center gap-3 p-2 hover:bg-white cursor-pointer"> <input type="radio" name="q3" value="b"> <span style="color: #374151;">B) Total Cost ÷ Output</span> </label> <label class="flex items-center gap-3 p-2 hover:bg-white cursor-pointer"> <input type="radio" name="q3" value="c"> <span style="color: #374151;">C) Goals Achieved ÷ Total Goals</span> </label>
+        </div>
+       </div><!-- Q4 -->
+       <div style="background: #f9fafb; border: 1px solid #e5e7eb; padding: 16px; border-radius: 8px;">
+        <p class="font-semibold mb-4" style="color: #1f2937;">4. A restaurant serves 200 customers with 85% satisfaction (target 90%). What does this show?</p>
+        <div class="space-y-2"><label class="flex items-center gap-3 p-2 hover:bg-white cursor-pointer"> <input type="radio" name="q4" value="a" required> <span style="color: #374151;">A) Low effectiveness (satisfaction goal not met)</span> </label> <label class="flex items-center gap-3 p-2 hover:bg-white cursor-pointer"> <input type="radio" name="q4" value="b"> <span style="color: #374151;">B) Low efficiency (too many customers)</span> </label> <label class="flex items-center gap-3 p-2 hover:bg-white cursor-pointer"> <input type="radio" name="q4" value="c"> <span style="color: #374151;">C) Low productivity (not enough revenue)</span> </label>
+        </div>
+       </div><!-- Q5 -->
+       <div style="background: #f9fafb; border: 1px solid #e5e7eb; padding: 16px; border-radius: 8px;">
+        <p class="font-semibold mb-4" style="color: #1f2937;">5. Which statement is TRUE about efficiency and effectiveness?</p>
+        <div class="space-y-2"><label class="flex items-center gap-3 p-2 hover:bg-white cursor-pointer"> <input type="radio" name="q5" value="a" required> <span style="color: #374151;">A) You can be effective without being efficient</span> </label> <label class="flex items-center gap-3 p-2 hover:bg-white cursor-pointer"> <input type="radio" name="q5" value="b"> <span style="color: #374151;">B) Efficiency is more important than effectiveness</span> </label> <label class="flex items-center gap-3 p-2 hover:bg-white cursor-pointer"> <input type="radio" name="q5" value="c"> <span style="color: #374151;">C) You cannot improve productivity without improving efficiency</span> </label>
+        </div>
+       </div><button type="submit" class="w-full px-6 py-3 rounded-lg font-semibold text-white" style="background: linear-gradient(135deg, #3b82f6, #1e40af);">Check Answers</button>
+      </form>
+      <div id="quiz-results" style="display: none; margin-top: 24px; padding: 16px; background: #f0fdf4; border-left: 4px solid #10b981; border-radius: 8px;">
+       <p id="quiz-score" style="color: #047857; font-weight: 600; font-size: 18px;"></p>
+       <p id="quiz-feedback" style="color: #374151; margin-top: 8px; font-size: 14px;"></p>
+      </div>
+     </div>
+    </section>
+   </main>
+  </div>
+  <script>
+    const defaultConfig = {
+      course_title: 'DM104 - Evaluation of Business Performance'
+    };
+
+    let config = { ...defaultConfig };
+    let currentRecordCount = 0;
+
+    const dataHandler = {
+      onDataChanged(data) {
+        currentRecordCount = data.length;
+      }
+    };
+
+    async function initSDK() {
+      if (window.dataSdk) {
+        const result = await window.dataSdk.init(dataHandler);
+        if (!result.isOk) console.error('Failed to initialize Data SDK');
+      }
+
+      if (window.elementSdk) {
+        window.elementSdk.init({
+          defaultConfig,
+          onConfigChange,
+          mapToCapabilities,
+          mapToEditPanelValues
+        });
+      }
+    }
+
+    async function onConfigChange(newConfig) {
+      config = { ...config, ...newConfig };
+      const titleEl = document.getElementById('course-title');
+      if (titleEl) titleEl.textContent = config.course_title || 'Evaluation of Business Performance';
+    }
+
+    function mapToCapabilities(config) {
+      return { recolorables: [], borderables: [], fontEditable: undefined, fontSizeable: undefined };
+    }
+
+    function mapToEditPanelValues(config) {
+      return new Map([['course_title', config.course_title || defaultConfig.course_title]]);
+    }
+
+    function switchTab(tabName, event) {
+      if (event) event.preventDefault();
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.tab-button').forEach(el => el.classList.remove('active'));
+      document.getElementById(tabName + '-tab').classList.add('active');
+      event.target.classList.add('active');
+    }
+
+    function showToast(message) {
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.textContent = message;
+      document.body.appendChild(toast);
+      setTimeout(() => toast.remove(), 3000);
+    }
+
+    // Individual Activity Submission
+    document.getElementById('individual-form')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = document.getElementById('ind-name').value;
+      const email = document.getElementById('ind-email').value;
+      const scenario = document.getElementById('ind-scenario').value;
+      const analysis = document.getElementById('ind-analysis').value;
+
+      if (window.dataSdk) {
+        const result = await window.dataSdk.create({
+          student_name: name,
+          email: email,
+          week: 'week5',
+          activity_type: 'individual_problem_solving',
+          submission_text: `Scenario: ${scenario}\n\nAnalysis:\n${analysis}`,
+          timestamp: new Date().toISOString()
+        });
+
+        if (result.isOk) {
+          showToast('✅ Analysis submitted successfully!');
+          document.getElementById('individual-form').reset();
+        } else {
+          showToast('⚠️ Error submitting. Please try again.');
+        }
+      }
+    });
+
+    // Group Activity Submission
+    document.getElementById('group-form')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const names = document.getElementById('grp-names').value;
+      const email = document.getElementById('grp-email').value;
+      const business = document.getElementById('grp-business').value;
+      const efficiency = document.getElementById('grp-efficiency').value;
+      const effectiveness = document.getElementById('grp-effectiveness').value;
+      const productivity = document.getElementById('grp-productivity').value;
+      const improvement = document.getElementById('grp-improvement').value;
+
+      if (window.dataSdk) {
+        const result = await window.dataSdk.create({
+          student_name: names,
+          email: email,
+          week: 'week5',
+          activity_type: 'group_performance_dashboard',
+          submission_text: `Business: ${business}\n\nEfficiency Metrics:\n${efficiency}\n\nEffectiveness Metrics:\n${effectiveness}\n\nProductivity Metrics:\n${productivity}\n\nImprovement Strategy:\n${improvement}`,
+          timestamp: new Date().toISOString()
+        });
+
+        if (result.isOk) {
+          showToast('✅ Dashboard submitted!');
+          document.getElementById('group-form').reset();
+        } else {
+          showToast('⚠️ Error submitting. Please try again.');
+        }
+      }
+    });
+
+    // Quiz Submission
+    document.getElementById('quiz-form')?.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const answers = {
+        q1: document.querySelector('input[name="q1"]:checked')?.value,
+        q2: document.querySelector('input[name="q2"]:checked')?.value,
+        q3: document.querySelector('input[name="q3"]:checked')?.value,
+        q4: document.querySelector('input[name="q4"]:checked')?.value,
+        q5: document.querySelector('input[name="q5"]:checked')?.value
+      };
+
+      const correctAnswers = { q1: 'a', q2: 'a', q3: 'a', q4: 'a', q5: 'a' };
+      let score = Object.keys(correctAnswers).filter(q => answers[q] === correctAnswers[q]).length;
+
+      document.getElementById('quiz-form').style.display = 'none';
+      document.getElementById('quiz-results').style.display = 'block';
+      const percent = Math.round((score / 5) * 100);
+      document.getElementById('quiz-score').textContent = `Score: ${score}/5 (${percent}%)`;
+
+      let feedback = '';
+      if (percent === 100) feedback = '🌟 Perfect! You\'ve mastered Week 5 concepts!';
+      else if (percent >= 80) feedback = '🎉 Excellent! You understand efficiency, effectiveness, and productivity!';
+      else if (percent >= 60) feedback = '📚 Good work! Review the definitions and examples for more clarity.';
+      else feedback = '💪 Keep studying! Make sure you understand the differences between these three concepts.';
+
+      document.getElementById('quiz-feedback').textContent = feedback;
+    });
+
+    initSDK();
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9c77e17051cf064f',t:'MTc3MDAxNjM1MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
