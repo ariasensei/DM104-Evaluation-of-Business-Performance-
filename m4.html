@@ -1,0 +1,444 @@
+<!doctype html>
+<html lang="en" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DM104 Midterm Week 4 - Business Performance Case Study</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="/_sdk/data_sdk.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&amp;family=Lato:wght@400;500;700&amp;display=swap" rel="stylesheet">
+  <style>
+    body { box-sizing: border-box; }
+    html, body, #app-wrapper { height: 100%; }
+    .font-heading { font-family: 'Merriweather', Georgia, serif; }
+    .font-body { font-family: 'Lato', system-ui, sans-serif; }
+    .card-hover { transition: all 0.3s ease; }
+    .card-hover:hover { transform: translateY(-4px); box-shadow: 0 15px 40px rgba(249, 115, 22, 0.15); }
+    .example-box { border-left: 4px solid #10b981; background: rgba(16, 185, 129, 0.05); }
+    .case-box { border-left: 4px solid #f59e0b; background: rgba(245, 158, 11, 0.05); }
+    .loading-spinner { border: 3px solid rgba(249, 115, 22, 0.2); border-top-color: #fb923c; border-radius: 50%; width: 24px; height: 24px; animation: spin 0.8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .toast { position: fixed; bottom: 20px; right: 20px; background: #10b981; color: white; padding: 14px 20px; border-radius: 8px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2); z-index: 100; animation: slideIn 0.3s ease-out; }
+    @keyframes slideIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    .data-metric { padding: 16px; background: #f0fdf4; border-radius: 8px; border-left: 4px solid #10b981; }
+    .metric-value { font-size: 24px; font-weight: bold; color: #047857; }
+    .metric-label { font-size: 14px; color: #6b7280; margin-top: 4px; }
+  </style>
+  <script src="https://cdn.tailwindcss.com/3.4.17" type="text/javascript"></script>
+ </head>
+ <body class="h-full font-body">
+  <div id="app-wrapper" class="w-full h-full overflow-auto" style="background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);">
+   <nav class="sticky top-0 z-40" style="background: white; border-bottom: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+     <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background: linear-gradient(135deg, #fb923c, #f97316);">
+       <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+       </svg>
+      </div>
+      <div>
+       <p class="text-xs font-semibold text-gray-500" id="course-label">DM104</p>
+       <p class="text-sm font-bold text-gray-900" id="module-title">Midterm Week 4: Business Performance Case Study</p>
+      </div>
+     </div>
+     <div class="flex items-center gap-2" style="color: #6b7280;">
+      <span class="text-sm">📊 Case Study Analysis</span>
+     </div>
+    </div>
+   </nav>
+   <main class="max-w-6xl mx-auto px-6 py-12"><!-- Learning Objectives -->
+    <section class="mb-12">
+     <div class="rounded-2xl p-8" style="background: white; border: 1px solid #e5e7eb; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+      <div class="flex items-start gap-4">
+       <div class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style="background: linear-gradient(135deg, #fb923c, #f97316);">
+        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+       </div>
+       <div class="flex-1">
+        <h2 class="font-heading text-2xl font-bold mb-4" style="color: #1f2937;">Learning Objectives</h2>
+        <p class="mb-4" style="color: #6b7280;">By the end of this week, you'll be able to:</p>
+        <ul class="space-y-2">
+         <li class="flex gap-3" style="color: #374151;"><span style="color: #fb923c;">✓</span> <span><strong>Define KPIs</strong> and explain how they drive business decisions</span></li>
+         <li class="flex gap-3" style="color: #374151;"><span style="color: #fb923c;">✓</span> <span><strong>Analyze real business data</strong> to identify performance trends</span></li>
+         <li class="flex gap-3" style="color: #374151;"><span style="color: #fb923c;">✓</span> <span><strong>Apply analytics tools</strong> to solve real business problems</span></li>
+         <li class="flex gap-3" style="color: #374151;"><span style="color: #fb923c;">✓</span> <span><strong>Make recommendations</strong> based on data insights</span></li>
+        </ul>
+       </div>
+      </div>
+     </div>
+    </section><!-- Core Concepts -->
+    <section class="mb-12">
+     <h2 class="font-heading text-3xl font-bold mb-8" style="color: #1f2937;">Core Concepts Explained</h2><!-- KPI Card -->
+     <div class="card-hover rounded-2xl p-8 mb-8" style="background: white; border: 1px solid #e5e7eb; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+      <div class="flex items-center gap-3 mb-6">
+       <span class="w-10 h-10 rounded-lg flex items-center justify-center" style="background: #dcfce7; color: #10b981; font-weight: bold;">1</span>
+       <h3 class="font-heading text-2xl font-bold" style="color: #1f2937;">What is a KPI?</h3>
+      </div>
+      <div class="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-6 mb-6 border-l-4 border-green-500">
+       <p class="font-semibold mb-2" style="color: #047857;">Simple Definition:</p>
+       <p style="color: #365a40; line-height: 1.8;"><strong>KPI (Key Performance Indicator)</strong> is a specific number that tells you if a business is achieving its most important goals. Like checking your pulse – it's one vital sign that shows if the business is "healthy."</p>
+      </div>
+      <div class="grid md:grid-cols-2 gap-6">
+       <div class="example-box rounded-lg p-6">
+        <p class="font-semibold mb-3" style="color: #047857;">🏪 Real KPI Examples</p>
+        <p style="color: #374151; line-height: 1.6;"><strong>E-commerce:</strong> Conversion Rate (% of visitors who buy)<br><strong>Restaurant:</strong> Average check size ($ per customer)<br><strong>Gym:</strong> Member retention rate<br><strong>Tech Startup:</strong> Monthly active users<br><strong>Bank:</strong> Loan default rate</p>
+       </div>
+       <div class="bg-blue-50 rounded-lg p-6 border-l-4 border-blue-500">
+        <p class="font-semibold mb-3" style="color: #1e40af;">Why They Matter:</p>
+        <ul class="space-y-2" style="color: #374151;">
+         <li>✓ Show if strategy is working</li>
+         <li>✓ Help spot problems early</li>
+         <li>✓ Drive team accountability</li>
+         <li>✓ Enable data-driven decisions</li>
+        </ul>
+       </div>
+      </div>
+     </div><!-- Analytics Card -->
+     <div class="card-hover rounded-2xl p-8 mb-8" style="background: white; border: 1px solid #e5e7eb; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+      <div class="flex items-center gap-3 mb-6">
+       <span class="w-10 h-10 rounded-lg flex items-center justify-center" style="background: #dbeafe; color: #0284c7; font-weight: bold;">2</span>
+       <h3 class="font-heading text-2xl font-bold" style="color: #1f2937;">Analytics: From Data to Decisions</h3>
+      </div>
+      <div class="bg-gradient-to-r from-blue-50 to-cyan-50 rounded-xl p-6 mb-6 border-l-4 border-blue-500">
+       <p class="font-semibold mb-2" style="color: #0369a1;">What it means:</p>
+       <p style="color: #164e63; line-height: 1.8;"><strong>Analytics</strong> = Finding patterns in data to understand what happened, why it happened, and what to do next. You're a detective solving business puzzles!</p>
+      </div>
+      <div class="grid md:grid-cols-2 gap-6">
+       <div class="example-box rounded-lg p-6">
+        <p class="font-semibold mb-3" style="color: #047857;">📊 The 5-Step Process</p>
+        <p style="color: #374151; text-sm; line-height: 1.8;"><strong>1. Collect:</strong> Track what matters<br><strong>2. Organize:</strong> Put data in order<br><strong>3. Analyze:</strong> Look for patterns<br><strong>4. Interpret:</strong> What does it mean?<br><strong>5. Act:</strong> Make changes based on insights</p>
+       </div>
+       <div class="bg-purple-50 rounded-lg p-6 border-l-4 border-purple-500">
+        <p class="font-semibold mb-3" style="color: #6b21a8;">Types of Analytics:</p>
+        <div style="color: #374151; font-size: 14px; line-height: 1.8;"><strong>📈 Descriptive:</strong> What happened?<br><strong>🔍 Diagnostic:</strong> Why did it happen?<br><strong>🔮 Predictive:</strong> What will happen?<br><strong>✅ Prescriptive:</strong> What should we do?
+        </div>
+       </div>
+      </div>
+     </div><!-- Business Impact Card -->
+     <div class="card-hover rounded-2xl p-8" style="background: white; border: 1px solid #e5e7eb; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+      <div class="flex items-center gap-3 mb-6">
+       <span class="w-10 h-10 rounded-lg flex items-center justify-center" style="background: #fce7f3; color: #ec4899; font-weight: bold;">3</span>
+       <h3 class="font-heading text-2xl font-bold" style="color: #1f2937;">Real Impact: Why Companies Care</h3>
+      </div>
+      <div class="bg-gradient-to-r from-pink-50 to-rose-50 rounded-xl p-6 mb-6 border-l-4 border-pink-500">
+       <p class="font-semibold mb-2" style="color: #be185d;">The Bottom Line:</p>
+       <p style="color: #831843; line-height: 1.8;">Companies using data analytics earn 5-6% more profit than competitors. Good analytics = competitive advantage!</p>
+      </div>
+      <div class="grid md:grid-cols-3 gap-6">
+       <div class="case-box rounded-lg p-6">
+        <p class="font-semibold mb-3" style="color: #b45309;">💰 Netflix</p>
+        <p style="color: #374151; text-sm; line-height: 1.6;"><strong>KPI:</strong> How long viewers watch<br><strong>Finding:</strong> First 10 minutes are critical<br><strong>Action:</strong> Invest in strong opening scenes<br><strong>Result:</strong> Billions in value</p>
+       </div>
+       <div class="case-box rounded-lg p-6">
+        <p class="font-semibold mb-3" style="color: #b45309;">🛍️ Amazon</p>
+        <p style="color: #374151; text-sm; line-height: 1.6;"><strong>KPI:</strong> Page load time<br><strong>Finding:</strong> 100ms slower = 1% lost sales<br><strong>Action:</strong> Build super-fast servers<br><strong>Result:</strong> Millions in extra revenue</p>
+       </div>
+       <div class="case-box rounded-lg p-6">
+        <p class="font-semibold mb-3" style="color: #b45309;">📱 Spotify</p>
+        <p style="color: #374151; text-sm; line-height: 1.6;"><strong>KPI:</strong> Playlist completion<br><strong>Finding:</strong> Personal playlists = engagement<br><strong>Action:</strong> AI personalization engine<br><strong>Result:</strong> More ad revenue</p>
+       </div>
+      </div>
+     </div>
+    </section>
+    <div style="height: 3px; background: linear-gradient(90deg, #fb923c, #f97316, transparent); margin: 2rem 0;"></div><!-- Case Study Section -->
+    <section class="mb-12">
+     <h2 class="font-heading text-3xl font-bold mb-8" style="color: #1f2937;">📋 Case Study: TechFlow E-Commerce</h2>
+     <p style="color: #6b7280; font-size: 16px; margin-bottom: 24px;">An online retailer is struggling. Sales are down 15%, customer complaints are up, and executives don't know why. Let's analyze the data and make recommendations.</p><!-- Case Background -->
+     <div class="rounded-2xl p-8 mb-8" style="background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%); border: 2px solid #f59e0b;">
+      <p class="font-semibold mb-4" style="color: #92400e;">🏢 The Situation:</p>
+      <p style="color: #451a03; line-height: 1.8; margin-bottom: 12px;"><strong>Company:</strong> TechFlow (online tech gadget store)</p>
+      <p style="color: #451a03; line-height: 1.8; margin-bottom: 12px;"><strong>Challenge:</strong> Revenue dropping, customer satisfaction declining</p>
+      <p style="color: #451a03; line-height: 1.8;"><strong>Question:</strong> Where is the problem? And what should we do?</p>
+     </div><!-- Key Data Metrics -->
+     <div class="mb-8">
+      <p class="font-semibold mb-4" style="color: #1f2937;">📊 Current Performance Data (Last 3 Months):</p>
+      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+       <div class="data-metric">
+        <div class="metric-value">
+         ↓ 15%
+        </div>
+        <div class="metric-label">
+         Revenue Decline
+        </div>
+       </div>
+       <div class="data-metric">
+        <div class="metric-value">
+         3.2/5
+        </div>
+        <div class="metric-label">
+         Customer Rating (was 4.6)
+        </div>
+       </div>
+       <div class="data-metric">
+        <div class="metric-value">
+         8.5%
+        </div>
+        <div class="metric-label">
+         Conversion Rate (was 6%)
+        </div>
+       </div>
+       <div class="data-metric">
+        <div class="metric-value">
+         $45
+        </div>
+        <div class="metric-label">
+         Avg Order Value (was $62)
+        </div>
+       </div>
+      </div>
+     </div><!-- Problem Analysis -->
+     <div class="rounded-2xl p-8 mb-8" style="background: white; border: 1px solid #e5e7eb;">
+      <p class="font-semibold mb-6" style="color: #1f2937;">🔍 Let's Diagnose the Problem:</p>
+      <div class="space-y-4">
+       <div style="background: #f0fdf4; padding: 16px; border-radius: 8px; border-left: 4px solid #10b981;">
+        <p style="color: #047857; font-weight: bold; margin-bottom: 8px;">📈 Wait... Conversion is UP but revenue is DOWN?</p>
+        <p style="color: #374151; font-size: 14px;">This is strange! More people are buying (8.5% vs 6%) but we're making LESS money. Why? <strong>Average order value dropped from $62 to $45!</strong> People are buying cheaper items or buying less stuff per order.</p>
+       </div>
+       <div style="background: #fef3c7; padding: 16px; border-radius: 8px; border-left: 4px solid #f59e0b;">
+        <p style="color: #92400e; font-weight: bold; margin-bottom: 8px;">😞 Rating Dropped from 4.6 to 3.2</p>
+        <p style="color: #374151; font-size: 14px;">Customer satisfaction is way down. This means customers are unhappy about something. Are products broken? Shipping too slow? Quality issues?</p>
+       </div>
+      </div>
+     </div><!-- Interactive Diagnosis -->
+     <div class="rounded-2xl p-8 mb-8" style="background: white; border: 1px solid #e5e7eb;">
+      <p class="font-semibold mb-6" style="color: #1f2937;">❓ Your Turn: What's the Real Problem?</p>
+      <p style="color: #6b7280; margin-bottom: 16px;">Based on the data above, select which problem you think is MOST likely causing TechFlow's issues:</p>
+      <form id="diagnosis-form" class="space-y-3"><label class="flex items-start gap-3 p-4 border-2 border-blue-200 rounded-lg cursor-pointer hover:bg-blue-50 transition-all"> <input type="radio" name="diagnosis" value="a" required> <span style="color: #374151;"><strong>A)</strong> The website is too slow, so people just buy one cheap item and leave</span> </label> <label class="flex items-start gap-3 p-4 border-2 border-blue-200 rounded-lg cursor-pointer hover:bg-blue-50 transition-all"> <input type="radio" name="diagnosis" value="b"> <span style="color: #374151;"><strong>B)</strong> Products are arriving damaged or defective, making customers unhappy</span> </label> <label class="flex items-start gap-3 p-4 border-2 border-blue-200 rounded-lg cursor-pointer hover:bg-blue-50 transition-all"> <input type="radio" name="diagnosis" value="c"> <span style="color: #374151;"><strong>C)</strong> A competitor just launched with cheaper prices, so customers buy less per order</span> </label> <label class="flex items-start gap-3 p-4 border-2 border-blue-200 rounded-lg cursor-pointer hover:bg-blue-50 transition-all"> <input type="radio" name="diagnosis" value="d"> <span style="color: #374151;"><strong>D)</strong> Shipping is too slow, and customers complain in reviews</span> </label> <button type="button" onclick="showDiagnosis()" class="w-full px-6 py-3 rounded-lg font-semibold text-white transition-all" style="background: linear-gradient(135deg, #fb923c, #f97316);">Check Analysis</button>
+      </form>
+      <div id="diagnosis-result" style="display: none; margin-top: 16px; padding: 16px; border-radius: 8px; background: #f0fdf4; border-left: 4px solid #10b981;">
+       <p id="diagnosis-feedback" style="color: #374151; line-height: 1.8;"></p>
+      </div>
+     </div>
+    </section>
+    <div style="height: 3px; background: linear-gradient(90deg, #fb923c, #f97316, transparent); margin: 2rem 0;"></div><!-- Interactive Activities -->
+    <section class="mb-12">
+     <h2 class="font-heading text-3xl font-bold mb-8" style="color: #1f2937;">Interactive Activities</h2><!-- Tabs -->
+     <div class="flex gap-4 mb-6 border-b" style="border-color: #e5e7eb;"><button onclick="switchTab('analysis')" id="tab-analysis" class="px-6 py-3 font-semibold border-b-2" style="border-color: #fb923c; color: #fb923c;">👤 Individual Analysis</button> <button onclick="switchTab('strategy')" id="tab-strategy" class="px-6 py-3 font-semibold" style="color: #6b7280;">👥 Group Strategy</button>
+     </div><!-- Individual Activity -->
+     <div id="analysis-tab" class="rounded-2xl p-8 mb-8" style="background: white; border: 1px solid #e5e7eb;">
+      <div class="flex items-center gap-3 mb-6">
+       <span class="text-3xl">👤</span>
+       <h3 class="font-heading text-2xl font-bold" style="color: #1f2937;">Individual Activity: Data Analysis &amp; Recommendations</h3>
+      </div>
+      <div class="bg-blue-50 rounded-xl p-6 mb-8 border-l-4 border-blue-500">
+       <p class="font-semibold mb-4" style="color: #1e40af;">📋 Your Task:</p>
+       <p style="color: #1e3a8a; line-height: 1.8;">Analyze TechFlow's performance data and create a diagnostic report with specific recommendations to improve revenue and customer satisfaction.</p>
+      </div>
+      <form id="individual-form">
+       <div class="mb-6"><label class="block font-semibold mb-2" style="color: #1f2937;">Your Name:</label> <input type="text" id="individual-name" placeholder="Enter your name" class="w-full px-4 py-3 rounded-lg border" style="border-color: #e5e7eb; color: #374151;" required>
+       </div>
+       <div class="mb-6"><label class="block font-semibold mb-2" style="color: #1f2937;">Your Email:</label> <input type="email" id="individual-email" placeholder="Enter your email" class="w-full px-4 py-3 rounded-lg border" style="border-color: #e5e7eb; color: #374151;" required>
+       </div>
+       <div class="mb-6"><label class="block font-semibold mb-2" style="color: #1f2937;">What is the main problem causing TechFlow's revenue decline?</label> <textarea id="analysis-problem" placeholder="Analyze the data and explain what you think is happening..." class="w-full px-4 py-3 rounded-lg border" style="border-color: #e5e7eb; color: #374151; min-height: 100px;" required></textarea>
+        <p class="text-sm mt-2" style="color: #6b7280;">💡 Look at: revenue down 15%, conversion UP, avg order value DOWN, rating down</p>
+       </div>
+       <div class="mb-6"><label class="block font-semibold mb-2" style="color: #1f2937;">What 3 specific actions should TechFlow take?</label> <textarea id="analysis-actions" placeholder="List 3 concrete steps to fix the problem:
+1. ...
+2. ...
+3. ..." class="w-full px-4 py-3 rounded-lg border" style="border-color: #e5e7eb; color: #374151; min-height: 120px;" required></textarea>
+        <p class="text-sm mt-2" style="color: #6b7280;">💡 Consider: product quality, shipping speed, pricing, customer communication</p>
+       </div>
+       <div class="mb-6"><label class="block font-semibold mb-2" style="color: #1f2937;">How would you measure success?</label> <textarea id="analysis-metrics" placeholder="What KPIs would you track to see if these actions work?" class="w-full px-4 py-3 rounded-lg border" style="border-color: #e5e7eb; color: #374151; min-height: 100px;" required></textarea>
+       </div><button type="submit" class="w-full px-6 py-3 rounded-lg font-semibold text-white transition-all" style="background: linear-gradient(135deg, #fb923c, #f97316);">Submit Analysis</button>
+      </form>
+     </div><!-- Group Activity -->
+     <div id="strategy-tab" class="rounded-2xl p-8 mb-8" style="background: white; border: 1px solid #e5e7eb; display: none;">
+      <div class="flex items-center gap-3 mb-6">
+       <span class="text-3xl">👥</span>
+       <h3 class="font-heading text-2xl font-bold" style="color: #1f2937;">Group Activity: Recovery Strategy</h3>
+      </div>
+      <div class="bg-purple-50 rounded-xl p-6 mb-8 border-l-4 border-purple-500">
+       <p class="font-semibold mb-4" style="color: #5b21b6;">👥 Group Discussion (3-4 students):</p>
+       <p style="color: #4c1d95; line-height: 1.8;">Your team is hired as consultants to save TechFlow. You have a $50,000 budget to fix the problems. Decide: Where should you spend the money? How will each action improve the KPIs? What's your 90-day recovery plan?</p>
+      </div>
+      <form id="group-form">
+       <div class="mb-6"><label class="block font-semibold mb-2" style="color: #1f2937;">Group Member Names:</label> <input type="text" id="group-names" placeholder="Name 1, Name 2, Name 3" class="w-full px-4 py-3 rounded-lg border" style="border-color: #e5e7eb; color: #374151;" required>
+       </div>
+       <div class="mb-6"><label class="block font-semibold mb-2" style="color: #1f2937;">How would you allocate the $50,000 budget?</label> <textarea id="group-budget" placeholder="Example:
+- $15,000 for quality control improvements
+- $20,000 for faster shipping infrastructure
+- $10,000 for customer service training
+- $5,000 for marketing recovery campaign" class="w-full px-4 py-3 rounded-lg border" style="border-color: #e5e7eb; color: #374151; min-height: 120px;" required></textarea>
+       </div>
+       <div class="mb-6"><label class="block font-semibold mb-2" style="color: #1f2937;">What's your 90-day recovery plan?</label> <textarea id="group-plan" placeholder="Describe your strategy for the next 3 months and expected results..." class="w-full px-4 py-3 rounded-lg border" style="border-color: #e5e7eb; color: #374151; min-height: 150px;" required></textarea>
+       </div><button type="submit" class="w-full px-6 py-3 rounded-lg font-semibold text-white transition-all" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">Submit Group Strategy</button>
+      </form>
+     </div>
+    </section><!-- Key Takeaways -->
+    <section class="mb-12">
+     <div class="rounded-2xl p-8" style="background: linear-gradient(135deg, #fef3c7 0%, #fcd34d 100%); border: 2px solid #f59e0b;">
+      <div class="flex items-start gap-4">
+       <span class="text-3xl">💡</span>
+       <div>
+        <h3 class="font-heading text-2xl font-bold mb-4" style="color: #78350f;">Key Takeaways</h3>
+        <ul class="space-y-3" style="color: #451a03;">
+         <li class="flex gap-2"><span>✓</span> <span><strong>KPIs are vital signs:</strong> They show business health at a glance</span></li>
+         <li class="flex gap-2"><span>✓</span> <span><strong>Data tells stories:</strong> Numbers reveal what's really happening</span></li>
+         <li class="flex gap-2"><span>✓</span> <span><strong>Analytics drives decisions:</strong> Never guess when you have data</span></li>
+         <li class="flex gap-2"><span>✓</span> <span><strong>One KPI can hide problems:</strong> Look at multiple metrics together</span></li>
+         <li class="flex gap-2"><span>✓</span> <span><strong>Insights require action:</strong> Analysis only matters if you act on it</span></li>
+        </ul>
+       </div>
+      </div>
+     </div>
+    </section><!-- Footer -->
+    <footer class="border-t pt-8" style="border-color: #e5e7eb; color: #6b7280; text-align: center;">
+     <p>DM104 - Evaluation of Business Performance | Midterm Week 4: Case Study</p>
+     <p style="margin-top: 8px;">Instructor: MKDB | Lyceum de San Pablo</p>
+     <p style="margin-top: 16px; font-size: 12px;">© 2026 All Rights Reserved</p>
+    </footer>
+   </main>
+  </div>
+  <script>
+    const defaultConfig = {
+      module_title: 'Midterm Week 4: Business Performance Case Study',
+      week_number: 'Midterm Week 4'
+    };
+
+    let config = { ...defaultConfig };
+    let currentTab = 'analysis';
+    let allResponses = [];
+
+    // Data SDK Handler
+    const dataHandler = {
+      onDataChanged(data) {
+        allResponses = data;
+      }
+    };
+
+    // Initialize SDK
+    async function initSDK() {
+      if (window.dataSdk) {
+        const result = await window.dataSdk.init(dataHandler);
+      }
+
+      if (window.elementSdk) {
+        window.elementSdk.init({
+          defaultConfig,
+          onConfigChange,
+          mapToCapabilities,
+          mapToEditPanelValues
+        });
+      }
+    }
+
+    async function onConfigChange(newConfig) {
+      config = { ...config, ...newConfig };
+      const titleEl = document.getElementById('module-title');
+      if (titleEl) titleEl.textContent = config.module_title || defaultConfig.module_title;
+    }
+
+    function mapToCapabilities(config) {
+      return { recolorables: [], borderables: [], fontEditable: undefined, fontSizeable: undefined };
+    }
+
+    function mapToEditPanelValues(config) {
+      return new Map([
+        ['module_title', config.module_title || defaultConfig.module_title],
+        ['week_number', config.week_number || defaultConfig.week_number]
+      ]);
+    }
+
+    // Tab switching
+    function switchTab(tabName) {
+      currentTab = tabName;
+      document.getElementById('analysis-tab').style.display = tabName === 'analysis' ? 'block' : 'none';
+      document.getElementById('strategy-tab').style.display = tabName === 'strategy' ? 'block' : 'none';
+
+      document.getElementById('tab-analysis').style.color = tabName === 'analysis' ? '#fb923c' : '#6b7280';
+      document.getElementById('tab-analysis').style.borderColor = tabName === 'analysis' ? '#fb923c' : 'transparent';
+      document.getElementById('tab-strategy').style.color = tabName === 'strategy' ? '#8b5cf6' : '#6b7280';
+      document.getElementById('tab-strategy').style.borderColor = tabName === 'strategy' ? '#8b5cf6' : 'transparent';
+    }
+
+    // Show diagnosis
+    function showDiagnosis() {
+      const selected = document.querySelector('input[name="diagnosis"]:checked')?.value;
+      if (!selected) return;
+
+      const feedbacks = {
+        a: "💭 <strong>Interesting thought,</strong> but the data doesn't support this. If the website was slow, conversion would go DOWN, not up. ❌",
+        b: "🎯 <strong>CORRECT!</strong> The low rating (3.2/5) + high conversion but low order value suggests: people are buying cheap items in frustration, possibly because they're worried products will arrive damaged or defective. This is likely the main problem. ✅ <strong>Next step:</strong> Improve quality control, inspect products before shipping, and improve packaging.",
+        c: "💭 <strong>Could be a factor,</strong> but doesn't fully explain it. If it was just competition, we'd see fewer visitors, not higher conversion. ❌",
+        d: "💭 <strong>Partially correct.</strong> Slow shipping would explain low ratings, BUT it wouldn't explain why conversion is UP. If shipping was slow, people wouldn't buy at all. ❌"
+      };
+
+      document.getElementById('diagnosis-result').style.display = 'block';
+      document.getElementById('diagnosis-feedback').innerHTML = feedbacks[selected];
+    }
+
+    // Individual form submission
+    document.getElementById('individual-form')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = document.getElementById('individual-name').value;
+      const email = document.getElementById('individual-email').value;
+      const problem = document.getElementById('analysis-problem').value;
+      const actions = document.getElementById('analysis-actions').value;
+      const metrics = document.getElementById('analysis-metrics').value;
+
+      const response = `Problem Analysis: ${problem}\n\nRecommended Actions: ${actions}\n\nSuccess Metrics: ${metrics}`;
+
+      if (window.dataSdk) {
+        const result = await window.dataSdk.create({
+          student_name: name,
+          email: email,
+          activity_type: 'case_analysis',
+          responses: response,
+          completed: true,
+          timestamp: new Date().toISOString()
+        });
+
+        if (result.isOk) {
+          showToast('✅ Analysis submitted successfully!');
+          document.getElementById('individual-form').reset();
+          setTimeout(() => switchTab('strategy'), 1500);
+        } else {
+          showToast('❌ Error submitting. Please try again.');
+        }
+      }
+    });
+
+    // Group form submission
+    document.getElementById('group-form')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const names = document.getElementById('group-names').value;
+      const budget = document.getElementById('group-budget').value;
+      const plan = document.getElementById('group-plan').value;
+
+      const response = `Budget Allocation: ${budget}\n\nRecovery Plan: ${plan}`;
+
+      if (window.dataSdk) {
+        const result = await window.dataSdk.create({
+          student_name: names,
+          email: 'group@strategy.com',
+          activity_type: 'group_strategy',
+          responses: response,
+          completed: true,
+          timestamp: new Date().toISOString()
+        });
+
+        if (result.isOk) {
+          showToast('✅ Group strategy submitted successfully!');
+          document.getElementById('group-form').reset();
+        } else {
+          showToast('❌ Error submitting. Please try again.');
+        }
+      }
+    });
+
+    function showToast(message) {
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.textContent = message;
+      document.body.appendChild(toast);
+      setTimeout(() => toast.remove(), 3000);
+    }
+
+    initSDK();
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9d580fa7e0fefedd',t:'MTc3MjM2NzA1NC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
