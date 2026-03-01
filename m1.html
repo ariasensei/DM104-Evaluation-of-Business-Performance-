@@ -1,0 +1,648 @@
+<!doctype html>
+<html lang="en" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DM104 Midterm Week 1 - Value Creation, ROI, and Performance Analytics</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="/_sdk/data_sdk.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&amp;family=Lato:wght@400;500;700&amp;display=swap" rel="stylesheet">
+  <style>
+    body {
+      box-sizing: border-box;
+    }
+    html, body, #app-wrapper {
+      height: 100%;
+    }
+    .font-heading {
+      font-family: 'Merriweather', Georgia, serif;
+    }
+    .font-body {
+      font-family: 'Lato', system-ui, sans-serif;
+    }
+    .term-highlight {
+      position: relative;
+      cursor: help;
+      padding: 2px 6px;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+    }
+    .term-highlight:hover {
+      background-color: rgba(251, 146, 60, 0.2);
+      transform: scale(1.02);
+    }
+    .tooltip {
+      display: none;
+      position: absolute;
+      background: linear-gradient(135deg, #1f2937, #111827);
+      color: #f3f4f6;
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      z-index: 50;
+      border-left: 3px solid #fb923c;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+      max-width: 280px;
+      line-height: 1.5;
+    }
+    .term-highlight:hover .tooltip {
+      display: block;
+      bottom: 120%;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    .animate-slide-in {
+      animation: slideIn 0.6s ease-out;
+    }
+    .section-divider {
+      height: 3px;
+      background: linear-gradient(90deg, #fb923c, #f97316, transparent);
+      margin: 2rem 0;
+    }
+    .card-hover {
+      transition: all 0.3s ease;
+    }
+    .card-hover:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 15px 40px rgba(249, 115, 22, 0.15);
+    }
+    .example-box {
+      border-left: 4px solid #10b981;
+      background: rgba(16, 185, 129, 0.05);
+    }
+    .activity-box {
+      border-left: 4px solid #3b82f6;
+      background: rgba(59, 130, 246, 0.05);
+    }
+    .group-activity-box {
+      border-left: 4px solid #8b5cf6;
+      background: rgba(139, 92, 246, 0.05);
+    }
+    .loading-spinner {
+      border: 3px solid rgba(249, 115, 22, 0.2);
+      border-top-color: #fb923c;
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #10b981;
+      color: white;
+      padding: 14px 20px;
+      border-radius: 8px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      z-index: 100;
+      animation: slideIn 0.3s ease-out;
+    }
+  </style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="https://cdn.tailwindcss.com/3.4.17" type="text/javascript"></script>
+ </head>
+ <body class="h-full font-body">
+  <div id="app-wrapper" class="w-full h-full overflow-auto" style="background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);">
+   <!-- Navigation Bar -->
+   <nav class="sticky top-0 z-40" style="background: white; border-bottom: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+     <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background: linear-gradient(135deg, #fb923c, #f97316);">
+       <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+       </svg>
+      </div>
+      <div>
+       <p class="text-xs font-semibold text-gray-500" id="course-label">DM104</p>
+       <p class="text-sm font-bold text-gray-900" id="module-title">Midterm Week 1: Value Creation, ROI, and Performance Analytics</p>
+      </div>
+     </div>
+     <div class="flex items-center gap-2" style="color: #6b7280;">
+      <span class="text-sm">📊 Interactive Module</span>
+     </div>
+    </div>
+   </nav>
+   <main class="max-w-6xl mx-auto px-6 py-12">
+    <!-- Learning Objectives -->
+    <section class="mb-12 animate-slide-in">
+     <div class="rounded-2xl p-8" style="background: white; border: 1px solid #e5e7eb; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+      <div class="flex items-start gap-4">
+       <div class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style="background: linear-gradient(135deg, #fb923c, #f97316);">
+        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+       </div>
+       <div class="flex-1">
+        <h2 class="font-heading text-2xl font-bold mb-4" style="color: #1f2937;">Learning Outcomes</h2>
+        <p class="mb-4" style="color: #6b7280;">By completing this midterm module, you will be able to:</p>
+        <ul class="space-y-2">
+         <li class="flex gap-3" style="color: #374151;"><span style="color: #fb923c;">✓</span> <span><strong>Define</strong> value creation and explain how it drives business performance</span></li>
+         <li class="flex gap-3" style="color: #374151;"><span style="color: #fb923c;">✓</span> <span><strong>Calculate</strong> Return on Investment (ROI) and understand its significance</span></li>
+         <li class="flex gap-3" style="color: #374151;"><span style="color: #fb923c;">✓</span> <span><strong>Analyze</strong> real business cases using financial and performance metrics</span></li>
+         <li class="flex gap-3" style="color: #374151;"><span style="color: #fb923c;">✓</span> <span><strong>Assess</strong> whether a business initiative creates real value</span></li>
+         <li class="flex gap-3" style="color: #374151;"><span style="color: #fb923c;">✓</span> <span><strong>Apply</strong> performance analytics to solve business problems</span></li>
+        </ul>
+       </div>
+      </div>
+     </div>
+    </section><!-- Core Concepts -->
+    <section class="mb-12">
+     <h2 class="font-heading text-3xl font-bold mb-8" style="color: #1f2937;">Core Concepts Explained</h2><!-- Performance Measurement Card -->
+     <div class="card-hover rounded-2xl p-8 mb-8" style="background: white; border: 1px solid #e5e7eb; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+      <div class="flex items-center gap-3 mb-6">
+       <span class="w-10 h-10 rounded-lg flex items-center justify-center" style="background: #dcfce7; color: #10b981; font-weight: bold;">1</span>
+       <h3 class="font-heading text-2xl font-bold" style="color: #1f2937;">What is Value Creation?</h3>
+      </div>
+      <div class="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-6 mb-6 border-l-4 border-green-500">
+       <p class="font-semibold mb-2" style="color: #047857;">Simple Definition:</p>
+       <p style="color: #365a40; line-height: 1.8;"><strong>Value creation</strong> means making something worth MORE than it costs. It's when a business takes resources and transforms them into something customers are willing to pay more for. The difference between what customers pay and what it costs to produce = VALUE CREATED.</p>
+      </div>
+      <div class="grid md:grid-cols-2 gap-6">
+       <div class="example-box rounded-lg p-6">
+        <p class="font-semibold mb-3" style="color: #047857;">📱 Tech Startup Example</p>
+        <p style="color: #374151; line-height: 1.6;">A company develops a mobile app that helps restaurant owners manage bookings.<br><br><strong>Resources invested:</strong> $200,000 (programmer salaries, software tools)<br><strong>Revenue generated:</strong> $500,000 (from selling subscriptions to restaurants)<br><strong>Value created:</strong> $300,000 profit<br><br><em>The business transformed programming skills into something customers value enough to pay for.</em></p>
+       </div>
+       <div class="bg-blue-50 rounded-lg p-6 border-l-4 border-blue-500">
+        <p class="font-semibold mb-3" style="color: #1e40af;">Why It Matters:</p>
+        <ul class="space-y-2" style="color: #374151;">
+         <li>✓ Sustainable businesses create value consistently</li>
+         <li>✓ Value creation drives profit and growth</li>
+         <li>✓ Investors look for companies creating value</li>
+         <li>✓ Employees and customers benefit from value creation</li>
+         <li>✓ Without value creation, the business eventually fails</li>
+        </ul>
+       </div>
+      </div>
+     </div><!-- ROI Card -->
+     <div class="card-hover rounded-2xl p-8 mb-8" style="background: white; border: 1px solid #e5e7eb; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+      <div class="flex items-center gap-3 mb-6">
+       <span class="w-10 h-10 rounded-lg flex items-center justify-center" style="background: #dbeafe; color: #0284c7; font-weight: bold;">2</span>
+       <h3 class="font-heading text-2xl font-bold" style="color: #1f2937;">Return on Investment (ROI)</h3>
+      </div>
+      <div class="bg-gradient-to-r from-blue-50 to-cyan-50 rounded-xl p-6 mb-6 border-l-4 border-blue-500">
+       <p class="font-semibold mb-2" style="color: #0369a1;">Definition:</p>
+       <p style="color: #164e63; line-height: 1.8;"><strong>ROI (Return on Investment)</strong> measures how much profit you earn from every dollar you invest. It tells you if an investment is worthwhile. The higher the ROI, the better the investment performed.</p>
+       <div style="background: white; padding: 12px; border-radius: 8px; margin-top: 12px; font-family: monospace;">
+        <p style="color: #0369a1; font-weight: bold; margin-bottom: 4px;">The Formula:</p>
+        <p style="color: #374151; font-size: 14px;">ROI (%) = (Profit ÷ Investment) × 100</p>
+        <p style="color: #6b7280; font-size: 12px; margin-top: 4px;">Where Profit = Revenue - Investment Cost</p>
+       </div>
+      </div>
+      <div class="grid md:grid-cols-2 gap-6">
+       <div class="example-box rounded-lg p-6">
+        <p class="font-semibold mb-3" style="color: #047857;">🏭 Manufacturing Example</p>
+        <p style="color: #374151; line-height: 1.6;"><strong>Investment:</strong> Buy new machinery for $100,000<br><strong>Additional revenue:</strong> $150,000<br><strong>Profit:</strong> $150,000 - $100,000 = $50,000<br><br><strong>ROI = ($50,000 ÷ $100,000) × 100 = 50%</strong><br><br><em>For every dollar spent, earn 50 cents in profit.</em></p>
+       </div>
+       <div class="bg-purple-50 rounded-lg p-6 border-l-4 border-purple-500">
+        <p class="font-semibold mb-3" style="color: #6b21a8;">ROI Interpretation:</p>
+        <div style="color: #374151; font-size: 14px; line-height: 1.8;">
+         <div class="mb-3">
+          <span style="color: #10b981; font-weight: bold;">✓ ROI &gt; 0%:</span> Profitable
+         </div>
+         <div class="mb-3">
+          <span style="color: #10b981; font-weight: bold;">✓ Higher ROI:</span> Better investment
+         </div>
+         <div class="mb-3">
+          <span style="color: #ef4444; font-weight: bold;">✗ ROI &lt; 0%:</span> Lost money
+         </div>
+         <div>
+          <span style="color: #f59e0b; font-weight: bold;">⚠ ROI = 0%:</span> Break-even
+         </div>
+        </div>
+       </div>
+      </div>
+     </div><!-- Performance Analytics Card -->
+     <div class="card-hover rounded-2xl p-8 mb-8" style="background: white; border: 1px solid #e5e7eb; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+      <div class="flex items-center gap-3 mb-6">
+       <span class="w-10 h-10 rounded-lg flex items-center justify-center" style="background: #fce7f3; color: #ec4899; font-weight: bold;">3</span>
+       <h3 class="font-heading text-2xl font-bold" style="color: #1f2937;">Performance Analytics</h3>
+      </div>
+      <div class="bg-gradient-to-r from-pink-50 to-rose-50 rounded-xl p-6 mb-6 border-l-4 border-pink-500">
+       <p class="font-semibold mb-2" style="color: #be185d;">Definition:</p>
+       <p style="color: #831843; line-height: 1.8;"><strong>Performance analytics</strong> uses data and metrics to evaluate if a business strategy creates value. It answers: "Is this working? Are we making money?"</p>
+      </div>
+      <div class="grid md:grid-cols-3 gap-6">
+       <div class="example-box rounded-lg p-6">
+        <p class="font-semibold mb-3" style="color: #047857;">💰 Financial Metrics</p>
+        <p style="color: #374151; text-sm; line-height: 1.6;">• Revenue growth<br>
+         • Profit margin<br>
+         • ROI<br>
+         • Cost per customer<br>
+         • Break-even point</p>
+       </div>
+       <div class="example-box rounded-lg p-6">
+        <p class="font-semibold mb-3" style="color: #047857;">👥 Customer Metrics</p>
+        <p style="color: #374151; text-sm; line-height: 1.6;">• Satisfaction score<br>
+         • Retention rate<br>
+         • Customer lifetime value<br>
+         • Churn rate<br>
+         • Net Promoter Score</p>
+       </div>
+       <div class="example-box rounded-lg p-6">
+        <p class="font-semibold mb-3" style="color: #047857;">⚙️ Operational Metrics</p>
+        <p style="color: #374151; text-sm; line-height: 1.6;">• Productivity<br>
+         • Quality/defects<br>
+         • Delivery time<br>
+         • Process efficiency<br>
+         • Resource utilization</p>
+       </div>
+      </div>
+     </div>
+    </section>
+    <div class="section-divider"></div><!-- Activities Section -->
+    <section class="mb-12">
+     <h2 class="font-heading text-3xl font-bold mb-8" style="color: #1f2937;">Interactive Activities</h2><!-- Tabs for Activities -->
+     <div class="flex gap-4 mb-6 border-b" style="border-color: #e5e7eb;">
+      <button onclick="switchTab('case')" id="tab-case" class="px-6 py-3 font-semibold border-b-2" style="border-color: #fb923c; color: #fb923c;"> 📊 Case Study Analysis </button> <button onclick="switchTab('problem')" id="tab-problem" class="px-6 py-3 font-semibold" style="color: #6b7280;"> 🧩 Problem-Based Learning </button> <button onclick="switchTab('reflection')" id="tab-reflection" class="px-6 py-3 font-semibold" style="color: #6b7280;"> ✍️ Reflection &amp; Insights </button>
+     </div><!-- Case Study Analysis -->
+     <div id="case-tab" class="activity-box rounded-2xl p-8 mb-8">
+      <div class="flex items-center gap-3 mb-6">
+       <span class="text-3xl">📊</span>
+       <h3 class="font-heading text-2xl font-bold" style="color: #1f2937;">Case Study: TechNova's Digital Transformation</h3>
+      </div>
+      <div class="bg-blue-50 rounded-xl p-6 mb-8 border-l-4 border-blue-500">
+       <p class="font-semibold mb-4" style="color: #1e40af;">📋 The Scenario:</p>
+       <p style="color: #1e3a8a; line-height: 1.8;">TechNova is a mid-sized software company with $5 million annual revenue. The leadership team is considering investing $500,000 in a new cloud infrastructure platform to improve customer experience and reduce operational costs. They want to know: <strong>Is this investment worth it?</strong></p>
+      </div>
+      <div class="grid gap-6 mb-8">
+       <div class="bg-white rounded-lg p-6 border-2 border-blue-200">
+        <p class="font-semibold mb-4" style="color: #1e40af;">💼 Current Business Performance:</p>
+        <div class="grid md:grid-cols-2 gap-4" style="color: #374151; font-size: 14px;">
+         <div>
+          <p class="font-semibold" style="color: #1e40af;">Financial Metrics:</p>
+          <ul class="mt-2 space-y-1">
+           <li>• Annual Revenue: $5,000,000</li>
+           <li>• Current Profit: $750,000</li>
+           <li>• Profit Margin: 15%</li>
+           <li>• Current ROI: 10% (on all investments)</li>
+          </ul>
+         </div>
+         <div>
+          <p class="font-semibold" style="color: #1e40af;">Operational Metrics:</p>
+          <ul class="mt-2 space-y-1">
+           <li>• Customer Satisfaction: 3.8/5</li>
+           <li>• System Downtime: 5% per month</li>
+           <li>• Customer Retention: 75%</li>
+           <li>• Support Response Time: 24 hours</li>
+          </ul>
+         </div>
+        </div>
+       </div>
+       <div class="bg-green-50 rounded-lg p-6 border-2 border-green-200">
+        <p class="font-semibold mb-4" style="color: #047857;">🎯 Projected Impact (after 2 years):</p>
+        <div class="grid md:grid-cols-2 gap-4" style="color: #374151; font-size: 14px;">
+         <div>
+          <p class="font-semibold" style="color: #047857;">Financial Expected Results:</p>
+          <ul class="mt-2 space-y-1">
+           <li>• Additional Revenue: $800,000 (new customers)</li>
+           <li>• Cost Savings: $300,000 (efficiency)</li>
+           <li>• Total Benefit: $1,100,000</li>
+          </ul>
+         </div>
+         <div>
+          <p class="font-semibold" style="color: #047857;">Operational Improvements:</p>
+          <ul class="mt-2 space-y-1">
+           <li>• Customer Satisfaction: ↑ to 4.5/5</li>
+           <li>• System Downtime: ↓ to 0.5%</li>
+           <li>• Customer Retention: ↑ to 90%</li>
+           <li>• Support Response: ↓ to 1 hour</li>
+          </ul>
+         </div>
+        </div>
+       </div>
+      </div>
+      <form id="case-form">
+       <div class="mb-6">
+        <label class="block font-semibold mb-2" style="color: #1f2937;">Your Name:</label> <input type="text" id="case-name" placeholder="Enter your name" class="w-full px-4 py-3 rounded-lg border" style="border-color: #e5e7eb; color: #374151;" required>
+       </div>
+       <div class="mb-6">
+        <label class="block font-semibold mb-2" style="color: #1f2937;">Your Email:</label> <input type="email" id="case-email" placeholder="Enter your email" class="w-full px-4 py-3 rounded-lg border" style="border-color: #e5e7eb; color: #374151;" required>
+       </div>
+       <div class="mb-6 p-6 bg-yellow-50 rounded-lg border-l-4 border-yellow-500">
+        <p class="font-semibold mb-3" style="color: #92400e;">📊 Question 1: Calculate the ROI</p>
+        <p style="color: #78350f; margin-bottom: 12px;">Based on the projected impact, calculate the ROI for this $500,000 investment over 2 years.</p>
+        <p style="color: #6b7280; font-size: 12px; margin-bottom: 12px;">💡 Hint: ROI (%) = (Total Benefit - Investment) ÷ Investment × 100</p><input type="text" id="case-roi" placeholder="Enter ROI percentage (e.g., 120%)" class="w-full px-4 py-3 rounded-lg border" style="border-color: #e5e7eb; color: #374151;" required>
+       </div>
+       <div class="mb-6 p-6 bg-yellow-50 rounded-lg border-l-4 border-yellow-500">
+        <p class="font-semibold mb-3" style="color: #92400e;">📊 Question 2: Value Creation Analysis</p>
+        <p style="color: #78350f; margin-bottom: 12px;">Does this investment create value for TechNova? Explain your reasoning using at least 3 metrics.</p><textarea id="case-value" placeholder="Analyze whether this investment creates value. Consider:
+• Financial metrics (ROI, profit growth)
+• Customer metrics (satisfaction, retention)
+• Operational metrics (efficiency, downtime)
+• Long-term strategic value
+" class="w-full px-4 py-3 rounded-lg border" style="border-color: #e5e7eb; color: #374151; min-height: 150px;" required></textarea>
+       </div>
+       <div class="mb-6 p-6 bg-yellow-50 rounded-lg border-l-4 border-yellow-500">
+        <p class="font-semibold mb-3" style="color: #92400e;">🎯 Question 3: Your Recommendation</p>
+        <p style="color: #78350f; margin-bottom: 12px;">Should TechNova make this investment? Why or why not?</p><textarea id="case-recommendation" placeholder="Provide a clear recommendation with supporting evidence from your analysis." class="w-full px-4 py-3 rounded-lg border" style="border-color: #e5e7eb; color: #374151; min-height: 100px;" required></textarea>
+       </div><button type="submit" class="w-full px-6 py-3 rounded-lg font-semibold text-white transition-all" style="background: linear-gradient(135deg, #fb923c, #f97316);" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'"> Submit Case Analysis </button>
+      </form>
+     </div><!-- Group Activity -->
+     <div id="group-tab" class="group-activity-box rounded-2xl p-8 mb-8" style="display: none;">
+      <div class="flex items-center gap-3 mb-6">
+       <span class="text-3xl">👥</span>
+       <h3 class="font-heading text-2xl font-bold" style="color: #1f2937;">Group Activity: Strategy Debate</h3>
+      </div>
+      <div class="bg-purple-50 rounded-xl p-6 mb-8 border-l-4 border-purple-500">
+       <p class="font-semibold mb-4" style="color: #5b21b6;">👥 Group Discussion (3-4 students):</p>
+       <p style="color: #4c1d95; line-height: 1.8;">You are consulting for a mid-sized tech company. Half your group believes the company should focus on <strong>product quality</strong>, while the other half wants to focus on <strong>market expansion</strong>. Discuss and decide which is more important, and what performance measures would support each strategy.</p>
+      </div>
+      <div class="grid md:grid-cols-2 gap-6 mb-8">
+       <div class="bg-white rounded-lg p-6 border-2 border-purple-200">
+        <p class="font-semibold mb-4" style="color: #5b21b6;">🎯 Team A: Quality Focus</p>
+        <p style="color: #374151; text-sm; line-height: 1.6;"><strong>Strategy:</strong> Build the best product on the market<br><br><strong>Potential Measures:</strong><br>
+          • Bug reports per release<br>
+          • Customer satisfaction rating<br>
+          • Product reliability uptime<br>
+          • Customer retention rate<br>
+          • Returns/complaints ratio</p>
+       </div>
+       <div class="bg-white rounded-lg p-6 border-2 border-purple-200">
+        <p class="font-semibold mb-4" style="color: #5b21b6;">🚀 Team B: Expansion Focus</p>
+        <p style="color: #374151; text-sm; line-height: 1.6;"><strong>Strategy:</strong> Grow to new markets quickly<br><br><strong>Potential Measures:</strong><br>
+          • Market share growth (%)<br>
+          • New customer acquisition rate<br>
+          • Revenue growth rate<br>
+          • Sales team performance<br>
+          • Geographic expansion milestones</p>
+       </div>
+      </div>
+      <form id="group-form">
+       <div class="mb-6">
+        <label class="block font-semibold mb-2" style="color: #1f2937;">Group Members' Names:</label> <input type="text" id="group-names" placeholder="Name 1, Name 2, Name 3, Name 4" class="w-full px-4 py-3 rounded-lg border" style="border-color: #e5e7eb; color: #374151;" required>
+       </div>
+       <div class="mb-6">
+        <label class="block font-semibold mb-2" style="color: #1f2937;">Which strategy should the company prioritize and why?</label> <textarea id="group-response" placeholder="Explain your group's decision and the performance measures that would support it..." class="w-full px-4 py-3 rounded-lg border" style="border-color: #e5e7eb; color: #374151; min-height: 150px;" required></textarea>
+        <p class="text-sm mt-2" style="color: #6b7280;">💡 Tip: Consider both short-term and long-term implications!</p>
+       </div><button type="submit" class="w-full px-6 py-3 rounded-lg font-semibold text-white transition-all" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'"> Submit Group Activity </button>
+      </form>
+     </div><!-- Reflection -->
+     <div id="reflection-tab" class="rounded-2xl p-8 mb-8" style="display: none; background: white; border: 1px solid #e5e7eb;">
+      <div class="flex items-center gap-3 mb-6">
+       <span class="text-3xl">✍️</span>
+       <h3 class="font-heading text-2xl font-bold" style="color: #1f2937;">Personal Reflection: Learning Insights</h3>
+      </div>
+      <div class="bg-amber-50 rounded-xl p-6 mb-8 border-l-4 border-amber-500">
+       <p class="font-semibold mb-4" style="color: #92400e;">🎓 Reflection Prompts:</p>
+       <p style="color: #78350f; line-height: 1.8;">Take time to reflect on what you've learned about value creation, ROI, and performance analytics. Consider how these concepts apply to real business decisions.</p>
+      </div>
+      <form id="reflection-form" class="space-y-6">
+       <div>
+        <label class="block font-semibold mb-2" style="color: #1f2937;">Your Name:</label> <input type="text" id="reflection-name" placeholder="Enter your name" class="w-full px-4 py-3 rounded-lg border" style="border-color: #e5e7eb; color: #374151;" required>
+       </div>
+       <div>
+        <label class="block font-semibold mb-2" style="color: #1f2937;">Your Email:</label> <input type="email" id="reflection-email" placeholder="Enter your email" class="w-full px-4 py-3 rounded-lg border" style="border-color: #e5e7eb; color: #374151;" required>
+       </div>
+       <div class="p-6 bg-amber-50 rounded-lg border-l-4 border-amber-500">
+        <p class="font-semibold mb-3" style="color: #92400e;">1. Understanding Value Creation</p>
+        <p style="color: #78350f; text-sm; margin-bottom: 12px;">What was your "aha moment" about value creation? Give a real-world example of a company or product that creates value.</p><textarea id="reflection-value" placeholder="Describe your understanding and example..." class="w-full px-4 py-3 rounded-lg border" style="border-color: #e5e7eb; color: #374151; min-height: 100px;" required></textarea>
+       </div>
+       <div class="p-6 bg-amber-50 rounded-lg border-l-4 border-amber-500">
+        <p class="font-semibold mb-3" style="color: #92400e;">2. ROI in Decision Making</p>
+        <p style="color: #78350f; text-sm; margin-bottom: 12px;">How would you use ROI analysis to make a personal decision (e.g., buying equipment, investing time in learning)? Be specific.</p><textarea id="reflection-roi" placeholder="Describe how you'd apply ROI thinking..." class="w-full px-4 py-3 rounded-lg border" style="border-color: #e5e7eb; color: #374151; min-height: 100px;" required></textarea>
+       </div>
+       <div class="p-6 bg-amber-50 rounded-lg border-l-4 border-amber-500">
+        <p class="font-semibold mb-3" style="color: #92400e;">3. Performance Analytics Impact</p>
+        <p style="color: #78350f; text-sm; margin-bottom: 12px;">Why do you think companies need multiple metrics (financial, customer, operational) to assess performance? What could go wrong if they only tracked one type?</p><textarea id="reflection-analytics" placeholder="Explain the importance of balanced metrics..." class="w-full px-4 py-3 rounded-lg border" style="border-color: #e5e7eb; color: #374151; min-height: 100px;" required></textarea>
+       </div>
+       <div class="p-6 bg-amber-50 rounded-lg border-l-4 border-amber-500">
+        <p class="font-semibold mb-3" style="color: #92400e;">4. Key Learnings &amp; Application</p>
+        <p style="color: #78350f; text-sm; margin-bottom: 12px;">What's the most important thing you learned in this module? How will you apply it in your future career?</p><textarea id="reflection-learning" placeholder="Summarize your key learnings and how you'll apply them..." class="w-full px-4 py-3 rounded-lg border" style="border-color: #e5e7eb; color: #374151; min-height: 100px;" required></textarea>
+       </div><button type="submit" class="w-full px-6 py-3 rounded-lg font-semibold text-white transition-all" style="background: linear-gradient(135deg, #d97706, #f59e0b);" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'"> Submit Reflection </button>
+      </form>
+     </div>
+    </section><!-- Key Takeaways -->
+    <section class="mb-12">
+     <div class="rounded-2xl p-8" style="background: linear-gradient(135deg, #fef3c7 0%, #fcd34d 100%); border: 2px solid #f59e0b;">
+      <div class="flex items-center gap-4">
+       <span class="text-3xl">💡</span>
+       <div>
+        <h3 class="font-heading text-2xl font-bold mb-4" style="color: #78350f;">Key Takeaways</h3>
+        <ul class="space-y-3" style="color: #451a03;">
+         <li class="flex gap-2"><span>✓</span> <span><strong>Value creation</strong> = making something worth more than it costs</span></li>
+         <li class="flex gap-2"><span>✓</span> <span><strong>ROI measures</strong> how much profit you earn from each dollar invested</span></li>
+         <li class="flex gap-2"><span>✓</span> <span><strong>Higher ROI</strong> = better investment; compare investments by ROI, not just profit</span></li>
+         <li class="flex gap-2"><span>✓</span> <span><strong>Performance analytics</strong> uses financial, customer, and operational metrics together</span></li>
+         <li class="flex gap-2"><span>✓</span> <span><strong>Smart decisions</strong> require analyzing multiple metrics, not just one perspective</span></li>
+         <li class="flex gap-2"><span>✓</span> <span><strong>All investments</strong> should be evaluated for: financial returns, customer impact, and strategic fit</span></li>
+        </ul>
+       </div>
+      </div>
+     </div>
+    </section><!-- Resources -->
+    <section class="mb-12">
+     <h2 class="font-heading text-2xl font-bold mb-6" style="color: #1f2937;">📚 Additional Resources</h2>
+     <div class="grid md:grid-cols-3 gap-6">
+      <a href="#" class="card-hover rounded-lg p-6" style="background: white; border: 1px solid #e5e7eb; text-decoration: none;"> <span class="text-3xl mb-3 block">📖</span> <p class="font-semibold mb-2" style="color: #1f2937;">Reading Material</p><p style="color: #6b7280; font-size: 14px;">Download the course slides and readings from Modules section</p></a> <a href="#" class="card-hover rounded-lg p-6" style="background: white; border: 1px solid #e5e7eb; text-decoration: none;"> <span class="text-3xl mb-3 block">🎥</span> <p class="font-semibold mb-2" style="color: #1f2937;">Video Lecture</p><p style="color: #6b7280; font-size: 14px;">Watch the guided discussion recorded lecture available on Canvas</p></a> <a href="#" class="card-hover rounded-lg p-6" style="background: white; border: 1px solid #e5e7eb; text-decoration: none;"> <span class="text-3xl mb-3 block">❓</span> <p class="font-semibold mb-2" style="color: #1f2937;">Q&amp;A Forum</p><p style="color: #6b7280; font-size: 14px;">Post questions on the discussion board and help classmates</p></a>
+     </div>
+    </section><!-- Footer -->
+    <footer class="border-t pt-8" style="border-color: #e5e7eb; color: #6b7280; text-align: center;">
+     <p>DM104 - Evaluation of Business Performance | Midterm Week 1: Value Creation, ROI, and Performance Analytics</p>
+     <p style="margin-top: 8px;">Instructor: MKDB | Lyceum de San Pablo</p>
+     <p style="margin-top: 16px; font-size: 12px;">© 2026 All Rights Reserved</p>
+    </footer>
+   </main>
+  </div>
+  <script>
+    const defaultConfig = {
+      module_title: 'Midterm Week 1: Value Creation, ROI, and Performance Analytics',
+      week_number: 'Midterm Week 1'
+    };
+
+    let config = { ...defaultConfig };
+    let currentTab = 'case';
+    let allResponses = [];
+
+    // Data SDK Handler
+    const dataHandler = {
+      onDataChanged(data) {
+        allResponses = data;
+        console.log('Data updated:', data);
+      }
+    };
+
+    // Initialize SDK
+    async function initSDK() {
+      if (window.dataSdk) {
+        const result = await window.dataSdk.init(dataHandler);
+        if (!result.isOk) {
+          console.error('Failed to initialize Data SDK');
+        }
+      }
+
+      if (window.elementSdk) {
+        window.elementSdk.init({
+          defaultConfig,
+          onConfigChange,
+          mapToCapabilities,
+          mapToEditPanelValues
+        });
+      }
+    }
+
+    async function onConfigChange(newConfig) {
+      config = { ...config, ...newConfig };
+      const titleEl = document.getElementById('module-title');
+      if (titleEl) titleEl.textContent = config.module_title || defaultConfig.module_title;
+    }
+
+    function mapToCapabilities(config) {
+      return {
+        recolorables: [],
+        borderables: [],
+        fontEditable: undefined,
+        fontSizeable: undefined
+      };
+    }
+
+    function mapToEditPanelValues(config) {
+      return new Map([
+        ['module_title', config.module_title || defaultConfig.module_title],
+        ['week_number', config.week_number || defaultConfig.week_number]
+      ]);
+    }
+
+    // Tab switching
+    function switchTab(tabName) {
+      currentTab = tabName;
+      document.getElementById('case-tab').style.display = tabName === 'case' ? 'block' : 'none';
+      document.getElementById('problem-tab').style.display = tabName === 'problem' ? 'block' : 'none';
+      document.getElementById('reflection-tab').style.display = tabName === 'reflection' ? 'block' : 'none';
+
+      document.getElementById('tab-case').style.color = tabName === 'case' ? '#fb923c' : '#6b7280';
+      document.getElementById('tab-case').style.borderColor = tabName === 'case' ? '#fb923c' : 'transparent';
+      document.getElementById('tab-problem').style.color = tabName === 'problem' ? '#8b5cf6' : '#6b7280';
+      document.getElementById('tab-problem').style.borderColor = tabName === 'problem' ? '#8b5cf6' : 'transparent';
+      document.getElementById('tab-reflection').style.color = tabName === 'reflection' ? '#d97706' : '#6b7280';
+      document.getElementById('tab-reflection').style.borderColor = tabName === 'reflection' ? '#d97706' : 'transparent';
+    }
+
+    // Case Study submission
+    document.getElementById('case-form')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = document.getElementById('case-name').value;
+      const email = document.getElementById('case-email').value;
+      const roi = document.getElementById('case-roi').value;
+      const value = document.getElementById('case-value').value;
+      const recommendation = document.getElementById('case-recommendation').value;
+
+      if (window.dataSdk) {
+        const result = await window.dataSdk.create({
+          student_name: name,
+          email: email,
+          activity_type: 'case_study',
+          responses: `ROI Calculation: ${roi}\n\nValue Analysis: ${value}\n\nRecommendation: ${recommendation}`,
+          completed: true,
+          timestamp: new Date().toISOString(),
+          score: 0
+        });
+
+        if (result.isOk) {
+          showToast('✅ Case study submitted successfully!');
+          document.getElementById('case-form').reset();
+          setTimeout(() => switchTab('problem'), 1500);
+        } else {
+          showToast('❌ Error submitting. Please try again.');
+        }
+      }
+    });
+
+    // Problem-Based Learning submission
+    document.getElementById('problem-form')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = document.getElementById('problem-name').value;
+      const email = document.getElementById('problem-email').value;
+      const financial = document.getElementById('problem-financial').value;
+      const metrics = document.getElementById('problem-metrics').value;
+      const risks = document.getElementById('problem-risks').value;
+      const decision = document.getElementById('problem-decision').value;
+
+      if (window.dataSdk) {
+        const result = await window.dataSdk.create({
+          student_name: name,
+          email: email,
+          activity_type: 'problem_based',
+          responses: `Financial: ${financial}\n\nMetrics: ${metrics}\n\nRisks: ${risks}\n\nDecision: ${decision}`,
+          completed: true,
+          timestamp: new Date().toISOString(),
+          score: 0
+        });
+
+        if (result.isOk) {
+          showToast('✅ Problem analysis submitted successfully!');
+          document.getElementById('problem-form').reset();
+          setTimeout(() => switchTab('reflection'), 1500);
+        } else {
+          showToast('❌ Error submitting. Please try again.');
+        }
+      }
+    });
+
+    // Reflection submission
+    document.getElementById('reflection-form')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = document.getElementById('reflection-name').value;
+      const email = document.getElementById('reflection-email').value;
+      const value = document.getElementById('reflection-value').value;
+      const roi = document.getElementById('reflection-roi').value;
+      const analytics = document.getElementById('reflection-analytics').value;
+      const learning = document.getElementById('reflection-learning').value;
+
+      if (window.dataSdk) {
+        const result = await window.dataSdk.create({
+          student_name: name,
+          email: email,
+          activity_type: 'reflection',
+          responses: `Value Creation: ${value}\n\nROI Application: ${roi}\n\nAnalytics Impact: ${analytics}\n\nKey Learning: ${learning}`,
+          completed: true,
+          timestamp: new Date().toISOString(),
+          score: 0
+        });
+
+        if (result.isOk) {
+          showToast('✅ Reflection submitted successfully! Great work completing the module.');
+          document.getElementById('reflection-form').reset();
+          setTimeout(() => {
+            document.getElementById('reflection-form').innerHTML = '<div class="text-center py-12"><div class="text-5xl mb-4">🎉</div><p class="text-2xl font-bold" style="color: #1f2937;">Module Complete!</p><p style="color: #6b7280; margin-top: 8px;">Thank you for completing the Midterm Week 1 module.</p></div>';
+          }, 1500);
+        } else {
+          showToast('❌ Error submitting. Please try again.');
+        }
+      }
+    });
+
+    // Show toast notification
+    function showToast(message) {
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.textContent = message;
+      document.body.appendChild(toast);
+
+      setTimeout(() => {
+        toast.style.animation = 'slideDown 0.3s ease-in';
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    }
+
+    // Initialize
+    initSDK();
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9d57985fb103fec8',t:'MTc3MjM2MjE2OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
