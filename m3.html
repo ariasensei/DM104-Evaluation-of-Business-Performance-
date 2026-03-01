@@ -1,0 +1,604 @@
+<!doctype html>
+<html lang="en" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DM104 Midterm Week 3 - Ethics, Data Governance, and Responsible Analytics</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="/_sdk/data_sdk.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&amp;family=Lato:wght@400;500;700&amp;display=swap" rel="stylesheet">
+  <style>
+    body {
+      box-sizing: border-box;
+    }
+    html, body, #app-wrapper {
+      height: 100%;
+    }
+    .font-heading {
+      font-family: 'Merriweather', Georgia, serif;
+    }
+    .font-body {
+      font-family: 'Lato', system-ui, sans-serif;
+    }
+    .term-highlight {
+      position: relative;
+      cursor: help;
+      padding: 2px 6px;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+    }
+    .term-highlight:hover {
+      background-color: rgba(251, 146, 60, 0.2);
+      transform: scale(1.02);
+    }
+    .tooltip {
+      display: none;
+      position: absolute;
+      background: linear-gradient(135deg, #1f2937, #111827);
+      color: #f3f4f6;
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      z-index: 50;
+      border-left: 3px solid #fb923c;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+      max-width: 280px;
+      line-height: 1.5;
+    }
+    .term-highlight:hover .tooltip {
+      display: block;
+      bottom: 120%;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    .animate-slide-in {
+      animation: slideIn 0.6s ease-out;
+    }
+    .section-divider {
+      height: 3px;
+      background: linear-gradient(90deg, #fb923c, #f97316, transparent);
+      margin: 2rem 0;
+    }
+    .card-hover {
+      transition: all 0.3s ease;
+    }
+    .card-hover:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 15px 40px rgba(249, 115, 22, 0.15);
+    }
+    .example-box {
+      border-left: 4px solid #10b981;
+      background: rgba(16, 185, 129, 0.05);
+    }
+    .activity-box {
+      border-left: 4px solid #3b82f6;
+      background: rgba(59, 130, 246, 0.05);
+    }
+    .group-activity-box {
+      border-left: 4px solid #8b5cf6;
+      background: rgba(139, 92, 246, 0.05);
+    }
+    .loading-spinner {
+      border: 3px solid rgba(249, 115, 22, 0.2);
+      border-top-color: #fb923c;
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #10b981;
+      color: white;
+      padding: 14px 20px;
+      border-radius: 8px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      z-index: 100;
+      animation: slideIn 0.3s ease-out;
+    }
+  </style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="https://cdn.tailwindcss.com/3.4.17" type="text/javascript"></script>
+ </head>
+ <body class="h-full font-body">
+  <div id="app-wrapper" class="w-full h-full overflow-auto" style="background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);">
+   <!-- Navigation Bar -->
+   <nav class="sticky top-0 z-40" style="background: white; border-bottom: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+     <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background: linear-gradient(135deg, #fb923c, #f97316);">
+       <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+       </svg>
+      </div>
+      <div>
+       <p class="text-xs font-semibold text-gray-500" id="course-label">DM104</p>
+       <p class="text-sm font-bold text-gray-900" id="module-title">Midterm Week 3: Ethics, Data Governance, and Responsible Analytics</p>
+      </div>
+     </div>
+     <div class="flex items-center gap-2" style="color: #6b7280;">
+      <span class="text-sm">📊 Interactive Module</span>
+     </div>
+    </div>
+   </nav>
+   <main class="max-w-6xl mx-auto px-6 py-12">
+    <!-- Learning Objectives -->
+    <section class="mb-12 animate-slide-in">
+     <div class="rounded-2xl p-8" style="background: white; border: 1px solid #e5e7eb; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+      <div class="flex items-start gap-4">
+       <div class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style="background: linear-gradient(135deg, #fb923c, #f97316);">
+        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+       </div>
+       <div class="flex-1">
+        <h2 class="font-heading text-2xl font-bold mb-4" style="color: #1f2937;">Learning Objectives</h2>
+        <p class="mb-4" style="color: #6b7280;">By the end of this week, you'll be able to:</p>
+        <ul class="space-y-2">
+         <li class="flex gap-3" style="color: #374151;"><span style="color: #dc2626;">✓</span> <span><strong>Recognize</strong> ethical issues in data collection and performance measurement</span></li>
+         <li class="flex gap-3" style="color: #374151;"><span style="color: #dc2626;">✓</span> <span><strong>Understand</strong> data governance rules and why they matter</span></li>
+         <li class="flex gap-3" style="color: #374151;"><span style="color: #dc2626;">✓</span> <span><strong>Apply</strong> ethical frameworks to real business decisions with data</span></li>
+         <li class="flex gap-3" style="color: #374151;"><span style="color: #dc2626;">✓</span> <span><strong>Demonstrate</strong> responsible analytics practices in your work</span></li>
+        </ul>
+       </div>
+      </div>
+     </div>
+    </section><!-- Core Concepts -->
+    <section class="mb-12">
+     <h2 class="font-heading text-3xl font-bold mb-8" style="color: #1f2937;">Core Concepts Explained</h2><!-- Ethics in Data Card -->
+     <div class="card-hover rounded-2xl p-8 mb-8" style="background: white; border: 1px solid #e5e7eb; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+      <div class="flex items-center gap-3 mb-6">
+       <span class="w-10 h-10 rounded-lg flex items-center justify-center" style="background: #fee2e2; color: #dc2626; font-weight: bold;">1</span>
+       <h3 class="font-heading text-2xl font-bold" style="color: #1f2937;">Ethics in Data &amp; Performance Measurement</h3>
+      </div>
+      <div class="bg-gradient-to-r from-red-50 to-rose-50 rounded-xl p-6 mb-6 border-l-4 border-red-500">
+       <p class="font-semibold mb-2" style="color: #b91c1c;">Simple Definition:</p>
+       <p style="color: #7f1d1d; line-height: 1.8;"><strong>Ethics</strong> means doing the right thing, even when no one is watching. In data and performance measurement, ethics means collecting and using data honestly, fairly, and responsibly – protecting people's privacy and rights.</p>
+      </div>
+      <div class="grid md:grid-cols-2 gap-6">
+       <div class="example-box rounded-lg p-6">
+        <p class="font-semibold mb-3" style="color: #047857;">🏢 Real-World Example</p>
+        <p style="color: #374151; line-height: 1.6;"><strong>Tech Company Tracking:</strong><br>
+          • Company collects user data to improve products<br>
+          • <strong>Unethical:</strong> Selling data to third parties without permission<br>
+          • <strong>Ethical:</strong> Using data only for stated purpose and getting clear consent<br><br>
+          The data is the same, but HOW you use it makes all the difference.</p>
+       </div>
+       <div class="bg-red-50 rounded-lg p-6 border-l-4 border-red-500">
+        <p class="font-semibold mb-3" style="color: #991b1b;">Why Ethics Matter:</p>
+        <ul class="space-y-2" style="color: #374151; font-size: 14px;">
+         <li>✓ Protects people's privacy and rights</li>
+         <li>✓ Builds trust with customers</li>
+         <li>✓ Avoids legal problems</li>
+         <li>✓ Creates fair business practices</li>
+         <li>✓ Prevents harm to vulnerable groups</li>
+         <li>✓ Ensures honest decision-making</li>
+        </ul>
+       </div>
+      </div>
+     </div><!-- Data Governance Card -->
+     <div class="card-hover rounded-2xl p-8 mb-8" style="background: white; border: 1px solid #e5e7eb; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+      <div class="flex items-center gap-3 mb-6">
+       <span class="w-10 h-10 rounded-lg flex items-center justify-center" style="background: #dbeafe; color: #0284c7; font-weight: bold;">2</span>
+       <h3 class="font-heading text-2xl font-bold" style="color: #1f2937;">Data Governance: Rules for Data</h3>
+      </div>
+      <div class="bg-gradient-to-r from-blue-50 to-cyan-50 rounded-xl p-6 mb-6 border-l-4 border-blue-500">
+       <p class="font-semibold mb-2" style="color: #0369a1;">What It Is:</p>
+       <p style="color: #164e63; line-height: 1.8;"><strong>Data governance</strong> is the set of rules and procedures that organizations use to manage their data safely and responsibly. Think of it like traffic laws – they keep everyone safe by establishing clear rules about who can access data, how it's used, and how it's protected.</p>
+      </div>
+      <div class="grid md:grid-cols-2 gap-6">
+       <div class="example-box rounded-lg p-6">
+        <p class="font-semibold mb-3" style="color: #047857;">🏥 Healthcare Example</p>
+        <p style="color: #374151; line-height: 1.6;"><strong>Data Governance Rules:</strong><br>
+          • Only doctors and nurses can see patient medical records<br>
+          • Patient data kept for 7 years, then destroyed<br>
+          • Data encrypted so hackers can't steal it<br>
+          • Regular audits to check if rules are followed<br><br>
+          These rules protect patients while allowing doctors to help them.</p>
+       </div>
+       <div class="bg-blue-50 rounded-lg p-6 border-l-4 border-blue-500">
+        <p class="font-semibold mb-3" style="color: #0c4a6e;">Key Governance Elements:</p>
+        <ul class="space-y-2" style="color: #374151; font-size: 14px;">
+         <li><strong>📋 Access Control:</strong> Who can see and use data</li>
+         <li><strong>🔒 Security:</strong> Protection against theft/misuse</li>
+         <li><strong>📅 Retention:</strong> How long data is kept</li>
+         <li><strong>🚨 Compliance:</strong> Following laws (GDPR, privacy laws)</li>
+         <li><strong>🔍 Audit:</strong> Regular checks to ensure compliance</li>
+         <li><strong>📢 Transparency:</strong> Telling people how data is used</li>
+        </ul>
+       </div>
+      </div>
+     </div><!-- Responsible Analytics Card -->
+     <div class="card-hover rounded-2xl p-8 mb-8" style="background: white; border: 1px solid #e5e7eb; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+      <div class="flex items-center gap-3 mb-6">
+       <span class="w-10 h-10 rounded-lg flex items-center justify-center" style="background: #fce7f3; color: #ec4899; font-weight: bold;">3</span>
+       <h3 class="font-heading text-2xl font-bold" style="color: #1f2937;">Responsible Analytics: Using Data Wisely</h3>
+      </div>
+      <div class="bg-gradient-to-r from-pink-50 to-rose-50 rounded-xl p-6 mb-6 border-l-4 border-pink-500">
+       <p class="font-semibold mb-2" style="color: #be185d;">What It Means:</p>
+       <p style="color: #831843; line-height: 1.8;"><strong>Responsible analytics</strong> means using data analysis in a way that's fair, honest, and considers the impact on people. It's about not just asking "What does the data say?" but also asking "Is it fair? Who might be harmed? Am I being honest?"</p>
+      </div>
+      <div class="grid md:grid-cols-3 gap-6">
+       <div class="example-box rounded-lg p-6">
+        <p class="font-semibold mb-3" style="color: #047857;">❌ Irresponsible Analytics</p>
+        <p style="color: #374151; text-sm; line-height: 1.6;"><strong>Problem:</strong> Company uses historical hiring data (where they hired mostly men) to build an AI that automatically rejects female applicants<br><br><strong>Why it's wrong:</strong><br>
+          • Perpetuates past discrimination<br>
+          • Treats women unfairly<br>
+          • Hides bias behind "data"</p>
+       </div>
+       <div class="example-box rounded-lg p-6">
+        <p class="font-semibold mb-3" style="color: #047857;">✅ Responsible Analytics</p>
+        <p style="color: #374151; text-sm; line-height: 1.6;"><strong>Solution:</strong> Audit the data for bias, adjust it, and add human review<br><br><strong>Why it's better:</strong><br>
+          • Reduces discrimination<br>
+          • Treats candidates fairly<br>
+          • Human judgment catches mistakes</p>
+       </div>
+       <div class="bg-purple-50 rounded-lg p-6 border-l-4 border-purple-500">
+        <p class="font-semibold mb-3" style="color: #6b21a8;">Key Practices:</p>
+        <ul class="space-y-2" style="color: #374151; font-size: 13px;">
+         <li>✓ Check data for bias</li>
+         <li>✓ Transparent about methods</li>
+         <li>✓ Get consent from people</li>
+         <li>✓ Document assumptions</li>
+         <li>✓ Test for fairness</li>
+         <li>✓ Keep human oversight</li>
+         <li>✓ Report limitations</li>
+        </ul>
+       </div>
+      </div>
+     </div><!-- Real Risks Card -->
+     <div class="card-hover rounded-2xl p-8" style="background: white; border: 1px solid #e5e7eb; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+      <div class="flex items-center gap-3 mb-6">
+       <span class="w-10 h-10 rounded-lg flex items-center justify-center" style="background: #fee2e2; color: #dc2626; font-weight: bold;">4</span>
+       <h3 class="font-heading text-2xl font-bold" style="color: #1f2937;">Real Risks of Misusing Data</h3>
+      </div>
+      <div class="bg-red-50 rounded-xl p-6 mb-6 border-l-4 border-red-500">
+       <p class="font-semibold mb-2" style="color: #b91c1c;">What Can Go Wrong?</p>
+       <p style="color: #7f1d1d; line-height: 1.8;">When organizations don't follow ethical guidelines and data governance, serious problems happen – harming people, the company, and society.</p>
+      </div>
+      <div class="space-y-4">
+       <div class="rounded-lg p-4 border-l-4" style="background: #fef2f2; border-color: #dc2626;">
+        <p class="font-semibold mb-2" style="color: #991b1b;">⚠️ Case 1: Privacy Violation - Facebook Data Breach (2018)</p>
+        <p style="color: #374151; font-size: 13px; line-height: 1.6;"><strong>What happened:</strong> 87 million users' personal data was shared with a political consulting firm without consent.<br><strong>Consequences:</strong> $5 billion fine, damaged trust, users felt violated.<br><strong>Lesson:</strong> Companies must have strict access controls and transparency.</p>
+       </div>
+       <div class="rounded-lg p-4 border-l-4" style="background: #fef2f2; border-color: #dc2626;">
+        <p class="font-semibold mb-2" style="color: #991b1b;">⚠️ Case 2: Algorithmic Bias - Amazon's Hiring AI</p>
+        <p style="color: #374151; font-size: 13px; line-height: 1.6;"><strong>What happened:</strong> Amazon's AI tool trained on past hiring data automatically rejected female applicants.<br><strong>Consequences:</strong> Discrimination, legal liability, public outcry.<br><strong>Lesson:</strong> Data reflects historical biases; must be actively audited for fairness.</p>
+       </div>
+       <div class="rounded-lg p-4 border-l-4" style="background: #fef2f2; border-color: #dc2626;">
+        <p class="font-semibold mb-2" style="color: #991b1b;">⚠️ Case 3: Data Manipulation - Wells Fargo Scandal</p>
+        <p style="color: #374151; font-size: 13px; line-height: 1.6;"><strong>What happened:</strong> Employees created fake accounts to meet sales targets, using manipulated data.<br><strong>Consequences:</strong> $3 billion fine, fired employees, destroyed reputation.<br><strong>Lesson:</strong> Pressure to meet metrics can drive unethical behavior; need strong governance.</p>
+       </div>
+       <div class="rounded-lg p-4 border-l-4" style="background: #fef2f2; border-color: #dc2626;">
+        <p class="font-semibold mb-2" style="color: #991b1b;">⚠️ Case 4: Lack of Transparency - Cambridge Analytica</p>
+        <p style="color: #374151; font-size: 13px; line-height: 1.6;"><strong>What happened:</strong> Political firm used personal data for micro-targeted political ads without consent.<br><strong>Consequences:</strong> Company shut down, investigations, erosion of trust.<br><strong>Lesson:</strong> People deserve to know how their data is being used.</p>
+       </div>
+      </div>
+     </div>
+    </section>
+    <div class="section-divider"></div><!-- Activities Section -->
+    <section class="mb-12">
+     <h2 class="font-heading text-3xl font-bold mb-8" style="color: #1f2937;">Interactive Activities</h2><!-- Tabs for Activities -->
+     <div class="flex gap-4 mb-6 border-b" style="border-color: #e5e7eb;">
+      <button onclick="switchTab('individual')" id="tab-individual" class="px-6 py-3 font-semibold border-b-2" style="border-color: #dc2626; color: #dc2626;"> 👤 Individual Activity </button> <button onclick="switchTab('group')" id="tab-group" class="px-6 py-3 font-semibold" style="color: #6b7280;"> 👥 Group Activity </button> <button onclick="switchTab('quiz')" id="tab-quiz" class="px-6 py-3 font-semibold" style="color: #6b7280;"> ✍️ Case Study Quiz </button>
+     </div><!-- Individual Activity -->
+     <div id="individual-tab" class="activity-box rounded-2xl p-8 mb-8">
+      <div class="flex items-center gap-3 mb-6">
+       <span class="text-3xl">👤</span>
+       <h3 class="font-heading text-2xl font-bold" style="color: #1f2937;">Individual Activity: Ethical Dilemma</h3>
+      </div>
+      <div class="bg-red-50 rounded-xl p-6 mb-8 border-l-4 border-red-500">
+       <p class="font-semibold mb-4" style="color: #991b1b;">📋 Your Situation:</p>
+       <p style="color: #7f1d1d; line-height: 1.8;">You work in HR at a large company. You've discovered that the company's performance evaluation system is biased – it gives higher ratings to employees who match the demographic profile of senior managers (mostly men, aged 45+). Your boss says, "It's just how things happen naturally. The numbers show it." You have access to this data and can present it to leadership, but it might create conflict.</p>
+      </div>
+      <div class="grid md:grid-cols-2 gap-6 mb-8">
+       <div class="bg-white rounded-lg p-6 border-2 border-red-200">
+        <p class="font-semibold mb-3" style="color: #991b1b;">The Ethical Issue:</p>
+        <p style="color: #374151; font-size: 14px; line-height: 1.6;">This is a <strong>fairness and transparency</strong> problem. The evaluation system is perpetuating discrimination, even if unintentionally. The question is: Do you speak up or stay silent?</p>
+       </div>
+       <div class="bg-white rounded-lg p-6 border-2 border-red-200">
+        <p class="font-semibold mb-3" style="color: #991b1b;">Your Options:</p>
+        <ul style="color: #374151; font-size: 14px; space-y-2;">
+         <li>A) Say nothing – not your problem</li>
+         <li>B) Report to leadership with data</li>
+         <li>C) Present to your boss first diplomatically</li>
+         <li>D) Leak it anonymously to an employee group</li>
+        </ul>
+       </div>
+      </div>
+      <form id="individual-form" style="display: block;">
+       <div class="mb-6">
+        <label class="block font-semibold mb-2" style="color: #1f2937;">Your Name:</label> <input type="text" id="individual-name" placeholder="Enter your name" class="w-full px-4 py-3 rounded-lg border" style="border-color: #e5e7eb; color: #374151;" required>
+       </div>
+       <div class="mb-6">
+        <label class="block font-semibold mb-2" style="color: #1f2937;">Your Email:</label> <input type="email" id="individual-email" placeholder="Enter your email" class="w-full px-4 py-3 rounded-lg border" style="border-color: #e5e7eb; color: #374151;" required>
+       </div>
+       <div class="mb-6">
+        <label class="block font-semibold mb-2" style="color: #1f2937;">Which option would you choose? (A, B, C, or D)</label> <input type="text" id="individual-choice" placeholder="Enter your choice" maxlength="1" class="w-full px-4 py-3 rounded-lg border" style="border-color: #e5e7eb; color: #374151;" required>
+       </div>
+       <div class="mb-6">
+        <label class="block font-semibold mb-2" style="color: #1f2937;">Explain your reasoning. Why did you choose this option? What are the ethical implications?</label> <textarea id="individual-response" placeholder="Consider: Who could be harmed? What's your responsibility? What values matter most to you?" class="w-full px-4 py-3 rounded-lg border" style="border-color: #e5e7eb; color: #374151; min-height: 150px;" required></textarea>
+        <p class="text-sm mt-2" style="color: #6b7280;">💡 Tip: There's no 'perfect' answer, but explain your ethical reasoning clearly!</p>
+       </div><button type="submit" class="w-full px-6 py-3 rounded-lg font-semibold text-white transition-all" style="background: linear-gradient(135deg, #dc2626, #b91c1c);" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'"> Submit Individual Activity </button>
+      </form>
+     </div><!-- Group Activity -->
+     <div id="group-tab" class="group-activity-box rounded-2xl p-8 mb-8" style="display: none;">
+      <div class="flex items-center gap-3 mb-6">
+       <span class="text-3xl">👥</span>
+       <h3 class="font-heading text-2xl font-bold" style="color: #1f2937;">Group Activity: Design a Data Governance Plan</h3>
+      </div>
+      <div class="bg-purple-50 rounded-xl p-6 mb-8 border-l-4 border-purple-500">
+       <p class="font-semibold mb-4" style="color: #5b21b6;">👥 Group Challenge (3-4 students):</p>
+       <p style="color: #4c1d95; line-height: 1.8;">Your retail company just experienced a data breach where customer credit card information was stolen. The CEO asks your team to create a data governance plan to prevent this from happening again and restore customer trust.</p>
+      </div>
+      <div class="bg-white rounded-lg p-6 mb-8 border-2 border-purple-200">
+       <p class="font-semibold mb-4" style="color: #5b21b6;">Your plan should address:</p>
+       <ul style="color: #374151; font-size: 14px; space-y-3;">
+        <li><strong>1. Access Control:</strong> Who should be allowed to see customer data? Who should NOT?</li>
+        <li><strong>2. Data Security:</strong> How will you protect sensitive information from hackers?</li>
+        <li><strong>3. Retention Policy:</strong> How long should you keep customer data? When should it be deleted?</li>
+        <li><strong>4. Transparency &amp; Communication:</strong> How will you tell customers about the breach and what you're doing to protect them?</li>
+       </ul>
+      </div>
+      <form id="group-form">
+       <div class="mb-6">
+        <label class="block font-semibold mb-2" style="color: #1f2937;">Group Members' Names:</label> <input type="text" id="group-names" placeholder="Name 1, Name 2, Name 3, Name 4" class="w-full px-4 py-3 rounded-lg border" style="border-color: #e5e7eb; color: #374151;" required>
+       </div>
+       <div class="mb-6">
+        <label class="block font-semibold mb-2" style="color: #1f2937;">Your Data Governance Plan</label> <textarea id="group-response" placeholder="Describe your group's governance framework covering access control, security, retention, and transparency..." class="w-full px-4 py-3 rounded-lg border" style="border-color: #e5e7eb; color: #374151; min-height: 180px;" required></textarea>
+        <p class="text-sm mt-2" style="color: #6b7280;">💡 Tip: Be specific – what tools, rules, and roles will enforce your governance?</p>
+       </div><button type="submit" class="w-full px-6 py-3 rounded-lg font-semibold text-white transition-all" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'"> Submit Group Activity </button>
+      </form>
+     </div><!-- Case Study Quiz -->
+     <div id="quiz-tab" class="rounded-2xl p-8 mb-8" style="display: none; background: white; border: 1px solid #e5e7eb;">
+      <div class="flex items-center gap-3 mb-6">
+       <span class="text-3xl">✍️</span>
+       <h3 class="font-heading text-2xl font-bold" style="color: #1f2937;">Case Study Quiz: Spot the Ethical Problems</h3>
+      </div>
+      <p class="mb-8" style="color: #6b7280;">Read each scenario and identify the ethical or governance issues. Short answer – explain your thinking.</p>
+      <form id="quiz-form" class="space-y-8">
+       <!-- Question 1 -->
+       <div class="rounded-lg p-6" style="background: #f9fafb; border: 1px solid #e5e7eb;">
+        <p class="font-semibold mb-4" style="color: #1f2937;">1. A bank uses a credit scoring algorithm trained on 20 years of historical lending data. The algorithm denies loans to applicants from certain neighborhoods at twice the rate of others. When asked why, the bank says: "The algorithm is objective – it's based on numbers, not human bias."</p>
+        <p class="mb-3" style="color: #374151; font-size: 14px;"><strong>What ethical problems do you see? Explain:</strong></p><textarea name="q1" placeholder="Describe the ethical and responsible analytics issues here..." class="w-full px-4 py-3 rounded-lg border" style="border-color: #e5e7eb; color: #374151; min-height: 100px;" required></textarea>
+       </div><!-- Question 2 -->
+       <div class="rounded-lg p-6" style="background: #f9fafb; border: 1px solid #e5e7eb;">
+        <p class="font-semibold mb-4" style="color: #1f2937;">2. A tech company collects user behavioral data (browsing history, location, preferences) through their free app. In the privacy policy (35 pages long) buried on page 22, it says this data may be sold to marketing companies. Most users never read the policy. Is this ethical? Why or why not?</p>
+        <p class="mb-3" style="color: #374151; font-size: 14px;"><strong>Your analysis:</strong></p><textarea name="q2" placeholder="Discuss consent, transparency, and data governance issues..." class="w-full px-4 py-3 rounded-lg border" style="border-color: #e5e7eb; color: #374151; min-height: 100px;" required></textarea>
+       </div><!-- Question 3 -->
+       <div class="rounded-lg p-6" style="background: #f9fafb; border: 1px solid #e5e7eb;">
+        <p class="font-semibold mb-4" style="color: #1f2937;">3. An HR manager discovers that women in your company are paid 15% less on average than men in the same roles. She reports this to the CEO, who says: "Let's not make this public. We'll quietly adjust salaries over 5 years." Is this the right approach? What should be done instead?</p>
+        <p class="mb-3" style="color: #374151; font-size: 14px;"><strong>Your recommendation:</strong></p><textarea name="q3" placeholder="Consider: accountability, transparency, fairness, and ethical responsibility..." class="w-full px-4 py-3 rounded-lg border" style="border-color: #e5e7eb; color: #374151; min-height: 100px;" required></textarea>
+       </div><button type="submit" class="w-full px-6 py-3 rounded-lg font-semibold text-white transition-all" style="background: linear-gradient(135deg, #dc2626, #b91c1c);"> Submit Quiz </button>
+      </form>
+      <div id="quiz-results" style="display: none; margin-top: 24px; padding: 24px; border-radius: 12px; background: #fef2f2; border: 2px solid #dc2626;">
+       <div class="flex items-center gap-3 mb-4">
+        <span class="text-3xl">✅</span>
+        <p class="font-heading text-xl font-bold" style="color: #991b1b;">Responses Submitted!</p>
+       </div>
+       <p style="color: #374151; line-height: 1.8;">Thank you for engaging with these complex ethical scenarios. Your responses have been saved. In the next class, we'll discuss different approaches and perspectives on these dilemmas.</p>
+      </div>
+     </div>
+    </section><!-- Key Takeaways -->
+    <section class="mb-12">
+     <div class="rounded-2xl p-8" style="background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%); border: 2px solid #dc2626;">
+      <div class="flex items-start gap-4">
+       <span class="text-3xl">⚠️</span>
+       <div>
+        <h3 class="font-heading text-2xl font-bold mb-4" style="color: #991b1b;">Key Takeaways</h3>
+        <ul class="space-y-3" style="color: #7f1d1d;">
+         <li class="flex gap-2"><span>✓</span> <span><strong>Ethics matters:</strong> How you use data is as important as having the data itself</span></li>
+         <li class="flex gap-2"><span>✓</span> <span><strong>Data governance provides rules:</strong> Access control, security, retention, and transparency protect people and organizations</span></li>
+         <li class="flex gap-2"><span>✓</span> <span><strong>Responsible analytics requires:</strong> Checking for bias, being transparent, maintaining human oversight, and considering impact</span></li>
+         <li class="flex gap-2"><span>✓</span> <span><strong>Real consequences:</strong> Ethical failures lead to fines, reputation damage, legal liability, and loss of trust</span></li>
+         <li class="flex gap-2"><span>✓</span> <span><strong>It's your responsibility:</strong> When you see unethical data practices, speaking up is the right thing to do</span></li>
+        </ul>
+       </div>
+      </div>
+     </div>
+    </section><!-- Resources -->
+    <section class="mb-12">
+     <h2 class="font-heading text-2xl font-bold mb-6" style="color: #1f2937;">📚 Additional Resources</h2>
+     <div class="grid md:grid-cols-3 gap-6">
+      <a href="#" class="card-hover rounded-lg p-6" style="background: white; border: 1px solid #e5e7eb; text-decoration: none;"> <span class="text-3xl mb-3 block">📖</span> <p class="font-semibold mb-2" style="color: #1f2937;">Reading Material</p><p style="color: #6b7280; font-size: 14px;">Download the course slides and readings from Modules section</p></a> <a href="#" class="card-hover rounded-lg p-6" style="background: white; border: 1px solid #e5e7eb; text-decoration: none;"> <span class="text-3xl mb-3 block">🎥</span> <p class="font-semibold mb-2" style="color: #1f2937;">Video Lecture</p><p style="color: #6b7280; font-size: 14px;">Watch the guided discussion recorded lecture available on Canvas</p></a> <a href="#" class="card-hover rounded-lg p-6" style="background: white; border: 1px solid #e5e7eb; text-decoration: none;"> <span class="text-3xl mb-3 block">❓</span> <p class="font-semibold mb-2" style="color: #1f2937;">Q&amp;A Forum</p><p style="color: #6b7280; font-size: 14px;">Post questions on the discussion board and help classmates</p></a>
+     </div>
+    </section><!-- Footer -->
+    <footer class="border-t pt-8" style="border-color: #e5e7eb; color: #6b7280; text-align: center;">
+     <p>DM104 - Evaluation of Business Performance | Midterm Week 3 Interactive Module</p>
+     <p style="margin-top: 8px;">Instructor: MKDB | Lyceum de San Pablo</p>
+     <p style="margin-top: 16px; font-size: 12px;">© 2026 All Rights Reserved</p>
+    </footer>
+   </main>
+  </div>
+  <script>
+    const defaultConfig = {
+      module_title: 'Midterm Week 3: Ethics, Data Governance, and Responsible Analytics',
+      week_number: 'Midterm Week 3'
+    };
+
+    let config = { ...defaultConfig };
+    let currentTab = 'individual';
+    let selectedOrgType = null;
+    let allResponses = [];
+
+    // Data SDK Handler
+    const dataHandler = {
+      onDataChanged(data) {
+        allResponses = data;
+        console.log('Data updated:', data);
+      }
+    };
+
+    // Initialize SDK
+    async function initSDK() {
+      if (window.dataSdk) {
+        const result = await window.dataSdk.init(dataHandler);
+        if (!result.isOk) {
+          console.error('Failed to initialize Data SDK');
+        }
+      }
+
+      if (window.elementSdk) {
+        window.elementSdk.init({
+          defaultConfig,
+          onConfigChange,
+          mapToCapabilities,
+          mapToEditPanelValues
+        });
+      }
+    }
+
+    async function onConfigChange(newConfig) {
+      config = { ...config, ...newConfig };
+      const titleEl = document.getElementById('module-title');
+      if (titleEl) titleEl.textContent = config.module_title || defaultConfig.module_title;
+    }
+
+    function mapToCapabilities(config) {
+      return {
+        recolorables: [],
+        borderables: [],
+        fontEditable: undefined,
+        fontSizeable: undefined
+      };
+    }
+
+    function mapToEditPanelValues(config) {
+      return new Map([
+        ['module_title', config.module_title || defaultConfig.module_title],
+        ['week_number', config.week_number || defaultConfig.week_number]
+      ]);
+    }
+
+    // Tab switching
+    function switchTab(tabName) {
+      currentTab = tabName;
+      document.getElementById('individual-tab').style.display = tabName === 'individual' ? 'block' : 'none';
+      document.getElementById('group-tab').style.display = tabName === 'group' ? 'block' : 'none';
+      document.getElementById('quiz-tab').style.display = tabName === 'quiz' ? 'block' : 'none';
+
+      document.getElementById('tab-individual').style.color = tabName === 'individual' ? '#dc2626' : '#6b7280';
+      document.getElementById('tab-individual').style.borderColor = tabName === 'individual' ? '#dc2626' : 'transparent';
+      document.getElementById('tab-group').style.color = tabName === 'group' ? '#8b5cf6' : '#6b7280';
+      document.getElementById('tab-group').style.borderColor = tabName === 'group' ? '#8b5cf6' : 'transparent';
+      document.getElementById('tab-quiz').style.color = tabName === 'quiz' ? '#dc2626' : '#6b7280';
+      document.getElementById('tab-quiz').style.borderColor = tabName === 'quiz' ? '#dc2626' : 'transparent';
+    }
+
+    // Individual activity submission
+    document.getElementById('individual-form')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = document.getElementById('individual-name').value;
+      const email = document.getElementById('individual-email').value;
+      const choice = document.getElementById('individual-choice').value.toUpperCase();
+      const response = document.getElementById('individual-response').value;
+
+      if (window.dataSdk) {
+        const result = await window.dataSdk.create({
+          student_name: name,
+          email: email,
+          activity_type: 'individual_ethical_dilemma',
+          responses: `Choice: ${choice}\n\nReasoning: ${response}`,
+          completed: true,
+          timestamp: new Date().toISOString()
+        });
+
+        if (result.isOk) {
+          showToast('✅ Ethical dilemma response submitted successfully!');
+          document.getElementById('individual-form').reset();
+          setTimeout(() => switchTab('group'), 1500);
+        } else {
+          showToast('❌ Error submitting activity. Please try again.');
+        }
+      }
+    });
+
+    // Group activity submission
+    document.getElementById('group-form')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const names = document.getElementById('group-names').value;
+      const response = document.getElementById('group-response').value;
+
+      if (window.dataSdk) {
+        const result = await window.dataSdk.create({
+          student_name: names,
+          email: 'group@activity.com',
+          activity_type: 'group_data_governance',
+          responses: response,
+          completed: true,
+          timestamp: new Date().toISOString()
+        });
+
+        if (result.isOk) {
+          showToast('✅ Data governance plan submitted successfully!');
+          document.getElementById('group-form').reset();
+        } else {
+          showToast('❌ Error submitting activity. Please try again.');
+        }
+      }
+    });
+
+    // Case study quiz submission
+    document.getElementById('quiz-form')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const q1 = document.querySelector('textarea[name="q1"]')?.value || '';
+      const q2 = document.querySelector('textarea[name="q2"]')?.value || '';
+      const q3 = document.querySelector('textarea[name="q3"]')?.value || '';
+
+      if (window.dataSdk) {
+        const result = await window.dataSdk.create({
+          student_name: 'Anonymous',
+          email: 'quiz@response.com',
+          activity_type: 'case_study_quiz',
+          responses: `Case 1 - Algorithmic Bias:\n${q1}\n\nCase 2 - Data Privacy:\n${q2}\n\nCase 3 - Pay Equity:\n${q3}`,
+          completed: true,
+          timestamp: new Date().toISOString()
+        });
+
+        if (result.isOk) {
+          document.getElementById('quiz-form').style.display = 'none';
+          document.getElementById('quiz-results').style.display = 'block';
+          showToast('✅ Case study responses submitted successfully!');
+        } else {
+          showToast('❌ Error submitting quiz. Please try again.');
+        }
+      }
+    });
+
+    // Show toast notification
+    function showToast(message) {
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.textContent = message;
+      document.body.appendChild(toast);
+
+      setTimeout(() => {
+        toast.style.animation = 'slideDown 0.3s ease-in';
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    }
+
+    // Initialize
+    initSDK();
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9d57e36e65d7c7b1',t:'MTc3MjM2NTI0Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
