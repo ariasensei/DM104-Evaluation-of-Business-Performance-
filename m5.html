@@ -1,0 +1,648 @@
+<!doctype html>
+<html lang="en" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DM104 Midterm Week 5 - Final Project Presentation &amp; Evaluation</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="/_sdk/data_sdk.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&amp;family=Lato:wght@400;500;700&amp;display=swap" rel="stylesheet">
+  <style>
+    body {
+      box-sizing: border-box;
+    }
+    html, body, #app-wrapper {
+      height: 100%;
+    }
+    .font-heading {
+      font-family: 'Merriweather', Georgia, serif;
+    }
+    .font-body {
+      font-family: 'Lato', system-ui, sans-serif;
+    }
+    .term-highlight {
+      position: relative;
+      cursor: help;
+      padding: 2px 6px;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+    }
+    .term-highlight:hover {
+      background-color: rgba(251, 146, 60, 0.2);
+      transform: scale(1.02);
+    }
+    .tooltip {
+      display: none;
+      position: absolute;
+      background: linear-gradient(135deg, #1f2937, #111827);
+      color: #f3f4f6;
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      z-index: 50;
+      border-left: 3px solid #fb923c;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+      max-width: 280px;
+      line-height: 1.5;
+    }
+    .term-highlight:hover .tooltip {
+      display: block;
+      bottom: 120%;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    .animate-slide-in {
+      animation: slideIn 0.6s ease-out;
+    }
+    .section-divider {
+      height: 3px;
+      background: linear-gradient(90deg, #fb923c, #f97316, transparent);
+      margin: 2rem 0;
+    }
+    .card-hover {
+      transition: all 0.3s ease;
+    }
+    .card-hover:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 15px 40px rgba(249, 115, 22, 0.15);
+    }
+    .example-box {
+      border-left: 4px solid #10b981;
+      background: rgba(16, 185, 129, 0.05);
+    }
+    .activity-box {
+      border-left: 4px solid #3b82f6;
+      background: rgba(59, 130, 246, 0.05);
+    }
+    .group-activity-box {
+      border-left: 4px solid #8b5cf6;
+      background: rgba(139, 92, 246, 0.05);
+    }
+    .loading-spinner {
+      border: 3px solid rgba(249, 115, 22, 0.2);
+      border-top-color: #fb923c;
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #10b981;
+      color: white;
+      padding: 14px 20px;
+      border-radius: 8px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      z-index: 100;
+      animation: slideIn 0.3s ease-out;
+    }
+  </style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="https://cdn.tailwindcss.com/3.4.17" type="text/javascript"></script>
+ </head>
+ <body class="h-full font-body">
+  <div id="app-wrapper" class="w-full h-full overflow-auto" style="background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);">
+   <!-- Navigation Bar -->
+   <nav class="sticky top-0 z-40" style="background: white; border-bottom: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+     <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background: linear-gradient(135deg, #fb923c, #f97316);">
+       <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+       </svg>
+      </div>
+      <div>
+       <p class="text-xs font-semibold text-gray-500" id="course-label">DM104</p>
+       <p class="text-sm font-bold text-gray-900" id="module-title">Midterm Week 5: Final Project Presentation &amp; Evaluation</p>
+      </div>
+     </div>
+     <div class="flex items-center gap-2" style="color: #6b7280;">
+      <span class="text-sm">📊 Interactive Module</span>
+     </div>
+    </div>
+   </nav>
+   <main class="max-w-6xl mx-auto px-6 py-12">
+    <!-- Learning Objectives -->
+    <section class="mb-12 animate-slide-in">
+     <div class="rounded-2xl p-8" style="background: white; border: 1px solid #e5e7eb; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+      <div class="flex items-start gap-4">
+       <div class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style="background: linear-gradient(135deg, #fb923c, #f97316);">
+        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+       </div>
+       <div class="flex-1">
+        <h2 class="font-heading text-2xl font-bold mb-4" style="color: #1f2937;">Learning Objectives (ILO)</h2>
+        <p class="mb-4" style="color: #6b7280;">By the end of Week 5, you'll be able to:</p>
+        <ul class="space-y-2">
+         <li class="flex gap-3" style="color: #374151;"><span style="color: #fb923c;">✓</span> <span><strong>Present</strong> your performance evaluation findings clearly and professionally</span></li>
+         <li class="flex gap-3" style="color: #374151;"><span style="color: #fb923c;">✓</span> <span><strong>Justify</strong> your recommendations using data and analytics evidence</span></li>
+         <li class="flex gap-3" style="color: #374151;"><span style="color: #fb923c;">✓</span> <span><strong>Evaluate</strong> others' presentations using professional evaluation criteria</span></li>
+         <li class="flex gap-3" style="color: #374151;"><span style="color: #fb923c;">✓</span> <span><strong>Defend</strong> your conclusions against feedback and questions</span></li>
+        </ul>
+       </div>
+      </div>
+     </div>
+    </section><!-- Core Concepts -->
+    <section class="mb-12">
+     <h2 class="font-heading text-3xl font-bold mb-8" style="color: #1f2937;">Core Concepts: Professional Presentation Skills</h2><!-- Presentation Structure Card -->
+     <div class="card-hover rounded-2xl p-8 mb-8" style="background: white; border: 1px solid #e5e7eb; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+      <div class="flex items-center gap-3 mb-6">
+       <span class="w-10 h-10 rounded-lg flex items-center justify-center" style="background: #dcfce7; color: #10b981; font-weight: bold;">1</span>
+       <h3 class="font-heading text-2xl font-bold" style="color: #1f2937;">What is a Professional Presentation?</h3>
+      </div>
+      <div class="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-6 mb-6 border-l-4 border-green-500">
+       <p class="font-semibold mb-2" style="color: #047857;">Simple Definition:</p>
+       <p style="color: #365a40; line-height: 1.8;"><strong>A professional presentation</strong> is a structured way to communicate your findings, analysis, and recommendations to an audience. It combines storytelling, data, and visuals to convince people that your conclusions are correct and your solutions will work.</p>
+      </div>
+      <div class="grid md:grid-cols-2 gap-6">
+       <div class="example-box rounded-lg p-6">
+        <p class="font-semibold mb-3" style="color: #047857;">🏢 Corporate Example</p>
+        <p style="color: #374151; line-height: 1.6;">A sales manager presents Q3 performance to executives:<br>
+          • <strong>Problem:</strong> Sales down 12%<br>
+          • <strong>Root Cause:</strong> New competitor entered market<br>
+          • <strong>Data:</strong> Customer survey shows price concerns<br>
+          • <strong>Recommendation:</strong> Launch loyalty program<br>
+          • <strong>Expected Outcome:</strong> Recover 8% within 6 months<br><br>
+          The presentation convinces leadership to fund the initiative.</p>
+       </div>
+       <div class="bg-blue-50 rounded-lg p-6 border-l-4 border-blue-500">
+        <p class="font-semibold mb-3" style="color: #1e40af;">Why It Matters:</p>
+        <ul class="space-y-2" style="color: #374151;">
+         <li>✓ Decision-makers need to understand your analysis</li>
+         <li>✓ Data alone doesn't tell the story</li>
+         <li>✓ Clear presentation = more buy-in for recommendations</li>
+         <li>✓ Professional communication builds credibility</li>
+         <li>✓ Your career depends on communicating value</li>
+        </ul>
+       </div>
+      </div>
+     </div><!-- The 5-Part Presentation Structure Card -->
+     <div class="card-hover rounded-2xl p-8 mb-8" style="background: white; border: 1px solid #e5e7eb; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+      <div class="flex items-center gap-3 mb-6">
+       <span class="w-10 h-10 rounded-lg flex items-center justify-center" style="background: #dbeafe; color: #0284c7; font-weight: bold;">2</span>
+       <h3 class="font-heading text-2xl font-bold" style="color: #1f2937;">The 5-Part Presentation Structure</h3>
+      </div>
+      <div class="bg-gradient-to-r from-blue-50 to-cyan-50 rounded-xl p-6 mb-8 border-l-4 border-blue-500">
+       <p class="font-semibold mb-2" style="color: #0369a1;">Essential Framework:</p>
+       <p style="color: #164e63; line-height: 1.8;">Every professional presentation follows the same structure. Think of it like a story with a beginning, middle, and end. Your audience needs to understand the context before you can convince them of your solution.</p>
+      </div>
+      <div class="space-y-4">
+       <div class="border-l-4 border-blue-500 bg-blue-50 rounded-lg p-6">
+        <p class="font-semibold mb-2" style="color: #0369a1;">📌 Part 1: Executive Summary (30 seconds)</p>
+        <p style="color: #164e63; font-size: 14px; line-height: 1.6;"><strong>What it is:</strong> A brief overview of your entire presentation in just a few sentences. This is like the headline of a newspaper article.<br><strong>What you say:</strong> "We analyzed [company/product]. The main issue is [problem]. Our data shows [key finding]. We recommend [solution]."<br><strong>Real example:</strong> "Netflix analyzed why subscriber churn increased 3%. Our data found that 60% cancellations happened after 2 failed login attempts. We recommend improving login reliability. This should reduce churn by 15%."</p>
+       </div>
+       <div class="border-l-4 border-emerald-500 bg-emerald-50 rounded-lg p-6">
+        <p class="font-semibold mb-2" style="color: #047857;">📊 Part 2: The Data &amp; Analysis (2-3 minutes)</p>
+        <p style="color: #365a40; font-size: 14px; line-height: 1.6;"><strong>What it is:</strong> Show the actual numbers, charts, and trends you discovered. This is the evidence that supports your conclusion.<br><strong>What you say:</strong> Walk through your KPIs, metrics, and findings with visuals. Explain what changed and why it matters.<br><strong>Real example:</strong> "In Q3, revenue dropped from $2.5M to $2.1M (16% decline). But customer acquisition actually increased 12%. This tells us we're getting more customers, but they're spending less. Looking deeper, average order value fell from $65 to $48. So the problem isn't fewer customers—it's lower spending per customer."</p>
+       </div>
+       <div class="border-l-4 border-purple-500 bg-purple-50 rounded-lg p-6">
+        <p class="font-semibold mb-2" style="color: #6b21a8;">🔍 Part 3: Root Cause Analysis (1-2 minutes)</p>
+        <p style="color: #581c87; font-size: 14px; line-height: 1.6;"><strong>What it is:</strong> Explain WHY the problem happened. Don't just say "sales are down"—explain the reason behind it.<br><strong>What you say:</strong> Use your research, customer feedback, market data, or other analysis to show the underlying cause.<br><strong>Real example:</strong> "We surveyed customers who reduced purchases. 73% said 'product quality declined.' Digging deeper, we found that after switching to a cheaper supplier, defect rates increased from 2% to 8%. Customers noticed the quality drop and reduced their orders."</p>
+       </div>
+       <div class="border-l-4 border-orange-500 bg-orange-50 rounded-lg p-6">
+        <p class="font-semibold mb-2" style="color: #b45309;">💡 Part 4: Recommendations (1-2 minutes)</p>
+        <p style="color: #92400e; font-size: 14px; line-height: 1.6;"><strong>What it is:</strong> Your proposed solutions. Be specific and actionable—not vague ideas.<br><strong>What you say:</strong> Present 2-3 specific recommendations with expected impact and costs.<br><strong>Real example:</strong> "We recommend: (1) Switch back to quality supplier (+$50K/quarter), expecting defect rate to return to 2% within 90 days, which should recover 60% of lost revenue. (2) Launch quality guarantee program to rebuild customer trust. (3) Collect quality feedback monthly to prevent future issues."</p>
+       </div>
+       <div class="border-l-4 border-pink-500 bg-pink-50 rounded-lg p-6">
+        <p class="font-semibold mb-2" style="color: #be185d;">📈 Part 5: Expected Outcomes &amp; Next Steps (1 minute)</p>
+        <p style="color: #831843; font-size: 14px; line-height: 1.6;"><strong>What it is:</strong> Show specifically how things will improve if your recommendations are followed.<br><strong>What you say:</strong> Connect recommendations back to KPIs with clear metrics and timelines.<br><strong>Real example:</strong> "If we implement these changes: (1) Defect rates return to 2% in 90 days. (2) Customer survey scores improve by 15 points in 6 months. (3) Revenue recovers to $2.3M within 180 days. (4) We're ready to test the quality guarantee program by end of Q4."</p>
+       </div>
+      </div>
+     </div><!-- Key Jargon Explained Card -->
+     <div class="card-hover rounded-2xl p-8" style="background: white; border: 1px solid #e5e7eb; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+      <div class="flex items-center gap-3 mb-6">
+       <span class="w-10 h-10 rounded-lg flex items-center justify-center" style="background: #fce7f3; color: #ec4899; font-weight: bold;">3</span>
+       <h3 class="font-heading text-2xl font-bold" style="color: #1f2937;">Key Presentation Jargon Explained</h3>
+      </div>
+      <div class="grid md:grid-cols-2 gap-6">
+       <div class="example-box rounded-lg p-6">
+        <p class="font-semibold mb-2" style="color: #047857;">📋 Jargon: "Justification"</p>
+        <p style="color: #374151; font-size: 14px; line-height: 1.6;"><strong>What it means:</strong> Proving that your recommendations are correct using evidence (data, research, facts).<br><strong>Not:</strong> "I think we should do this because it sounds good"<br><strong>Correct:</strong> "Our data shows X. Research proves Y. Therefore, recommendation Z is the best choice because it will achieve objective A."</p>
+       </div>
+       <div class="example-box rounded-lg p-6">
+        <p class="font-semibold mb-2" style="color: #047857;">📋 Jargon: "Root Cause"</p>
+        <p style="color: #374151; font-size: 14px; line-height: 1.6;"><strong>What it means:</strong> The real reason a problem exists, not just the symptom.<br><strong>Symptom:</strong> "Our sales are down"<br><strong>Root Cause:</strong> "Our sales are down because competitor lowered prices and we haven't responded"</p>
+       </div>
+       <div class="example-box rounded-lg p-6">
+        <p class="font-semibold mb-2" style="color: #047857;">📋 Jargon: "KPI Targets"</p>
+        <p style="color: #374151; font-size: 14px; line-height: 1.6;"><strong>What it means:</strong> The specific numbers you want to achieve from your recommendations.<br><strong>Example:</strong> "Our KPI target for customer satisfaction is to improve from 3.2 stars to 4.5 stars within 90 days using our recommended changes."</p>
+       </div>
+       <div class="example-box rounded-lg p-6">
+        <p class="font-semibold mb-2" style="color: #047857;">📋 Jargon: "Stakeholder Buy-in"</p>
+        <p style="color: #374151; font-size: 14px; line-height: 1.6;"><strong>What it means:</strong> Getting decision-makers to agree with and support your recommendations.<br><strong>How to achieve it:</strong> Show clear data, explain the problem simply, connect recommendations to company goals.</p>
+       </div>
+       <div class="example-box rounded-lg p-6">
+        <p class="font-semibold mb-2" style="color: #047857;">📋 Jargon: "Quantifiable Results"</p>
+        <p style="color: #374151; font-size: 14px; line-height: 1.6;"><strong>What it means:</strong> Your recommendations should lead to measurable outcomes you can track with numbers.<br><strong>Good:</strong> "This will reduce costs by $100K" or "improve satisfaction by 20%"<br><strong>Vague:</strong> "This will help a lot"</p>
+       </div>
+       <div class="example-box rounded-lg p-6">
+        <p class="font-semibold mb-2" style="color: #047857;">📋 Jargon: "Timeline &amp; Milestones"</p>
+        <p style="color: #374151; font-size: 14px; line-height: 1.6;"><strong>What it means:</strong> Specific dates when you'll achieve results and check progress.<br><strong>Example:</strong> "By Day 30: implement system. By Day 60: see 8% improvement. By Day 90: reach 20% target."</p>
+       </div>
+      </div>
+     </div>
+    </section>
+    <div class="section-divider"></div><!-- Activities Section -->
+    <section class="mb-12">
+     <h2 class="font-heading text-3xl font-bold mb-8" style="color: #1f2937;">Interactive Activities</h2><!-- Tabs for Activities -->
+     <div class="flex gap-4 mb-6 border-b" style="border-color: #e5e7eb;">
+      <button onclick="switchTab('individual')" id="tab-individual" class="px-6 py-3 font-semibold border-b-2" style="border-color: #fb923c; color: #fb923c;"> 🎤 Your Presentation </button> <button onclick="switchTab('group')" id="tab-group" class="px-6 py-3 font-semibold" style="color: #6b7280;"> 📋 Peer Evaluation </button> <button onclick="switchTab('quiz')" id="tab-quiz" class="px-6 py-3 font-semibold" style="color: #6b7280;"> ✅ Self-Assessment </button>
+     </div><!-- Individual Activity: Prepare Your Presentation -->
+     <div id="individual-tab" class="activity-box rounded-2xl p-8 mb-8">
+      <div class="flex items-center gap-3 mb-6">
+       <span class="text-3xl">🎤</span>
+       <h3 class="font-heading text-2xl font-bold" style="color: #1f2937;">Individual Activity: Prepare Your Final Presentation</h3>
+      </div>
+      <div class="bg-blue-50 rounded-xl p-6 mb-8 border-l-4 border-blue-500">
+       <p class="font-semibold mb-4" style="color: #1e40af;">📊 Your Task (10-15 minutes):</p>
+       <p style="color: #1e3a8a; line-height: 1.8;">Using the 5-part presentation structure, prepare your final presentation on the business case or company you analyzed. You'll present this to the class, and classmates will evaluate you.</p>
+      </div>
+      <div class="bg-amber-50 rounded-lg p-6 mb-6 border-l-4 border-amber-500">
+       <p class="font-semibold mb-3" style="color: #92400e;">⏱️ Presentation Format:</p>
+       <p style="color: #78350f; line-height: 1.6;">• <strong>Total Time:</strong> 10 minutes presenting + 5 minutes for questions<br>
+         • <strong>Use visuals:</strong> Charts, graphs, or simple slides<br>
+         • <strong>Follow the structure:</strong> Use the 5 parts explained in Core Concepts<br>
+         • <strong>Practice:</strong> Rehearse before presenting so you stay on time</p>
+      </div>
+      <form id="individual-form">
+       <div class="mb-6">
+        <label class="block font-semibold mb-2" style="color: #1f2937;">Your Name:</label> <input type="text" id="individual-name" placeholder="Enter your name" class="w-full px-4 py-3 rounded-lg border" style="border-color: #e5e7eb; color: #374151;" required>
+       </div>
+       <div class="mb-6">
+        <label class="block font-semibold mb-2" style="color: #1f2937;">Your Email:</label> <input type="email" id="individual-email" placeholder="Enter your email" class="w-full px-4 py-3 rounded-lg border" style="border-color: #e5e7eb; color: #374151;" required>
+       </div>
+       <div class="mb-6"><label class="block font-semibold mb-3" style="color: #1f2937;">Complete this table to prepare each part of your presentation:</label>
+        <div class="space-y-4">
+         <div class="border rounded-lg p-4" style="border-color: #e5e7eb;">
+          <p class="font-semibold mb-2" style="color: #1f2937;">📌 PART 1: Executive Summary (30 seconds)</p>
+          <p class="text-sm mb-3" style="color: #6b7280;">Write your 2-3 sentence overview here:</p><textarea class="w-full px-3 py-2 rounded border text-sm" style="border-color: #e5e7eb;" placeholder="Example: We analyzed Netflix subscriber churn. Our data shows 60% of cancellations occur after login failures. We recommend improving login reliability to reduce churn by 15%."></textarea>
+         </div>
+         <div class="border rounded-lg p-4" style="border-color: #e5e7eb;">
+          <p class="font-semibold mb-2" style="color: #1f2937;">📊 PART 2: Key Data &amp; KPIs (2-3 minutes)</p>
+          <p class="text-sm mb-3" style="color: #6b7280;">List your 3-4 most important metrics and findings:</p><textarea id="individual-response" class="w-full px-3 py-2 rounded border text-sm" style="border-color: #e5e7eb;" placeholder="Example: 1. Revenue declined 16% (from $2.5M to $2.1M)
+2. Customer acquisition rose 12% but order value fell 26%
+3. Average order value dropped from $65 to $48
+4. Customer satisfaction fell from 4.6 to 3.2 stars" required></textarea>
+         </div>
+         <div class="border rounded-lg p-4" style="border-color: #e5e7eb;">
+          <p class="font-semibold mb-2" style="color: #1f2937;">🔍 PART 3: Root Cause (1-2 minutes)</p>
+          <p class="text-sm mb-3" style="color: #6b7280;">Why did this problem happen?</p><textarea class="w-full px-3 py-2 rounded border text-sm" style="border-color: #e5e7eb;" placeholder="Example: Customer surveys revealed 73% cited quality concerns. Root cause: We switched to a cheaper supplier, increasing defect rates from 2% to 8%, causing customers to reduce orders."></textarea>
+         </div>
+         <div class="border rounded-lg p-4" style="border-color: #e5e7eb;">
+          <p class="font-semibold mb-2" style="color: #1f2937;">💡 PART 4: Recommendations (1-2 minutes)</p>
+          <p class="text-sm mb-3" style="color: #6b7280;">What are your 2-3 specific recommendations?</p><textarea class="w-full px-3 py-2 rounded border text-sm" style="border-color: #e5e7eb;" placeholder="Example: 1) Return to original supplier (costs $50K/quarter but reduces defects to 2%)
+2) Launch quality guarantee program to rebuild trust
+3) Monthly quality feedback survey to prevent future issues"></textarea>
+         </div>
+         <div class="border rounded-lg p-4" style="border-color: #e5e7eb;">
+          <p class="font-semibold mb-2" style="color: #1f2937;">📈 PART 5: Expected Outcomes (1 minute)</p>
+          <p class="text-sm mb-3" style="color: #6b7280;">What will happen if your recommendations are implemented?</p><textarea class="w-full px-3 py-2 rounded border text-sm" style="border-color: #e5e7eb;" placeholder="Example: Within 90 days: defect rates return to 2%. Within 180 days: revenue recovers to $2.3M. Customer satisfaction improves to 4.5 stars. We'll measure progress monthly."></textarea>
+         </div>
+        </div>
+        <p class="text-sm mt-4" style="color: #6b7280;">💡 Tip: Fill out all parts to ensure your 10-minute presentation flows smoothly!</p>
+       </div><button type="submit" class="w-full px-6 py-3 rounded-lg font-semibold text-white transition-all" style="background: linear-gradient(135deg, #fb923c, #f97316);" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'"> Submit Presentation Prep </button>
+      </form>
+     </div><!-- Group Activity: Peer Evaluation -->
+     <div id="group-tab" class="group-activity-box rounded-2xl p-8 mb-8" style="display: none;">
+      <div class="flex items-center gap-3 mb-6">
+       <span class="text-3xl">📋</span>
+       <h3 class="font-heading text-2xl font-bold" style="color: #1f2937;">Group Activity: Peer Evaluation Form</h3>
+      </div>
+      <div class="bg-purple-50 rounded-xl p-6 mb-8 border-l-4 border-purple-500">
+       <p class="font-semibold mb-4" style="color: #5b21b6;">📝 Your Task:</p>
+       <p style="color: #4c1d95; line-height: 1.8;">After each presentation, evaluate the presenter using the criteria below. Your feedback helps presenters improve and ensures fair grading.</p>
+      </div>
+      <div class="bg-red-50 rounded-lg p-6 mb-6 border-l-4 border-red-500">
+       <p class="font-semibold mb-3" style="color: #991b1b;">⭐ Rating Scale:</p>
+       <p style="color: #7f1d1d; text-sm; line-height: 1.6;">• <strong>Excellent (5):</strong> Far exceeds expectations<br>
+         • <strong>Good (4):</strong> Meets expectations<br>
+         • <strong>Satisfactory (3):</strong> Mostly meets expectations<br>
+         • <strong>Needs Improvement (2):</strong> Below expectations<br>
+         • <strong>Poor (1):</strong> Does not meet expectations</p>
+      </div>
+      <form id="group-form">
+       <div class="mb-6">
+        <label class="block font-semibold mb-2" style="color: #1f2937;">Your Name:</label> <input type="text" id="evaluator-name" placeholder="Your name" class="w-full px-4 py-3 rounded-lg border" style="border-color: #e5e7eb; color: #374151;" required>
+       </div>
+       <div class="mb-6">
+        <label class="block font-semibold mb-2" style="color: #1f2937;">Presenter's Name:</label> <input type="text" id="presenter-name" placeholder="Person you're evaluating" class="w-full px-4 py-3 rounded-lg border" style="border-color: #e5e7eb; color: #374151;" required>
+       </div>
+       <div class="space-y-6 mb-6">
+        <div class="border rounded-lg p-4" style="border-color: #e5e7eb;">
+         <p class="font-semibold mb-4" style="color: #1f2937;">1. Did the presentation follow the 5-part structure?</p>
+         <div class="space-y-2">
+          <label class="flex items-center gap-2"><input type="radio" name="structure" value="5" required> <span style="color: #374151;">5 - Perfect, covered all 5 parts clearly</span></label> <label class="flex items-center gap-2"><input type="radio" name="structure" value="4"> <span style="color: #374151;">4 - Good, covered all 5 parts</span></label> <label class="flex items-center gap-2"><input type="radio" name="structure" value="3"> <span style="color: #374151;">3 - Satisfactory, missed 1 part</span></label> <label class="flex items-center gap-2"><input type="radio" name="structure" value="2"> <span style="color: #374151;">2 - Needs improvement, missed 2+ parts</span></label>
+         </div>
+        </div>
+        <div class="border rounded-lg p-4" style="border-color: #e5e7eb;">
+         <p class="font-semibold mb-4" style="color: #1f2937;">2. Was the data and analysis clearly explained?</p>
+         <div class="space-y-2">
+          <label class="flex items-center gap-2"><input type="radio" name="clarity" value="5" required> <span style="color: #374151;">5 - Excellent, easy to follow all findings</span></label> <label class="flex items-center gap-2"><input type="radio" name="clarity" value="4"> <span style="color: #374151;">4 - Good, mostly clear</span></label> <label class="flex items-center gap-2"><input type="radio" name="clarity" value="3"> <span style="color: #374151;">3 - Satisfactory, somewhat confusing</span></label> <label class="flex items-center gap-2"><input type="radio" name="clarity" value="2"> <span style="color: #374151;">2 - Needs improvement, hard to follow</span></label>
+         </div>
+        </div>
+        <div class="border rounded-lg p-4" style="border-color: #e5e7eb;">
+         <p class="font-semibold mb-4" style="color: #1f2937;">3. Were recommendations backed up with evidence?</p>
+         <div class="space-y-2">
+          <label class="flex items-center gap-2"><input type="radio" name="evidence" value="5" required> <span style="color: #374151;">5 - Excellent, strong data support</span></label> <label class="flex items-center gap-2"><input type="radio" name="evidence" value="4"> <span style="color: #374151;">4 - Good, supported by data</span></label> <label class="flex items-center gap-2"><input type="radio" name="evidence" value="3"> <span style="color: #374151;">3 - Satisfactory, some support</span></label> <label class="flex items-center gap-2"><input type="radio" name="evidence" value="2"> <span style="color: #374151;">2 - Needs improvement, weak support</span></label>
+         </div>
+        </div>
+        <div class="border rounded-lg p-4" style="border-color: #e5e7eb;">
+         <p class="font-semibold mb-4" style="color: #1f2937;">4. Was the presentation professional and well-organized?</p>
+         <div class="space-y-2">
+          <label class="flex items-center gap-2"><input type="radio" name="professionalism" value="5" required> <span style="color: #374151;">5 - Excellent, polished and engaging</span></label> <label class="flex items-center gap-2"><input type="radio" name="professionalism" value="4"> <span style="color: #374151;">4 - Good, well-organized</span></label> <label class="flex items-center gap-2"><input type="radio" name="professionalism" value="3"> <span style="color: #374151;">3 - Satisfactory, acceptable</span></label> <label class="flex items-center gap-2"><input type="radio" name="professionalism" value="2"> <span style="color: #374151;">2 - Needs improvement, disorganized</span></label>
+         </div>
+        </div>
+        <div class="border rounded-lg p-4" style="border-color: #e5e7eb;">
+         <p class="font-semibold mb-4" style="color: #1f2937;">5. Were expected outcomes realistic and measurable?</p>
+         <div class="space-y-2">
+          <label class="flex items-center gap-2"><input type="radio" name="outcomes" value="5" required> <span style="color: #374151;">5 - Excellent, clear and specific metrics</span></label> <label class="flex items-center gap-2"><input type="radio" name="outcomes" value="4"> <span style="color: #374151;">4 - Good, mostly specific</span></label> <label class="flex items-center gap-2"><input type="radio" name="outcomes" value="3"> <span style="color: #374151;">3 - Satisfactory, somewhat vague</span></label> <label class="flex items-center gap-2"><input type="radio" name="outcomes" value="2"> <span style="color: #374151;">2 - Needs improvement, very vague</span></label>
+         </div>
+        </div>
+        <div class="border rounded-lg p-4" style="border-color: #e5e7eb;">
+         <p class="font-semibold mb-4" style="color: #1f2937;">Overall Comments (What was the best part? What could improve?)</p><textarea id="group-response" placeholder="Example: Great job breaking down the data! I liked your root cause analysis. You could improve the recommendations section with more specific cost-benefit analysis." class="w-full px-4 py-3 rounded-lg border text-sm" style="border-color: #e5e7eb; color: #374151; min-height: 100px;" required></textarea>
+        </div>
+       </div><button type="submit" class="w-full px-6 py-3 rounded-lg font-semibold text-white transition-all" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'"> Submit Peer Evaluation </button>
+      </form>
+     </div><!-- Self-Assessment Quiz -->
+     <div id="quiz-tab" class="rounded-2xl p-8 mb-8" style="display: none; background: white; border: 1px solid #e5e7eb;">
+      <div class="flex items-center gap-3 mb-6">
+       <span class="text-3xl">✅</span>
+       <h3 class="font-heading text-2xl font-bold" style="color: #1f2937;">Self-Assessment: How Did Your Presentation Go?</h3>
+      </div>
+      <p class="mb-8" style="color: #6b7280;">Rate your own presentation to identify strengths and areas for improvement.</p>
+      <form id="quiz-form" class="space-y-6">
+       <!-- Question 1 -->
+       <div class="rounded-lg p-6" style="background: #f9fafb; border: 1px solid #e5e7eb;">
+        <p class="font-semibold mb-4" style="color: #1f2937;">1. I covered all 5 parts of the presentation structure.</p>
+        <div class="space-y-2">
+         <label class="flex items-center gap-2"><input type="radio" name="q1" value="strongly_agree" required> <span style="color: #374151;">Strongly Agree</span></label> <label class="flex items-center gap-2"><input type="radio" name="q1" value="agree"> <span style="color: #374151;">Agree</span></label> <label class="flex items-center gap-2"><input type="radio" name="q1" value="neutral"> <span style="color: #374151;">Neutral</span></label> <label class="flex items-center gap-2"><input type="radio" name="q1" value="disagree"> <span style="color: #374151;">Disagree</span></label>
+        </div>
+       </div><!-- Question 2 -->
+       <div class="rounded-lg p-6" style="background: #f9fafb; border: 1px solid #e5e7eb;">
+        <p class="font-semibold mb-4" style="color: #1f2937;">2. My data and findings were clearly explained.</p>
+        <div class="space-y-2">
+         <label class="flex items-center gap-2"><input type="radio" name="q2" value="strongly_agree" required> <span style="color: #374151;">Strongly Agree</span></label> <label class="flex items-center gap-2"><input type="radio" name="q2" value="agree"> <span style="color: #374151;">Agree</span></label> <label class="flex items-center gap-2"><input type="radio" name="q2" value="neutral"> <span style="color: #374151;">Neutral</span></label> <label class="flex items-center gap-2"><input type="radio" name="q2" value="disagree"> <span style="color: #374151;">Disagree</span></label>
+        </div>
+       </div><!-- Question 3 -->
+       <div class="rounded-lg p-6" style="background: #f9fafb; border: 1px solid #e5e7eb;">
+        <p class="font-semibold mb-4" style="color: #1f2937;">3. I justified my recommendations with solid evidence and data.</p>
+        <div class="space-y-2">
+         <label class="flex items-center gap-2"><input type="radio" name="q3" value="strongly_agree" required> <span style="color: #374151;">Strongly Agree</span></label> <label class="flex items-center gap-2"><input type="radio" name="q3" value="agree"> <span style="color: #374151;">Agree</span></label> <label class="flex items-center gap-2"><input type="radio" name="q3" value="neutral"> <span style="color: #374151;">Neutral</span></label> <label class="flex items-center gap-2"><input type="radio" name="q3" value="disagree"> <span style="color: #374151;">Disagree</span></label>
+        </div>
+       </div><!-- Question 4 -->
+       <div class="rounded-lg p-6" style="background: #f9fafb; border: 1px solid #e5e7eb;">
+        <p class="font-semibold mb-4" style="color: #1f2937;">4. I handled questions from the audience confidently.</p>
+        <div class="space-y-2">
+         <label class="flex items-center gap-2"><input type="radio" name="q4" value="strongly_agree" required> <span style="color: #374151;">Strongly Agree</span></label> <label class="flex items-center gap-2"><input type="radio" name="q4" value="agree"> <span style="color: #374151;">Agree</span></label> <label class="flex items-center gap-2"><input type="radio" name="q4" value="neutral"> <span style="color: #374151;">Neutral</span></label> <label class="flex items-center gap-2"><input type="radio" name="q4" value="disagree"> <span style="color: #374151;">Disagree</span></label>
+        </div>
+       </div><!-- Question 5 -->
+       <div class="rounded-lg p-6" style="background: #f9fafb; border: 1px solid #e5e7eb;">
+        <p class="font-semibold mb-4" style="color: #1f2937;">5. My outcomes and next steps were specific and measurable.</p>
+        <div class="space-y-2">
+         <label class="flex items-center gap-2"><input type="radio" name="q5" value="strongly_agree" required> <span style="color: #374151;">Strongly Agree</span></label> <label class="flex items-center gap-2"><input type="radio" name="q5" value="agree"> <span style="color: #374151;">Agree</span></label> <label class="flex items-center gap-2"><input type="radio" name="q5" value="neutral"> <span style="color: #374151;">Neutral</span></label> <label class="flex items-center gap-2"><input type="radio" name="q5" value="disagree"> <span style="color: #374151;">Disagree</span></label>
+        </div>
+       </div>
+       <div class="rounded-lg p-6" style="background: #f9fafb; border: 1px solid #e5e7eb;">
+        <p class="font-semibold mb-4" style="color: #1f2937;">What was the biggest challenge during your presentation?</p><textarea id="challenge" placeholder="Example: I struggled to explain the root cause clearly, or I ran out of time for the recommendations section." class="w-full px-4 py-3 rounded-lg border" style="border-color: #e5e7eb; color: #374151; min-height: 80px;" required></textarea>
+       </div>
+       <div class="rounded-lg p-6" style="background: #f9fafb; border: 1px solid #e5e7eb;">
+        <p class="font-semibold mb-4" style="color: #1f2937;">What was your strongest point?</p><textarea id="strength" placeholder="Example: I had strong data, or my recommendations were specific, or the audience understood my analysis." class="w-full px-4 py-3 rounded-lg border" style="border-color: #e5e7eb; color: #374151; min-height: 80px;" required></textarea>
+       </div><button type="submit" class="w-full px-6 py-3 rounded-lg font-semibold text-white transition-all" style="background: linear-gradient(135deg, #fb923c, #f97316);"> Submit Self-Assessment </button>
+      </form>
+      <div id="quiz-results" style="display: none; margin-top: 24px; padding: 24px; border-radius: 12px; background: #f0fdf4; border: 2px solid #10b981;">
+       <div class="flex items-center gap-3 mb-4">
+        <span class="text-3xl">🌟</span>
+        <p class="font-heading text-xl font-bold" style="color: #047857;">Great Job!</p>
+       </div>
+       <p style="color: #374151; line-height: 1.8;">Your self-assessment has been recorded. Use your feedback from peers and this assessment to continue developing your presentation skills. Remember: great communicators practice and improve with every presentation!</p>
+      </div>
+     </div>
+    </section><!-- Key Takeaways -->
+    <section class="mb-12">
+     <div class="rounded-2xl p-8" style="background: linear-gradient(135deg, #fef3c7 0%, #fcd34d 100%); border: 2px solid #f59e0b;">
+      <div class="flex items-start gap-4">
+       <span class="text-3xl">💡</span>
+       <div>
+        <h3 class="font-heading text-2xl font-bold mb-4" style="color: #78350f;">Week 5 Key Takeaways</h3>
+        <ul class="space-y-3" style="color: #451a03;">
+         <li class="flex gap-2"><span>✓</span> <span><strong>Structure matters:</strong> The 5-part presentation framework helps audiences understand your findings</span></li>
+         <li class="flex gap-2"><span>✓</span> <span><strong>Data tells a story:</strong> Use KPIs and metrics to support your conclusions, not just list numbers</span></li>
+         <li class="flex gap-2"><span>✓</span> <span><strong>Root cause is crucial:</strong> Audiences care WHY the problem exists, not just THAT it exists</span></li>
+         <li class="flex gap-2"><span>✓</span> <span><strong>Recommendations must be justified:</strong> Connect each recommendation to your data and business goals</span></li>
+         <li class="flex gap-2"><span>✓</span> <span><strong>Specific beats vague:</strong> "Improve revenue by $100K in 90 days" beats "improve performance"</span></li>
+         <li class="flex gap-2"><span>✓</span> <span><strong>Professional communication is a career skill:</strong> Practice presenting clearly to advance your career</span></li>
+        </ul>
+       </div>
+      </div>
+     </div>
+    </section><!-- Resources -->
+    <section class="mb-12">
+     <h2 class="font-heading text-2xl font-bold mb-6" style="color: #1f2937;">📚 Additional Resources</h2>
+     <div class="grid md:grid-cols-3 gap-6">
+      <a href="#" class="card-hover rounded-lg p-6" style="background: white; border: 1px solid #e5e7eb; text-decoration: none;"> <span class="text-3xl mb-3 block">📖</span> <p class="font-semibold mb-2" style="color: #1f2937;">Reading Material</p><p style="color: #6b7280; font-size: 14px;">Download the course slides and readings from Modules section</p></a> <a href="#" class="card-hover rounded-lg p-6" style="background: white; border: 1px solid #e5e7eb; text-decoration: none;"> <span class="text-3xl mb-3 block">🎥</span> <p class="font-semibold mb-2" style="color: #1f2937;">Video Lecture</p><p style="color: #6b7280; font-size: 14px;">Watch the guided discussion recorded lecture available on Canvas</p></a> <a href="#" class="card-hover rounded-lg p-6" style="background: white; border: 1px solid #e5e7eb; text-decoration: none;"> <span class="text-3xl mb-3 block">❓</span> <p class="font-semibold mb-2" style="color: #1f2937;">Q&amp;A Forum</p><p style="color: #6b7280; font-size: 14px;">Post questions on the discussion board and help classmates</p></a>
+     </div>
+    </section><!-- Footer -->
+    <footer class="border-t pt-8" style="border-color: #e5e7eb; color: #6b7280; text-align: center;">
+     <p>DM104 - Evaluation of Business Performance | Midterm Week 5: Final Project Presentation &amp; Evaluation</p>
+     <p style="margin-top: 8px;">Instructor: MKDB | Lyceum de San Pablo</p>
+     <p style="margin-top: 16px; font-size: 12px;">© 2026 All Rights Reserved</p>
+    </footer>
+   </main>
+  </div>
+  <script>
+    const defaultConfig = {
+      module_title: 'Midterm Week 5: Final Project Presentation & Evaluation',
+      week_number: 'Midterm Week 5'
+    };
+
+    let config = { ...defaultConfig };
+    let currentTab = 'individual';
+    let allResponses = [];
+
+    // Data SDK Handler
+    const dataHandler = {
+      onDataChanged(data) {
+        allResponses = data;
+        console.log('Data updated:', data);
+      }
+    };
+
+    // Initialize SDK
+    async function initSDK() {
+      if (window.dataSdk) {
+        const result = await window.dataSdk.init(dataHandler);
+        if (!result.isOk) {
+          console.error('Failed to initialize Data SDK');
+        }
+      }
+
+      if (window.elementSdk) {
+        window.elementSdk.init({
+          defaultConfig,
+          onConfigChange,
+          mapToCapabilities,
+          mapToEditPanelValues
+        });
+      }
+    }
+
+    async function onConfigChange(newConfig) {
+      config = { ...config, ...newConfig };
+      const titleEl = document.getElementById('module-title');
+      if (titleEl) titleEl.textContent = config.module_title || defaultConfig.module_title;
+    }
+
+    function mapToCapabilities(config) {
+      return {
+        recolorables: [],
+        borderables: [],
+        fontEditable: undefined,
+        fontSizeable: undefined
+      };
+    }
+
+    function mapToEditPanelValues(config) {
+      return new Map([
+        ['module_title', config.module_title || defaultConfig.module_title],
+        ['week_number', config.week_number || defaultConfig.week_number]
+      ]);
+    }
+
+    // Tab switching
+    function switchTab(tabName) {
+      currentTab = tabName;
+      document.getElementById('individual-tab').style.display = tabName === 'individual' ? 'block' : 'none';
+      document.getElementById('group-tab').style.display = tabName === 'group' ? 'block' : 'none';
+      document.getElementById('quiz-tab').style.display = tabName === 'quiz' ? 'block' : 'none';
+
+      document.getElementById('tab-individual').style.color = tabName === 'individual' ? '#fb923c' : '#6b7280';
+      document.getElementById('tab-individual').style.borderColor = tabName === 'individual' ? '#fb923c' : 'transparent';
+      document.getElementById('tab-group').style.color = tabName === 'group' ? '#8b5cf6' : '#6b7280';
+      document.getElementById('tab-group').style.borderColor = tabName === 'group' ? '#8b5cf6' : 'transparent';
+      document.getElementById('tab-quiz').style.color = tabName === 'quiz' ? '#fb923c' : '#6b7280';
+      document.getElementById('tab-quiz').style.borderColor = tabName === 'quiz' ? '#fb923c' : 'transparent';
+    }
+
+    // Individual activity submission
+    document.getElementById('individual-form')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = document.getElementById('individual-name').value;
+      const email = document.getElementById('individual-email').value;
+      const response = document.getElementById('individual-response').value;
+
+      if (window.dataSdk) {
+        const result = await window.dataSdk.create({
+          student_name: name,
+          email: email,
+          activity_type: 'presentation_prep',
+          responses: response,
+          completed: true,
+          timestamp: new Date().toISOString()
+        });
+
+        if (result.isOk) {
+          showToast('✅ Presentation prep submitted successfully!');
+          document.getElementById('individual-form').reset();
+          setTimeout(() => switchTab('group'), 1500);
+        } else {
+          showToast('❌ Error submitting. Please try again.');
+        }
+      }
+    });
+
+    // Group activity (Peer Evaluation) submission
+    document.getElementById('group-form')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const evaluatorName = document.getElementById('evaluator-name').value;
+      const presenterName = document.getElementById('presenter-name').value;
+      const structure = document.querySelector('input[name="structure"]:checked')?.value || '';
+      const clarity = document.querySelector('input[name="clarity"]:checked')?.value || '';
+      const evidence = document.querySelector('input[name="evidence"]:checked')?.value || '';
+      const professionalism = document.querySelector('input[name="professionalism"]:checked')?.value || '';
+      const outcomes = document.querySelector('input[name="outcomes"]:checked')?.value || '';
+      const comments = document.getElementById('group-response').value;
+
+      const score = (parseInt(structure) + parseInt(clarity) + parseInt(evidence) + parseInt(professionalism) + parseInt(outcomes)) / 5;
+
+      if (window.dataSdk) {
+        const result = await window.dataSdk.create({
+          student_name: evaluatorName,
+          email: presenterName,
+          activity_type: 'peer_evaluation',
+          responses: `Presenter: ${presenterName}\nAverage Score: ${score.toFixed(1)}/5\nStructure: ${structure}/5\nClarity: ${clarity}/5\nEvidence: ${evidence}/5\nProfessionalism: ${professionalism}/5\nOutcomes: ${outcomes}/5\n\nComments: ${comments}`,
+          completed: true,
+          timestamp: new Date().toISOString()
+        });
+
+        if (result.isOk) {
+          showToast('✅ Peer evaluation submitted successfully!');
+          document.getElementById('group-form').reset();
+        } else {
+          showToast('❌ Error submitting. Please try again.');
+        }
+      }
+    });
+
+    // Self-Assessment Quiz submission
+    document.getElementById('quiz-form')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const challenge = document.getElementById('challenge').value;
+      const strength = document.getElementById('strength').value;
+
+      if (window.dataSdk) {
+        const result = await window.dataSdk.create({
+          student_name: 'Self-Assessment',
+          email: 'self-assessment@local',
+          activity_type: 'self_assessment',
+          responses: `Challenge: ${challenge}\n\nStrength: ${strength}`,
+          completed: true,
+          timestamp: new Date().toISOString()
+        });
+
+        if (result.isOk) {
+          document.getElementById('quiz-form').style.display = 'none';
+          document.getElementById('quiz-results').style.display = 'block';
+          showToast('✅ Self-assessment recorded!');
+        } else {
+          showToast('❌ Error submitting. Please try again.');
+        }
+      }
+    });
+
+    // Show toast notification
+    function showToast(message) {
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.textContent = message;
+      document.body.appendChild(toast);
+
+      setTimeout(() => {
+        toast.style.animation = 'slideDown 0.3s ease-in';
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    }
+
+    // Initialize
+    initSDK();
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9d58267eb7564045',t:'MTc3MjM2Nzk4OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
