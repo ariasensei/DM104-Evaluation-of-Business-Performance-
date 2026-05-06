@@ -1,0 +1,693 @@
+<!doctype html>
+<html lang="en" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Performance Analytics Finals</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Outfit', sans-serif; }
+    code, .mono { font-family: 'JetBrains Mono', monospace; }
+    html, body { height: 100%; margin: 0; }
+    .tab-active { background: #1e293b; color: #f8fafc; }
+    .tab-inactive { background: #334155; color: #94a3b8; }
+    .tab-inactive:hover { background: #475569; color: #e2e8f0; }
+    .card { background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 24px; }
+    .highlight { background: linear-gradient(135deg, #059669 0%, #0d9488 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .example-box { background: #0f172a; border-left: 4px solid #059669; padding: 16px; border-radius: 0 8px 8px 0; }
+    .key-concept { background: #172554; border: 1px solid #1d4ed8; border-radius: 8px; padding: 16px; }
+    .warning-box { background: #451a03; border: 1px solid #d97706; border-radius: 8px; padding: 16px; }
+    .project-box { background: linear-gradient(135deg, #1e1b4b 0%, #172554 100%); border: 2px solid #6366f1; border-radius: 12px; padding: 24px; }
+    .fade-in { animation: fadeIn 0.3s ease-in; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    .scroll-container { overflow-y: auto; height: 100%; }
+  </style>
+  <style>body { box-sizing: border-box; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full bg-slate-900 text-slate-200">
+  <div class="h-full flex flex-col w-full"><!-- Header -->
+   <header class="bg-slate-800 border-b border-slate-700 px-6 py-4 shrink-0">
+    <div class="max-w-6xl mx-auto flex items-center justify-between">
+     <div>
+      <h1 id="main-title" class="text-2xl font-bold text-slate-50">Performance Analytics &amp; Value Creation</h1>
+      <p id="subtitle" class="text-sm text-teal-400 mt-1">Finals Comprehensive Lecture Guide</p>
+     </div>
+     <div class="text-right">
+      <p id="instructor-display" class="text-sm text-slate-400">Instructor: Prof. Analytics</p>
+      <p class="text-xs text-slate-500">Weeks 1–5 | Final Exam Preparation</p>
+     </div>
+    </div>
+   </header><!-- Tabs -->
+   <nav class="bg-slate-800 px-6 py-2 shrink-0 border-b border-slate-700 overflow-x-auto">
+    <div class="max-w-6xl mx-auto flex gap-2 min-w-max"><button onclick="showWeek(1)" id="tab-1" class="tab-active px-4 py-2 rounded-lg text-sm font-medium transition-all">Week 1: Value &amp; ROI</button> <button onclick="showWeek(2)" id="tab-2" class="tab-inactive px-4 py-2 rounded-lg text-sm font-medium transition-all">Week 2: Risks &amp; Bias</button> <button onclick="showWeek(3)" id="tab-3" class="tab-inactive px-4 py-2 rounded-lg text-sm font-medium transition-all">Week 3: Ethics</button> <button onclick="showWeek(4)" id="tab-4" class="tab-inactive px-4 py-2 rounded-lg text-sm font-medium transition-all">Week 4: Case Study</button> <button onclick="showWeek(5)" id="tab-5" class="tab-inactive px-4 py-2 rounded-lg text-sm font-medium transition-all">Week 5: Final Project</button>
+    </div>
+   </nav><!-- Content -->
+   <main class="scroll-container flex-1">
+    <div class="max-w-6xl mx-auto px-6 py-8"><!-- WEEK 1 -->
+     <div id="week-1" class="fade-in space-y-6">
+      <div class="card">
+       <h2 class="text-xl font-bold text-teal-400 mb-2">Week 1: Value Creation, ROI, and Performance Analytics</h2>
+       <p class="text-slate-400 text-sm mb-4">ILO: Assess value creation using performance and financial metrics.</p>
+       <div class="key-concept mb-4">
+        <h3 class="font-semibold text-blue-300 mb-2"><i data-lucide="lightbulb" class="inline w-4 h-4"></i> Core Concept: What is Value Creation?</h3>
+        <p class="text-slate-300 text-sm">Value creation is when a business generates more worth than the resources it consumes. Think of it simply: <strong>if you spend ₱100 and generate ₱150 in benefits, you created ₱50 in value.</strong></p>
+       </div>
+      </div>
+      <div class="card">
+       <h3 class="font-semibold text-slate-100 mb-3">Key Metrics You Must Know</h3>
+       <div class="grid md:grid-cols-2 gap-4">
+        <div class="example-box">
+         <h4 class="font-medium text-teal-300 text-sm">ROI (Return on Investment)</h4>
+         <p class="mono text-xs text-slate-400 mt-1">ROI = (Net Profit / Cost of Investment) × 100</p>
+         <p class="text-sm text-slate-300 mt-2"><strong>Real Example:</strong> Jollibee invests ₱5M in a new drive-thru system. After 1 year, it generates ₱7M in additional revenue with ₱1M operating costs.</p>
+         <p class="mono text-xs text-teal-400 mt-1">ROI = (7M - 5M - 1M) / 5M × 100 = 20%</p>
+        </div>
+        <div class="example-box">
+         <h4 class="font-medium text-teal-300 text-sm">EVA (Economic Value Added)</h4>
+         <p class="mono text-xs text-slate-400 mt-1">EVA = NOPAT - (Capital × Cost of Capital)</p>
+         <p class="text-sm text-slate-300 mt-2"><strong>Real Example:</strong> SM Retail earns ₱10B after tax, uses ₱80B capital at 10% cost.</p>
+         <p class="mono text-xs text-teal-400 mt-1">EVA = 10B - (80B × 0.10) = ₱2B positive value created</p>
+        </div>
+        <div class="example-box">
+         <h4 class="font-medium text-teal-300 text-sm">KPIs (Key Performance Indicators)</h4>
+         <p class="text-sm text-slate-300 mt-2"><strong>Real Example:</strong> Grab Philippines tracks: average delivery time (target: &lt;30 min), driver rating (target: 4.5+), order completion rate (target: 95%)</p>
+        </div>
+        <div class="example-box">
+         <h4 class="font-medium text-teal-300 text-sm">Balanced Scorecard (BSC)</h4>
+         <p class="text-sm text-slate-300 mt-2">Four perspectives: Financial, Customer, Internal Process, Learning &amp; Growth</p>
+         <p class="text-sm text-slate-300 mt-1"><strong>Example:</strong> Globe Telecom measures subscriber growth (financial), NPS score (customer), network uptime (process), employee training hours (learning)</p>
+        </div>
+       </div>
+      </div>
+      <div class="card">
+       <h3 class="font-semibold text-slate-100 mb-3">Performance Analytics Framework</h3>
+       <p class="text-sm text-slate-300 mb-3">Performance analytics converts raw data into actionable insights. The cycle:</p>
+       <div class="flex flex-wrap items-center gap-2 text-sm text-center"><span class="bg-teal-900 text-teal-200 px-3 py-1 rounded-full">Collect Data</span> <span class="text-slate-500">→</span> <span class="bg-teal-900 text-teal-200 px-3 py-1 rounded-full">Measure KPIs</span> <span class="text-slate-500">→</span> <span class="bg-teal-900 text-teal-200 px-3 py-1 rounded-full">Analyze Trends</span> <span class="text-slate-500">→</span> <span class="bg-teal-900 text-teal-200 px-3 py-1 rounded-full">Generate Insights</span> <span class="text-slate-500">→</span> <span class="bg-teal-900 text-teal-200 px-3 py-1 rounded-full">Take Action</span>
+       </div>
+       <div class="example-box mt-4">
+        <h4 class="font-medium text-teal-300 text-sm">Real World: Netflix</h4>
+        <p class="text-sm text-slate-300 mt-1">Netflix tracks "viewing completion rate" as a KPI. If 80% of viewers finish a show's first episode but only 40% finish episode 3, analytics tells them they have a mid-season engagement problem. They used this to decide to invest in stronger episode 2-3 cliffhangers, resulting in 15% higher series completion rates and reduced churn (subscribers canceling).</p>
+       </div>
+      </div>
+      <div class="card">
+       <h3 class="font-semibold text-slate-100 mb-3">Financial vs Non-Financial Metrics</h3>
+       <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+         <thead>
+          <tr class="border-b border-slate-600">
+           <th class="text-left py-2 text-teal-300">Financial</th>
+           <th class="text-left py-2 text-teal-300">Non-Financial</th>
+          </tr>
+         </thead>
+         <tbody class="text-slate-300">
+          <tr class="border-b border-slate-700">
+           <td class="py-2">Revenue Growth Rate</td>
+           <td>Customer Satisfaction (CSAT)</td>
+          </tr>
+          <tr class="border-b border-slate-700">
+           <td class="py-2">Profit Margin</td>
+           <td>Employee Engagement Score</td>
+          </tr>
+          <tr class="border-b border-slate-700">
+           <td class="py-2">Return on Assets (ROA)</td>
+           <td>Net Promoter Score (NPS)</td>
+          </tr>
+          <tr>
+           <td class="py-2">Cost per Acquisition</td>
+           <td>Brand Awareness %</td>
+          </tr>
+         </tbody>
+        </table>
+       </div>
+      </div>
+      <div class="card">
+       <h3 class="font-semibold text-slate-100 mb-3">📝 Week 1 Takeaways for the Exam</h3>
+       <ul class="text-sm text-slate-300 space-y-2 list-disc list-inside">
+        <li>Value creation = benefits generated exceed resources consumed</li>
+        <li>ROI tells you efficiency; EVA tells you if you're beating your cost of capital</li>
+        <li>KPIs must be SMART (Specific, Measurable, Achievable, Relevant, Time-bound)</li>
+        <li>Balanced Scorecard prevents tunnel vision on just financial metrics</li>
+        <li>Analytics without action is just expensive data collection</li>
+       </ul>
+      </div>
+     </div><!-- WEEK 2 -->
+     <div id="week-2" class="fade-in space-y-6 hidden">
+      <div class="card">
+       <h2 class="text-xl font-bold text-teal-400 mb-2">Week 2: Risks, Bias, and Data Quality Issues</h2>
+       <p class="text-slate-400 text-sm mb-4">ILO: Evaluate risks and limitations in performance measurement systems.</p>
+       <div class="warning-box mb-4">
+        <h3 class="font-semibold text-amber-300 mb-2"><i data-lucide="alert-triangle" class="inline w-4 h-4"></i> Big Idea</h3>
+        <p class="text-slate-300 text-sm">"Not everything that counts can be counted, and not everything that can be counted counts." — William Bruce Cameron. Performance metrics can mislead if we don't understand their limitations.</p>
+       </div>
+      </div>
+      <div class="card">
+       <h3 class="font-semibold text-slate-100 mb-3">Types of Measurement Risks</h3>
+       <div class="space-y-4">
+        <div class="example-box">
+         <h4 class="font-medium text-amber-300 text-sm">1. Gaming the Metrics (Goodhart's Law)</h4>
+         <p class="text-sm text-slate-300 mt-1">"When a measure becomes a target, it ceases to be a good measure."</p>
+         <p class="text-sm text-slate-300 mt-2"><strong>Real Example — Wells Fargo Scandal (2016):</strong> Employees were given KPIs of "8 accounts per customer." To hit targets, staff opened 3.5 million fake accounts without customer consent. The metric worked perfectly — the behavior it incentivized was catastrophic. Fine: $3 billion.</p>
+        </div>
+        <div class="example-box">
+         <h4 class="font-medium text-amber-300 text-sm">2. Survivorship Bias</h4>
+         <p class="text-sm text-slate-300 mt-2"><strong>Real Example:</strong> A business school studies "successful startups" and finds they all used aggressive marketing. Conclusion: aggressive marketing = success. Problem: They didn't study the 90% of startups that ALSO used aggressive marketing and still failed. You're only looking at survivors.</p>
+        </div>
+        <div class="example-box">
+         <h4 class="font-medium text-amber-300 text-sm">3. Confirmation Bias</h4>
+         <p class="text-sm text-slate-300 mt-2"><strong>Real Example:</strong> A manager believes their new training program works. They cherry-pick data from the top 20% of trainees who improved, ignore the 40% who showed no change, and present only favorable metrics to leadership. The dashboard "confirms" success because they selected only supporting evidence.</p>
+        </div>
+        <div class="example-box">
+         <h4 class="font-medium text-amber-300 text-sm">4. Data Quality Issues</h4>
+         <p class="text-sm text-slate-300 mt-2"><strong>The 5 Data Quality Dimensions:</strong></p>
+         <ul class="text-sm text-slate-300 mt-1 list-disc list-inside space-y-1">
+          <li><strong>Accuracy</strong> — Is the data correct? (e.g., typo: revenue of ₱10M entered as ₱100M)</li>
+          <li><strong>Completeness</strong> — Are there missing values? (e.g., 30% of survey responses blank)</li>
+          <li><strong>Timeliness</strong> — Is data current? (e.g., using 2019 data for 2024 decisions)</li>
+          <li><strong>Consistency</strong> — Same data across systems? (e.g., CRM says 500 customers, finance says 480)</li>
+          <li><strong>Relevance</strong> — Does it measure what matters? (e.g., tracking page views when goal is sales)</li>
+         </ul>
+        </div>
+       </div>
+      </div>
+      <div class="card">
+       <h3 class="font-semibold text-slate-100 mb-3">Correlation ≠ Causation</h3>
+       <div class="example-box">
+        <p class="text-sm text-slate-300"><strong>Classic Trap:</strong> A company notices that stores with more employees have higher revenue. Conclusion: "Hire more people = more revenue!" Reality: Stores in high-traffic malls naturally need more staff AND naturally have more revenue. The location drives both — not the headcount.</p>
+        <p class="text-sm text-amber-300 mt-2">⚠️ Always ask: "Is there a lurking variable explaining both?"</p>
+       </div>
+      </div>
+      <div class="card">
+       <h3 class="font-semibold text-slate-100 mb-3">Mitigation Strategies</h3>
+       <div class="grid md:grid-cols-2 gap-4">
+        <div class="key-concept">
+         <h4 class="text-blue-300 font-medium text-sm">For Gaming</h4>
+         <ul class="text-sm text-slate-300 mt-2 space-y-1 list-disc list-inside">
+          <li>Use multiple balanced metrics</li>
+          <li>Include qualitative assessments</li>
+          <li>Rotate KPIs periodically</li>
+          <li>Reward behaviors, not just outcomes</li>
+         </ul>
+        </div>
+        <div class="key-concept">
+         <h4 class="text-blue-300 font-medium text-sm">For Data Quality</h4>
+         <ul class="text-sm text-slate-300 mt-2 space-y-1 list-disc list-inside">
+          <li>Automate data validation</li>
+          <li>Regular data audits</li>
+          <li>Clear data entry standards</li>
+          <li>Cross-reference multiple sources</li>
+         </ul>
+        </div>
+       </div>
+      </div>
+      <div class="card">
+       <h3 class="font-semibold text-slate-100 mb-3">📝 Week 2 Takeaways for the Exam</h3>
+       <ul class="text-sm text-slate-300 space-y-2 list-disc list-inside">
+        <li>Goodhart's Law: targets corrupt the metrics they're based on</li>
+        <li>Always ask "what am I NOT seeing?" (survivorship bias)</li>
+        <li>Data quality has 5 dimensions — memorize them</li>
+        <li>Correlation ≠ causation — look for lurking variables</li>
+        <li>Best defense: triangulate with multiple metrics and qualitative data</li>
+       </ul>
+      </div>
+     </div><!-- WEEK 3 -->
+     <div id="week-3" class="fade-in space-y-6 hidden">
+      <div class="card">
+       <h2 class="text-xl font-bold text-teal-400 mb-2">Week 3: Ethics, Data Governance, and Responsible Analytics</h2>
+       <p class="text-slate-400 text-sm mb-4">ILO: Demonstrate ethical and responsible use of performance data.</p>
+       <div class="key-concept mb-4">
+        <h3 class="font-semibold text-blue-300 mb-2"><i data-lucide="shield" class="inline w-4 h-4"></i> Why Ethics Matter in Analytics</h3>
+        <p class="text-slate-300 text-sm">Data is power. How organizations collect, analyze, and act on performance data can help OR harm employees, customers, and society. Ethical analytics isn't optional — it's a competitive advantage and legal requirement.</p>
+       </div>
+      </div>
+      <div class="card">
+       <h3 class="font-semibold text-slate-100 mb-3">Core Ethical Principles in Performance Analytics</h3>
+       <div class="space-y-4">
+        <div class="example-box">
+         <h4 class="font-medium text-teal-300 text-sm">1. Transparency</h4>
+         <p class="text-sm text-slate-300 mt-1">People should know what's being measured and why.</p>
+         <p class="text-sm text-slate-300 mt-2"><strong>Real Example — Amazon Warehouse Workers:</strong> Amazon uses AI to track worker productivity per second. Workers reported not knowing exactly how algorithms scored them, leading to firings they couldn't understand or appeal. In 2022, California passed AB 701 requiring companies to disclose productivity quotas to warehouse workers.</p>
+        </div>
+        <div class="example-box">
+         <h4 class="font-medium text-teal-300 text-sm">2. Fairness &amp; Non-Discrimination</h4>
+         <p class="text-sm text-slate-300 mt-2"><strong>Real Example — Amazon's AI Hiring Tool (2018):</strong> Amazon built an AI to screen resumes. It was trained on 10 years of hiring data — which was mostly male hires. The AI learned to penalize resumes containing "women's" (e.g., "women's chess club captain"). Amazon scrapped the tool, but the lesson remains: biased historical data creates biased performance systems.</p>
+        </div>
+        <div class="example-box">
+         <h4 class="font-medium text-teal-300 text-sm">3. Privacy &amp; Consent</h4>
+         <p class="text-sm text-slate-300 mt-2"><strong>Real Example — Philippines Data Privacy Act (RA 10173):</strong> A BPO company installs keystroke logging and webcam monitoring on employee laptops without informing them. This violates RA 10173 because employees weren't given proper notice or consent. Penalty: up to ₱5M fine and imprisonment.</p>
+        </div>
+        <div class="example-box">
+         <h4 class="font-medium text-teal-300 text-sm">4. Accountability</h4>
+         <p class="text-sm text-slate-300 mt-2"><strong>Real Example — Facebook/Meta (2021):</strong> Internal documents showed Facebook knew Instagram harmed teenage mental health (their own performance data showed it), but they suppressed findings because engagement KPIs were positive. Whistleblower Frances Haugen exposed this — demonstrating that organizations must be accountable for what their data reveals.</p>
+        </div>
+       </div>
+      </div>
+      <div class="card">
+       <h3 class="font-semibold text-slate-100 mb-3">Data Governance Framework</h3>
+       <p class="text-sm text-slate-300 mb-3">Data governance = the rules, roles, and processes for managing data responsibly.</p>
+       <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+         <thead>
+          <tr class="border-b border-slate-600">
+           <th class="text-left py-2 text-teal-300">Component</th>
+           <th class="text-left py-2 text-teal-300">Purpose</th>
+           <th class="text-left py-2 text-teal-300">Example</th>
+          </tr>
+         </thead>
+         <tbody class="text-slate-300">
+          <tr class="border-b border-slate-700">
+           <td class="py-2">Data Ownership</td>
+           <td>Who is responsible?</td>
+           <td>HR owns employee data; Marketing owns customer data</td>
+          </tr>
+          <tr class="border-b border-slate-700">
+           <td class="py-2">Access Controls</td>
+           <td>Who can see what?</td>
+           <td>Only managers see individual performance; execs see aggregates</td>
+          </tr>
+          <tr class="border-b border-slate-700">
+           <td class="py-2">Retention Policies</td>
+           <td>How long do we keep it?</td>
+           <td>Employee reviews kept 5 years post-employment</td>
+          </tr>
+          <tr class="border-b border-slate-700">
+           <td class="py-2">Quality Standards</td>
+           <td>How accurate must it be?</td>
+           <td>Financial data: 99.9% accuracy; survey data: 95%</td>
+          </tr>
+          <tr>
+           <td class="py-2">Audit Trails</td>
+           <td>Who changed what, when?</td>
+           <td>All KPI target changes logged with justification</td>
+          </tr>
+         </tbody>
+        </table>
+       </div>
+      </div>
+      <div class="card">
+       <h3 class="font-semibold text-slate-100 mb-3">Responsible Analytics Checklist</h3>
+       <div class="key-concept">
+        <p class="text-sm text-slate-300">Before deploying any performance measurement system, ask:</p>
+        <ul class="text-sm text-slate-300 mt-2 space-y-2">
+         <li>✅ <strong>Necessity:</strong> Do we actually need this data to make the decision?</li>
+         <li>✅ <strong>Consent:</strong> Do people know they're being measured?</li>
+         <li>✅ <strong>Proportionality:</strong> Is the intrusiveness justified by the benefit?</li>
+         <li>✅ <strong>Bias Check:</strong> Could this disadvantage any protected group?</li>
+         <li>✅ <strong>Appeal Process:</strong> Can someone challenge a data-driven decision about them?</li>
+         <li>✅ <strong>Expiration:</strong> When will this data be deleted?</li>
+        </ul>
+       </div>
+      </div>
+      <div class="card">
+       <h3 class="font-semibold text-slate-100 mb-3">📝 Week 3 Takeaways for the Exam</h3>
+       <ul class="text-sm text-slate-300 space-y-2 list-disc list-inside">
+        <li>Ethical analytics = transparent, fair, private, and accountable</li>
+        <li>Philippines Data Privacy Act (RA 10173) governs data collection</li>
+        <li>Algorithmic bias comes from biased training data</li>
+        <li>Data governance has 5 components: ownership, access, retention, quality, audits</li>
+        <li>Always apply the "newspaper test" — would you be comfortable if this practice was on the front page?</li>
+       </ul>
+      </div>
+     </div><!-- WEEK 4 -->
+     <div id="week-4" class="fade-in space-y-6 hidden">
+      <div class="card">
+       <h2 class="text-xl font-bold text-teal-400 mb-2">Week 4: Business Performance Case Study</h2>
+       <p class="text-slate-400 text-sm mb-4">ILO: Integrate analytics and KPIs in a real-world business case.</p>
+       <div class="key-concept mb-4">
+        <h3 class="font-semibold text-blue-300 mb-2"><i data-lucide="briefcase" class="inline w-4 h-4"></i> Case Study: Shopee Philippines — From Growth to Profitability</h3>
+        <p class="text-slate-300 text-sm">We'll analyze how Shopee shifted from a "growth at all costs" strategy to profitability, examining which KPIs they changed and why.</p>
+       </div>
+      </div>
+      <div class="card">
+       <h3 class="font-semibold text-slate-100 mb-3">Background</h3>
+       <p class="text-sm text-slate-300">Shopee (owned by Sea Limited) dominated Southeast Asian e-commerce through massive subsidies: free shipping, seller vouchers, and aggressive marketing (celebrity endorsements, flash sales). By 2022, investors demanded profitability. Sea Limited's stock dropped 80% from its peak.</p>
+       <div class="warning-box mt-3">
+        <p class="text-sm text-amber-300"><strong>The Dilemma:</strong> How do you shift from measuring "Gross Merchandise Value (GMV)" to measuring "profitability" without killing the business?</p>
+       </div>
+      </div>
+      <div class="card">
+       <h3 class="font-semibold text-slate-100 mb-3">Phase 1: Growth KPIs (2019–2021)</h3>
+       <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+         <thead>
+          <tr class="border-b border-slate-600">
+           <th class="text-left py-2 text-teal-300">KPI</th>
+           <th class="text-left py-2 text-teal-300">Target</th>
+           <th class="text-left py-2 text-teal-300">Result</th>
+          </tr>
+         </thead>
+         <tbody class="text-slate-300">
+          <tr class="border-b border-slate-700">
+           <td class="py-2">GMV (Gross Merchandise Value)</td>
+           <td>↑ 50% YoY</td>
+           <td>Achieved (but at massive losses)</td>
+          </tr>
+          <tr class="border-b border-slate-700">
+           <td class="py-2">Monthly Active Users</td>
+           <td>↑ 30% YoY</td>
+           <td>343M users by Q3 2021</td>
+          </tr>
+          <tr class="border-b border-slate-700">
+           <td class="py-2">Orders per User</td>
+           <td>↑ quarterly</td>
+           <td>Grew but driven by subsidies</td>
+          </tr>
+          <tr>
+           <td class="py-2">Market Share</td>
+           <td>#1 in SEA</td>
+           <td>Achieved in 6 countries</td>
+          </tr>
+         </tbody>
+        </table>
+       </div>
+       <p class="text-sm text-amber-300 mt-3">⚠️ Problem: GMV was vanity metric — it included subsidized orders that were unprofitable.</p>
+      </div>
+      <div class="card">
+       <h3 class="font-semibold text-slate-100 mb-3">Phase 2: Profitability Pivot (2022–2024)</h3>
+       <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+         <thead>
+          <tr class="border-b border-slate-600">
+           <th class="text-left py-2 text-teal-300">New KPI</th>
+           <th class="text-left py-2 text-teal-300">Why It Matters</th>
+           <th class="text-left py-2 text-teal-300">Action Taken</th>
+          </tr>
+         </thead>
+         <tbody class="text-slate-300">
+          <tr class="border-b border-slate-700">
+           <td class="py-2">Adjusted EBITDA</td>
+           <td>Measures actual operating profit</td>
+           <td>Cut marketing spend 50%</td>
+          </tr>
+          <tr class="border-b border-slate-700">
+           <td class="py-2">Take Rate</td>
+           <td>Revenue per transaction</td>
+           <td>Increased seller commissions 2% → 4%</td>
+          </tr>
+          <tr class="border-b border-slate-700">
+           <td class="py-2">Cost per Order</td>
+           <td>Operational efficiency</td>
+           <td>Reduced free shipping, consolidated logistics</td>
+          </tr>
+          <tr>
+           <td class="py-2">Contribution Margin per Order</td>
+           <td>Profit per unit economics</td>
+           <td>Removed unprofitable product categories</td>
+          </tr>
+         </tbody>
+        </table>
+       </div>
+       <div class="example-box mt-3">
+        <p class="text-sm text-teal-300 font-medium">Result:</p>
+        <p class="text-sm text-slate-300">Sea Limited reported its first-ever profitable quarter in Q4 2022. By shifting KPIs from growth to profitability, they went from -$931M loss (Q3 2021) to +$422M profit (Q4 2022) in just 5 quarters.</p>
+       </div>
+      </div>
+      <div class="card">
+       <h3 class="font-semibold text-slate-100 mb-3">Analysis Framework: How to Approach Any Case Study</h3>
+       <div class="grid md:grid-cols-2 gap-4">
+        <div class="key-concept">
+         <h4 class="text-blue-300 font-medium text-sm">Step 1: Context</h4>
+         <p class="text-sm text-slate-300 mt-1">What's the business? What stage? What external pressures exist?</p>
+        </div>
+        <div class="key-concept">
+         <h4 class="text-blue-300 font-medium text-sm">Step 2: Identify KPIs</h4>
+         <p class="text-sm text-slate-300 mt-1">What are they measuring? Are metrics aligned with strategy?</p>
+        </div>
+        <div class="key-concept">
+         <h4 class="text-blue-300 font-medium text-sm">Step 3: Evaluate Quality</h4>
+         <p class="text-sm text-slate-300 mt-1">Are there biases? Gaming? Data quality issues?</p>
+        </div>
+        <div class="key-concept">
+         <h4 class="text-blue-300 font-medium text-sm">Step 4: Recommend</h4>
+         <p class="text-sm text-slate-300 mt-1">What should change? Why? What are the risks of your recommendation?</p>
+        </div>
+       </div>
+      </div>
+      <div class="card">
+       <h3 class="font-semibold text-slate-100 mb-3">📝 Week 4 Takeaways for the Exam</h3>
+       <ul class="text-sm text-slate-300 space-y-2 list-disc list-inside">
+        <li>KPIs must evolve with business strategy — what got you here won't get you there</li>
+        <li>Vanity metrics (GMV, page views, downloads) can mask real problems</li>
+        <li>Unit economics (profit per order/customer) reveal true health</li>
+        <li>Shifting KPIs has consequences — Shopee lost users but gained profitability</li>
+        <li>Use the 4-step framework: Context → KPIs → Quality → Recommendations</li>
+       </ul>
+      </div>
+     </div><!-- WEEK 5 -->
+     <div id="week-5" class="fade-in space-y-6 hidden">
+      <div class="card">
+       <h2 class="text-xl font-bold text-teal-400 mb-2">Week 5: Final Project Presentation &amp; Evaluation</h2>
+       <p class="text-slate-400 text-sm mb-4">ILO: Present and justify performance evaluation findings and recommendations.</p>
+      </div>
+      <div class="project-box">
+       <h3 class="text-xl font-bold text-indigo-300 mb-2">🎯 FINAL PROJECT: Performance Analytics Audit</h3>
+       <p class="text-sm text-slate-300 mb-1">Individual or Duo | Presentation: 12–15 minutes + 5 min Q&amp;A</p>
+       <p class="text-sm text-indigo-300 font-medium mt-3 mb-2">Choose ONE real company (local or international) and conduct a full performance analytics audit.</p>
+       <div class="bg-slate-900 rounded-lg p-4 mt-4 space-y-4">
+        <h4 class="font-semibold text-slate-100">Project Deliverables</h4>
+        <div class="border-l-4 border-indigo-500 pl-4">
+         <h5 class="text-indigo-300 font-medium text-sm">Part 1: Company Profile &amp; Strategy (15%)</h5>
+         <ul class="text-sm text-slate-300 mt-1 space-y-1 list-disc list-inside">
+          <li>Company overview (industry, size, market position)</li>
+          <li>Current business strategy (growth? profitability? transformation?)</li>
+          <li>Identify at least 3 stakeholder groups affected by their performance metrics</li>
+         </ul>
+        </div>
+        <div class="border-l-4 border-indigo-500 pl-4">
+         <h5 class="text-indigo-300 font-medium text-sm">Part 2: KPI Identification &amp; Analysis (25%)</h5>
+         <ul class="text-sm text-slate-300 mt-1 space-y-1 list-disc list-inside">
+          <li>Identify 5–8 KPIs the company currently uses (from annual reports, news, investor presentations)</li>
+          <li>Classify each: financial vs non-financial, leading vs lagging</li>
+          <li>Map KPIs to a Balanced Scorecard framework</li>
+          <li>Calculate ROI or EVA for at least one major initiative (use real or estimated numbers)</li>
+         </ul>
+        </div>
+        <div class="border-l-4 border-indigo-500 pl-4">
+         <h5 class="text-indigo-300 font-medium text-sm">Part 3: Risk &amp; Bias Assessment (25%)</h5>
+         <ul class="text-sm text-slate-300 mt-1 space-y-1 list-disc list-inside">
+          <li>Identify at least 2 potential biases or risks in their measurement system</li>
+          <li>Analyze data quality concerns (use the 5 dimensions)</li>
+          <li>Find at least 1 example of potential metric gaming or misalignment</li>
+          <li>Provide evidence (news articles, reports, logical analysis)</li>
+         </ul>
+        </div>
+        <div class="border-l-4 border-indigo-500 pl-4">
+         <h5 class="text-indigo-300 font-medium text-sm">Part 4: Ethics &amp; Governance Review (20%)</h5>
+         <ul class="text-sm text-slate-300 mt-1 space-y-1 list-disc list-inside">
+          <li>Evaluate: Is their data collection transparent? Fair? Privacy-respecting?</li>
+          <li>Identify any ethical concerns in how they use performance data</li>
+          <li>Assess their data governance maturity (basic/developing/advanced)</li>
+          <li>Reference relevant laws (RA 10173, GDPR, industry-specific regulations)</li>
+         </ul>
+        </div>
+        <div class="border-l-4 border-indigo-500 pl-4">
+         <h5 class="text-indigo-300 font-medium text-sm">Part 5: Recommendations &amp; Justification (15%)</h5>
+         <ul class="text-sm text-slate-300 mt-1 space-y-1 list-disc list-inside">
+          <li>Propose 3–5 specific, actionable recommendations</li>
+          <li>For each: explain the expected impact, implementation difficulty, and timeline</li>
+          <li>Justify using concepts from Weeks 1–4</li>
+          <li>Address potential risks of your own recommendations</li>
+         </ul>
+        </div>
+       </div>
+      </div>
+      <div class="card">
+       <h3 class="font-semibold text-slate-100 mb-3">Evaluation Rubric</h3>
+       <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+         <thead>
+          <tr class="border-b border-slate-600">
+           <th class="text-left py-2 text-teal-300">Criteria</th>
+           <th class="text-left py-2 text-teal-300">Excellent (90–100)</th>
+           <th class="text-left py-2 text-teal-300">Satisfactory (75–89)</th>
+           <th class="text-left py-2 text-teal-300">Needs Work (&lt;75)</th>
+          </tr>
+         </thead>
+         <tbody class="text-slate-300 text-xs">
+          <tr class="border-b border-slate-700">
+           <td class="py-2">Depth of Analysis</td>
+           <td>Goes beyond surface; uses multiple frameworks</td>
+           <td>Good analysis with some depth</td>
+           <td>Superficial or descriptive only</td>
+          </tr>
+          <tr class="border-b border-slate-700">
+           <td class="py-2">Evidence &amp; Sources</td>
+           <td>5+ credible sources; data-driven arguments</td>
+           <td>3–4 sources; mostly supported claims</td>
+           <td>Few sources; unsupported claims</td>
+          </tr>
+          <tr class="border-b border-slate-700">
+           <td class="py-2">Critical Thinking</td>
+           <td>Identifies non-obvious risks; challenges assumptions</td>
+           <td>Identifies clear risks; some critical analysis</td>
+           <td>Accepts metrics at face value</td>
+          </tr>
+          <tr class="border-b border-slate-700">
+           <td class="py-2">Recommendations</td>
+           <td>Specific, feasible, justified with trade-offs acknowledged</td>
+           <td>Reasonable but somewhat generic</td>
+           <td>Vague or unrealistic</td>
+          </tr>
+          <tr>
+           <td class="py-2">Presentation Quality</td>
+           <td>Clear, engaging, handles Q&amp;A confidently</td>
+           <td>Organized and clear</td>
+           <td>Disorganized or reads from slides</td>
+          </tr>
+         </tbody>
+        </table>
+       </div>
+      </div>
+      <div class="card">
+       <h3 class="font-semibold text-slate-100 mb-3">Suggested Companies (Pick One)</h3>
+       <div class="grid md:grid-cols-3 gap-3">
+        <div class="bg-slate-800 rounded-lg p-3">
+         <p class="text-teal-300 font-medium text-sm">Easy-Medium</p>
+         <ul class="text-xs text-slate-300 mt-1 space-y-1">
+          <li>• Jollibee Foods Corp</li>
+          <li>• SM Investments</li>
+          <li>• Globe Telecom</li>
+          <li>• Grab Philippines</li>
+         </ul>
+        </div>
+        <div class="bg-slate-800 rounded-lg p-3">
+         <p class="text-amber-300 font-medium text-sm">Medium-Hard</p>
+         <ul class="text-xs text-slate-300 mt-1 space-y-1">
+          <li>• Shopee/Sea Limited</li>
+          <li>• Tesla</li>
+          <li>• Spotify</li>
+          <li>• Airbnb</li>
+         </ul>
+        </div>
+        <div class="bg-slate-800 rounded-lg p-3">
+         <p class="text-red-300 font-medium text-sm">Challenging</p>
+         <ul class="text-xs text-slate-300 mt-1 space-y-1">
+          <li>• Meta/Facebook</li>
+          <li>• WeWork (failure case)</li>
+          <li>• FTX (ethical case)</li>
+          <li>• Any PH startup</li>
+         </ul>
+        </div>
+       </div>
+      </div>
+      <div class="card">
+       <h3 class="font-semibold text-slate-100 mb-3">Presentation Format Requirements</h3>
+       <div class="grid md:grid-cols-2 gap-4">
+        <div>
+         <h4 class="text-teal-300 font-medium text-sm mb-2">Structure</h4>
+         <ul class="text-sm text-slate-300 space-y-1 list-disc list-inside">
+          <li>10–15 slides maximum</li>
+          <li>12–15 min presentation + 5 min Q&amp;A</li>
+          <li>Must include at least 1 visual (chart, framework diagram, or data table)</li>
+          <li>Submit slides + 1-page executive summary</li>
+         </ul>
+        </div>
+        <div>
+         <h4 class="text-teal-300 font-medium text-sm mb-2">For Duos</h4>
+         <ul class="text-sm text-slate-300 space-y-1 list-disc list-inside">
+          <li>Both members must present equally</li>
+          <li>Include a "contribution statement" slide</li>
+          <li>Expected to have deeper analysis than solo presenters</li>
+          <li>15 min presentation + 5 min Q&amp;A</li>
+         </ul>
+        </div>
+       </div>
+      </div>
+      <div class="warning-box">
+       <h4 class="text-amber-300 font-medium mb-2">⚠️ Common Mistakes to Avoid</h4>
+       <ul class="text-sm text-slate-300 space-y-1 list-disc list-inside">
+        <li>Don't just describe the company — ANALYZE their metrics critically</li>
+        <li>Don't copy-paste from annual reports — interpret and evaluate the numbers</li>
+        <li>Don't make recommendations without explaining WHY and HOW</li>
+        <li>Don't ignore limitations of your own analysis</li>
+        <li>Don't present without rehearsing — practice your timing</li>
+       </ul>
+      </div>
+      <div class="card">
+       <h3 class="font-semibold text-slate-100 mb-3">Timeline</h3>
+       <div class="space-y-2 text-sm text-slate-300">
+        <div class="flex justify-between border-b border-slate-700 py-2">
+         <span>Week 2: Choose company &amp; submit topic approval</span><span class="text-teal-400">Checkpoint 1</span>
+        </div>
+        <div class="flex justify-between border-b border-slate-700 py-2">
+         <span>Week 3: Submit preliminary KPI list &amp; sources</span><span class="text-teal-400">Checkpoint 2</span>
+        </div>
+        <div class="flex justify-between border-b border-slate-700 py-2">
+         <span>Week 4: Draft slides for peer review</span><span class="text-teal-400">Checkpoint 3</span>
+        </div>
+        <div class="flex justify-between py-2">
+         <span class="font-medium">Week 5: Final presentation</span><span class="text-indigo-400 font-medium">Due Date</span>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div>
+   </main>
+  </div>
+  <script>
+    let currentWeek = 1;
+
+    function showWeek(week) {
+      document.getElementById(`week-${currentWeek}`).classList.add('hidden');
+      document.getElementById(`tab-${currentWeek}`).className = 'tab-inactive px-4 py-2 rounded-lg text-sm font-medium transition-all';
+      currentWeek = week;
+      document.getElementById(`week-${currentWeek}`).classList.remove('hidden');
+      document.getElementById(`tab-${currentWeek}`).className = 'tab-active px-4 py-2 rounded-lg text-sm font-medium transition-all';
+    }
+
+    const defaultConfig = {
+      course_title: 'Performance Analytics & Value Creation',
+      instructor_name: 'Prof. Analytics',
+      background_color: '#0f172a',
+      surface_color: '#1e293b',
+      text_color: '#e2e8f0',
+      primary_action: '#059669',
+      secondary_action: '#6366f1',
+      font_family: 'Outfit',
+      font_size: 16
+    };
+
+    function applyConfig(config) {
+      document.getElementById('main-title').textContent = config.course_title || defaultConfig.course_title;
+      document.getElementById('instructor-display').textContent = 'Instructor: ' + (config.instructor_name || defaultConfig.instructor_name);
+
+      const baseSize = config.font_size || defaultConfig.font_size;
+      const font = config.font_family || defaultConfig.font_family;
+      document.body.style.fontFamily = `${font}, Outfit, sans-serif`;
+      document.body.style.fontSize = `${baseSize}px`;
+      document.body.style.backgroundColor = config.background_color || defaultConfig.background_color;
+      document.body.style.color = config.text_color || defaultConfig.text_color;
+
+      document.querySelectorAll('.card').forEach(el => {
+        el.style.backgroundColor = config.surface_color || defaultConfig.surface_color;
+      });
+    }
+
+    window.elementSdk.init({
+      defaultConfig,
+      onConfigChange: async (config) => { applyConfig(config); },
+      mapToCapabilities: (config) => ({
+        recolorables: [
+          { get: () => config.background_color || defaultConfig.background_color, set: (v) => { config.background_color = v; window.elementSdk.setConfig({ background_color: v }); } },
+          { get: () => config.surface_color || defaultConfig.surface_color, set: (v) => { config.surface_color = v; window.elementSdk.setConfig({ surface_color: v }); } },
+          { get: () => config.text_color || defaultConfig.text_color, set: (v) => { config.text_color = v; window.elementSdk.setConfig({ text_color: v }); } },
+          { get: () => config.primary_action || defaultConfig.primary_action, set: (v) => { config.primary_action = v; window.elementSdk.setConfig({ primary_action: v }); } },
+          { get: () => config.secondary_action || defaultConfig.secondary_action, set: (v) => { config.secondary_action = v; window.elementSdk.setConfig({ secondary_action: v }); } }
+        ],
+        borderables: [],
+        fontEditable: { get: () => config.font_family || defaultConfig.font_family, set: (v) => { config.font_family = v; window.elementSdk.setConfig({ font_family: v }); } },
+        fontSizeable: { get: () => config.font_size || defaultConfig.font_size, set: (v) => { config.font_size = v; window.elementSdk.setConfig({ font_size: v }); } }
+      }),
+      mapToEditPanelValues: (config) => new Map([
+        ['course_title', config.course_title || defaultConfig.course_title],
+        ['instructor_name', config.instructor_name || defaultConfig.instructor_name]
+      ])
+    });
+
+    lucide.createIcons();
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9f7461f80366403a',t:'MTc3ODAzMjczNi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
